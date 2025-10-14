@@ -5,17 +5,16 @@ import { RouterLink } from "@angular/router";
 
 function passwordPolicyValidator(control: AbstractControl): ValidationErrors | null {
   const v = String(control.value ?? '');
-
   if (!v) return { required: true };
 
   const errors: Record<string, true> = {};
   // if (v.length < 8) errors.tooShort = true;
   // if (!/[A-Z]/.test(v)) errors.noUpper = true;
   // if (!/\d/.test(v)) errors.noDigit = true;
-
   if (v.length < 8) errors['tooShort'] = true;
   if (!/[A-Z]/.test(v)) errors['noUpper'] = true;
   if (!/\d/.test(v)) errors['noDigit'] = true;
+  if (!/[a-z]/.test(v)) errors['noLower'] = true;
 
   const hasSpace = /\s/.test(v);
   let hasControl = false;
@@ -50,6 +49,10 @@ export class Register {
 
   private fb = inject(FormBuilder);
 
+  modalOpen = signal(false);
+  modalTitle = signal('Ungültiges Passwort');
+  modalBody = signal<string | null>(null);
+
   form = this.fb.group({
     fullName: [''],
     email: [''],
@@ -62,11 +65,45 @@ export class Register {
     }, { validators: [passwordMatchValidator]})
   });
 
+  // Hilfsfunktionen
+  private passwordErrors(): string[] {
+    const errs = this.form.get('passwordGroup.password')?.errors ?? {};
+    const msgs: string[] = [];
+    if (errs['required']) msgs.push('Passwort ist erforderlich.');
+    if (errs['tooShort']) msgs.push('Mindestens 8 Zeichen.');
+    if (errs['noDigit']) msgs.push('Mindestens eine Zahl.');
+    if (errs['noUpper']) msgs.push('Mindestens ein Großbuchstabe.');
+    if (errs['noLower']) msgs.push('Mindestens ein Kleinbuchstabe.');
+    if (errs['hasSpaceOrControl']) msgs.push('Keine Leer- oder Steuerzeichen erlaubt.');
+    return msgs;
+  }
+  private matchError(): boolean {
+    return !!this.form.get('passwordGroup')?.errors?.['passwordsNotMatch'];
+  }
+
+  // Klick auf "Konto erstellen"
   submit() {
     if(this.form.invalid) {
       this.form.markAllAsTouched();
+
+      const pwdErrs = this.passwordErrors();
+      const totalErrs = pwdErrs.length + (this.matchError() ? 1 : 0);
+
+      if(totalErrs > 1) {
+        this.modalTitle.set('Bitte Passwort-Richtlinien beachten');
+        this.modalBody.set(null);
+      } else if(totalErrs === 1) {
+        this.modalTitle.set('Hinweis');
+        this.modalBody.set(this.matchError() ? 'Passwörter stimmen nicht überein.' : pwdErrs[0]);
+      } else {
+        this.modalTitle.set('Bitte Eingaben prüfen');
+        this.modalBody.set('Es fehlen noch Angaben oder Felder sind ungültig.')
+      }
+      this.modalOpen.set(true);
       return;
     }
     alert('Formular valide (Demo).')
   }
+
+  closeModal() {this.modalOpen.set(false);}
 }

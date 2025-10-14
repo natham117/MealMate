@@ -71,20 +71,11 @@
 
             <!-- Fehlermeldungen für Passwort -->
             <div class="error" *ngIf="form.get('passwordGroup.password')?.touched && form.get('passwordGroup.password')?.errors">
-                <!-- <div *ngIf="form.get('passwordGroup.password')?.errors?.tooShort">Mindestens 8 Zeichen erforderlich.</div>
-                <div *ngIf="form.get('passwordGroup.password')?.errors?.noDigit">Mindestens eine Zahl erforderlich.</div>
-                <div *ngIf="form.get('passwordGroup.password')?.errors?.noUpper">Mindestens ein Großbuchstabe erforderlich.</div>
-                <div *ngIf="form.get('passwordGroup.password')?.errors?.hasSpaceOrControl">Keine Leer- oder Steuerzeichen erlaubt.</div>
-                <div *ngIf="form.get('passwordGroup.password')?.errors?.required">Passwort ist erforderlich.</div> -->
-                <div *ngIf="form.get('passwordGroup.password')?.errors?.['tooShort']">Mindestens 8 Zeichen erforderlich.</div>
-                <div *ngIf="form.get('passwordGroup.password')?.errors?.['noDigit']">Mindestens eine Zahl erforderlich.</div>
-                <div *ngIf="form.get('passwordGroup.password')?.errors?.['noUpper']">Mindestens ein Großbuchstabe erforderlich.</div>
-                <div *ngIf="form.get('passwordGroup.password')?.errors?.['hasSpaceOrControl']">Keine Leer- oder Steuerzeichen erlaubt.</div>
-                <div *ngIf="form.get('passwordGroup.password')?.errors?.['required']">Passwort ist erforderlich.</div>
+                Bitte Passwort-Richtlinien beachten
             </div>
 
             <!-- Passwort wiederholen -->
-            <label for="email">Passwort wiederholen</label>
+            <label for="passwordConfirm">Passwort wiederholen</label>
             <input
                 id="passwordConfirm"
                 name="passwordConfirm"
@@ -109,4 +100,26 @@
             <a routerLink="/login">Jetzt anmelden.</a>
         </p>
     </form>
+</div>
+
+<div class="mm-modal-backdrop" *ngIf="modalOpen()" (click)="closeModal()"></div>
+<div class="mm-modal" *ngIf="modalOpen()">
+    <h2>{{ modalTitle() }}</h2>
+
+    <ng-container *ngIf="modalBody() === null; else singleMsg">
+        <ul>
+            <li>Mindestens 8 Zeichen</li>
+            <li>Mindestens eine Zahl</li>
+            <li>Mindestens ein Groß-/Kleinbuchstabe</li>
+            <li>Keine Leer- oder Unicode-Steuerzeichen</li>
+            <li>Passwort und Wiederholung müssen übereinstimmen</li>
+        </ul>
+    </ng-container>
+    <ng-template #singleMsg>
+        <p>{{ modalBody() }}</p>
+    </ng-template>
+
+    <div class="mm-modal-actions">
+        <button type="button" (click)="closeModal()">OK</button>
+    </div>
 </div>
