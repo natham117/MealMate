@@ -1,3 +1,80 @@
-<h2>Einkaufsliste 🛒</h2>
-<p>Deine Einkaufsliste wird hier angezeigt.</p>
-<button class="btn-overview" (click)="goToOverview()">👉 Zur Übersicht</button>
+<!-- <div class="container"> 
+    <h1>🛒Einkaufsliste</h1>
+    <p>Deine Einkaufsliste wird hier angezeigt.</p>
+    <button class="btn-overview" (click)="goToOverview()">👉 Zur Übersicht</button>
+</div> -->
+<div class="container">
+  <h1>🛒 Einkaufsliste</h1>
+  
+
+  <div class="header-bereich">
+    <button class="btn-overview" (click)="goToOverview()">👉 Zur Übersicht</button>
+    <input
+      type="text"
+      class="suchleiste"
+      placeholder="Artikel suchen..."
+      [(ngModel)]="suchbegriff"
+    />
+    <button class="hinzufuegen-btn" (click)="oeffneFormular()">
+      ➕ Artikel hinzufügen
+    </button>
+  </div>
+
+  <!-- Formular -->
+  <div *ngIf="formular_aktiv" class="formular">
+    <div class="form-gruppe">
+      <label>Artikelname</label>
+      <input
+        class="form-input"
+        type="text"
+        [(ngModel)]="neuerArtikel.name"
+        placeholder="z. B. Milch"
+      />
+    </div>
+
+    <div class="form-gruppe">
+      <label>Menge</label>
+      <input
+        class="form-input"
+        type="text"
+        [(ngModel)]="neuerArtikel.menge"
+        placeholder="z. B. 1 L, 2 Stück …"
+      />
+    </div>
+
+    <div class="form-aktionen">
+      <button class="abbrechen-btn" (click)="schliesseFormular()">Abbrechen</button>
+      <button class="speichern-btn" (click)="speichereArtikel()">Speichern</button>
+    </div>
+  </div>
+
+  <!-- Artikelliste -->
+  <div class="rezept-liste">
+    <div
+      *ngFor="let artikel of gefilterteArtikel; let i = index"
+      class="rezept-karte"
+      [class.gekauft]="artikel.gekauft"
+    >
+      <div class="rezept-inhalt">
+        <h2 class="rezept-titel">{{ artikel.name }}</h2>
+        <div class="rezept-info">
+          <div class="info-item">
+            🧾 Menge:
+            <span>{{ artikel.menge }}</span>
+          </div>
+        </div>
+
+        <div class="form-aktionen">
+          <button class="speichern-btn" (click)="toggleGekauft(artikel)">
+            {{ artikel.gekauft ? 'Zurücksetzen' : 'Als gekauft markieren' }}
+          </button>
+          <button class="abbrechen-btn" (click)="entferneArtikel(i)">Löschen</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!gefilterteArtikel.length" class="keine-ergebnisse">
+      Keine Artikel gefunden.
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="container" *ngIf="liste">
+  <h1>🛒 {{ liste.titel }}</h1>
+
+  <div class="rezept-liste">
+    <div *ngFor="let artikel of liste.artikel" class="rezept-karte">
+      <div class="rezept-inhalt">
+        <h2 class="rezept-titel" [class.gekauft]="artikel.gekauft">
+          {{ artikel.name }}
+        </h2>
+        <p>Menge: {{ artikel.menge }}</p>
+
+        <button class="speichern-btn" (click)="toggleGekauft(artikel)">
+          {{ artikel.gekauft ? 'Zurücksetzen' : 'Als gekauft markieren' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

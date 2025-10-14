@@ -1,13 +1,195 @@
 .btn-overview {
-  background-color: #0078d7;
+  flex: 1;
+  padding: 12px 24px;
   border: none;
-  color: white;
-  padding: 0.7rem 1.2rem;
-  border-radius: 8px;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.3s;
 }
 
 .btn-overview:hover {
-  background-color: #00569c;
+  background-color:  #229954;
 }
+/* Reset + Container-Layout übernehmen */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Header mit Suche + Button */
+.header-bereich {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.suchleiste {
+  flex: 1;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  background: white;
+}
+
+.suchleiste:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.hinzufuegen-btn {
+  padding: 15px 30px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+
+.hinzufuegen-btn:hover {
+  background: #229954;
+}
+
+/* Kartenlayout (Artikelboxen) */
+.rezept-liste {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+}
+
+.rezept-karte {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rezept-karte:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.rezept-karte.gekauft {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.rezept-titel {
+  color: #2c3e50;
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+.rezept-info {
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.95em;
+}
+
+/* Formular */
+.formular {
+  background: #fff;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 40px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.form-gruppe {
+  margin-bottom: 20px;
+}
+
+.form-gruppe label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.form-aktionen {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.abbrechen-btn,
+.speichern-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.abbrechen-btn {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.abbrechen-btn:hover {
+  background: #bdc3c7;
+}
+
+.speichern-btn {
+  background: #27ae60;
+  color: white;
+}
+
+.speichern-btn:hover {
+  background: #229954;
+}
+
+.keine-ergebnisse {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  color: #666;
+  font-size: 1.1em;
+}
+

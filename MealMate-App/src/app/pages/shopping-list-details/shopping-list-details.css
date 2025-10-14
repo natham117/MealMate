@@ -1,0 +1,135 @@
+/* ========== RESET & LAYOUT ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* ========== LISTEN-ÜBERSICHT ========== */
+.rezept-liste {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+}
+
+.rezept-karte {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.rezept-karte:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.rezept-inhalt {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rezept-titel {
+  color: #2c3e50;
+  font-size: 1.6em;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.rezept-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: #555;
+  font-size: 0.95em;
+  margin-bottom: 10px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Fortschrittsanzeige */
+.fortschritt {
+  background: #ecf0f1;
+  border-radius: 8px;
+  height: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #27ae60, #2ecc71);
+  height: 100%;
+  border-radius: 8px;
+  width: 0;
+  transition: width 0.4s ease-in-out;
+}
+
+/* ========== NO RESULTS ========== */
+.keine-ergebnisse {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  color: #777;
+  font-size: 1.1em;
+}
+
+/* ========== HOVER FEEDBACK ========== */
+.rezept-karte:hover .rezept-titel {
+  color: #27ae60;
+  transition: color 0.2s;
+}
+
+/* ========== BUTTONS (OPTIONAL) ========== */
+.btn-back {
+  display: inline-block;
+  margin-bottom: 25px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  text-decoration: none;
+}
+
+.btn-back:hover {
+  background: #2980b9;
+}
+
+/* ========== MOBILE ========== */
+@media (max-width: 600px) {
+  .rezept-liste {
+    grid-template-columns: 1fr;
+  }
+
+  .rezept-karte {
+    padding: 20px;
+  }
+}
