@@ -1,7 +1,7 @@
 <div class="auth-card">
     <h1>Registrieren</h1>
 
-    <form>
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
         <!-- Voller Name -->
         <label for="fullName">Voller Name</label>
         <input
@@ -10,6 +10,7 @@
             type="text"
             placeholder="z. B. Max Mustermann"
             autocomplete="name"
+            formControlName="fullName"
         />
 
         <!-- E-Mail -->
@@ -20,6 +21,7 @@
             type="email"
             placeholder="z. B. max@mustermann.de"
             autocomplete="email"
+            formControlName="email"
         />
 
         <!-- Benutzername -->
@@ -30,26 +32,7 @@
             type="text"
             placeholder="z. B. mustermannmax123"
             autocomplete="username"
-        />
-
-        <!-- Passwort -->
-        <label for="password">Passwort</label>
-        <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="********"
-            autocomplete="new-password"
-        />
-
-        <!-- Passwort wiederholen -->
-        <label for="email">Passwort wiederholen</label>
-        <input
-            id="passwordConfirm"
-            name="passwordConfirm"
-            type="password"
-            placeholder="Passwort erneut eingeben"
-            autocomplete="new-password"
+            formControlName="username"
         />
 
         <!-- Geburtsdatum -->
@@ -59,18 +42,66 @@
             name="birthdate"
             type="date"
             autocomplete="bday"
+            formControlName="birthdate"
         />
 
         <!-- Geschlecht -->
         <label for="gender">Geschlecht</label>
-        <select id="gender" name="gender" autocomplete="sex">
+        <select id="gender" name="gender" autocomplete="sex" formControlName="gender">
             <option value="" selected>Bitte auswählen</option>
             <option value="female">Weiblich</option>
             <option value="male">Männlich</option>
             <option value="diverse">Divers</option>
             <option value="none">Keine Angabe</option>
         </select>
+
+
+        <!-- Passwortbereich -->
+        <div formGroupName="passwordGroup">
+        <!-- Passwort -->
+            <label for="password">Passwort</label>
+            <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="********"
+                autocomplete="new-password"
+                formControlName="password"
+            />
+
+            <!-- Fehlermeldungen für Passwort -->
+            <div class="error" *ngIf="form.get('passwordGroup.password')?.touched && form.get('passwordGroup.password')?.errors">
+                <!-- <div *ngIf="form.get('passwordGroup.password')?.errors?.tooShort">Mindestens 8 Zeichen erforderlich.</div>
+                <div *ngIf="form.get('passwordGroup.password')?.errors?.noDigit">Mindestens eine Zahl erforderlich.</div>
+                <div *ngIf="form.get('passwordGroup.password')?.errors?.noUpper">Mindestens ein Großbuchstabe erforderlich.</div>
+                <div *ngIf="form.get('passwordGroup.password')?.errors?.hasSpaceOrControl">Keine Leer- oder Steuerzeichen erlaubt.</div>
+                <div *ngIf="form.get('passwordGroup.password')?.errors?.required">Passwort ist erforderlich.</div> -->
+                <div *ngIf="form.get('passwordGroup.password')?.errors?.['tooShort']">Mindestens 8 Zeichen erforderlich.</div>
+                <div *ngIf="form.get('passwordGroup.password')?.errors?.['noDigit']">Mindestens eine Zahl erforderlich.</div>
+                <div *ngIf="form.get('passwordGroup.password')?.errors?.['noUpper']">Mindestens ein Großbuchstabe erforderlich.</div>
+                <div *ngIf="form.get('passwordGroup.password')?.errors?.['hasSpaceOrControl']">Keine Leer- oder Steuerzeichen erlaubt.</div>
+                <div *ngIf="form.get('passwordGroup.password')?.errors?.['required']">Passwort ist erforderlich.</div>
+            </div>
+
+            <!-- Passwort wiederholen -->
+            <label for="email">Passwort wiederholen</label>
+            <input
+                id="passwordConfirm"
+                name="passwordConfirm"
+                type="password"
+                placeholder="Passwort erneut eingeben"
+                autocomplete="new-password"
+                formControlName="passwordConfirm"
+            />
+
+            <!-- Fehlermeldung für Nicht-Übereinstimmung -->
+            <!-- <div class="error" *ngIf="form.get('passwordGroup')?.touched && form.get('passwordGroup')?.errors?.passwordsNotMatch"> -->
+            <div class="error" *ngIf="form.get('passwordGroup')?.touched && form.get('passwordGroup')?.errors?.['passwordsNotMatch']">
+                Passwörter stimmen nicht überein.
+            </div>
+        </div>
         
+        <!-- Submit -->
         <button type="submit">Konto erstellen</button>
 
         <p class="hint">
