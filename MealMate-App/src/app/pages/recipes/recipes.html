@@ -1,10 +1,10 @@
 <div class="container">
   <h1>Meine Rezepte</h1>
   
-  <input type="text" class="suchleiste" placeholder="Rezept suchen...">
+  <input type="text" class="suchleiste" placeholder="Rezept suchen..." [(ngModel)]="suchbegriff">
   
   <div class="rezept-liste">
-    <div class="rezept-karte" *ngFor="let rezept of rezepte" (click)="zeigeDetails(rezept)">
+    <div class="rezept-karte" *ngFor="let rezept of gefilterte_rezepte" (click)="zeigeDetails(rezept)">
       <img *ngIf="rezept.bild" class="rezept-bild" [src]="rezept.bild" [alt]="rezept.titel">
       <div *ngIf="!rezept.bild" class="rezept-bild"></div>
       
@@ -30,6 +30,10 @@
           </ul>
         </div>
       </div>
+    </div>
+
+    <div *ngIf="gefilterte_rezepte.length === 0" class="keine-ergebnisse">
+      <p>Keine Rezepte gefunden für "{{ suchbegriff }}"</p>
     </div>
   </div>
 

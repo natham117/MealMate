@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Rezept {
   id: number;
@@ -13,11 +14,12 @@ interface Rezept {
 
 @Component({
   selector: 'app-recipes',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './recipes.html',
   styleUrl: './recipes.css'
 })
 export class Recipes {
+  suchbegriff = '';
   rezepte: Rezept[] = [
     {
       id: 1,
@@ -59,6 +61,17 @@ export class Recipes {
 
   ausgewaehltes_rezept: Rezept | null = null;
   modal_aktiv = false;
+
+  get gefilterte_rezepte(): Rezept[] {
+    if (!this.suchbegriff.trim()) {
+      return this.rezepte;
+    }
+    
+    const suche = this.suchbegriff.toLowerCase();
+    return this.rezepte.filter(rezept => 
+      rezept.titel.toLowerCase().includes(suche)
+    );
+  }
 
   zeigeDetails(rezept: Rezept): void {
     this.ausgewaehltes_rezept = rezept;

@@ -37,6 +37,16 @@ h1 {
   gap: 25px;
 }
 
+.keine-ergebnisse {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  color: #666;
+  font-size: 1.1em;
+}
+
 .rezept-karte {
   background: white;
   border-radius: 8px;
