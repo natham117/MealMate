@@ -20,6 +20,9 @@ interface Rezept {
 })
 export class Recipes {
   suchbegriff = '';
+  
+  neues_rezept: Rezept = this.leeres_rezept();
+  formular_aktiv = false;
   rezepte: Rezept[] = [
     {
       id: 1,
@@ -81,5 +84,55 @@ export class Recipes {
   schliesseModal(): void {
     this.modal_aktiv = false;
     this.ausgewaehltes_rezept = null;
+  }
+
+  oeffneFormular(): void {
+    this.neues_rezept = this.leeres_rezept();
+    this.formular_aktiv = true;
+  }
+
+  schliesseFormular(): void {
+    this.formular_aktiv = false;
+    this.neues_rezept = this.leeres_rezept();
+  }
+
+  speichereRezept(): void {
+    if (!this.neues_rezept.titel.trim()) {
+      alert('Bitte gib einen Rezeptnamen ein!');
+      return;
+    }
+
+    const neues_rezept: Rezept = {
+      id: this.rezepte.length > 0 ? Math.max(...this.rezepte.map(r => r.id)) + 1 : 1,
+      titel: this.neues_rezept.titel.trim(),
+      bild: this.neues_rezept.bild || null,
+      zeit: this.neues_rezept.zeit.trim() || 'unbekannt',
+      portionen: this.neues_rezept.portionen.trim() || 'unbekannt',
+      beschreibung: this.neues_rezept.beschreibung.trim(),
+      zutaten: this.neues_rezept.zutaten.filter(z => z.trim())
+    };
+
+    this.rezepte.unshift(neues_rezept);
+    this.schliesseFormular();
+  }
+
+  fuegeZutatHinzu(): void {
+    this.neues_rezept.zutaten.push('');
+  }
+
+  entferneZutat(index: number): void {
+    this.neues_rezept.zutaten.splice(index, 1);
+  }
+
+  private leeres_rezept(): Rezept {
+    return {
+      id: 0,
+      titel: '',
+      bild: null,
+      zeit: '',
+      portionen: '',
+      beschreibung: '',
+      zutaten: ['']
+    };
   }
 }

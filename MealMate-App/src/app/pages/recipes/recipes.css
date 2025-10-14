@@ -16,10 +16,15 @@ h1 {
   text-align: center;
 }
 
-.suchleiste {
-  width: 100%;
-  padding: 15px;
+.header-bereich {
+  display: flex;
+  gap: 15px;
   margin-bottom: 30px;
+}
+
+.suchleiste {
+  flex: 1;
+  padding: 15px;
   border: 2px solid #ddd;
   border-radius: 8px;
   font-size: 1em;
@@ -29,6 +34,23 @@ h1 {
 .suchleiste:focus {
   outline: none;
   border-color: #3498db;
+}
+
+.hinzufuegen-btn {
+  padding: 15px 30px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+
+.hinzufuegen-btn:hover {
+  background: #229954;
 }
 
 .rezept-liste {
@@ -236,4 +258,123 @@ h1 {
   color: #27ae60;
   font-weight: bold;
   margin-right: 10px;
+}
+
+/* Formular-Styles */
+.form-gruppe {
+  margin-bottom: 20px;
+}
+
+.form-gruppe label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+.zutaten-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.zutat-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.zutat-input input {
+  flex: 1;
+}
+
+.entfernen-btn {
+  width: 35px;
+  height: 35px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: background 0.3s;
+}
+
+.entfernen-btn:hover {
+  background: #c0392b;
+}
+
+.zutat-hinzufuegen-btn {
+  padding: 10px 20px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  border: 2px solid #bdc3c7;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: all 0.3s;
+}
+
+.zutat-hinzufuegen-btn:hover {
+  background: #bdc3c7;
+}
+
+.form-aktionen {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+.abbrechen-btn,
+.speichern-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.abbrechen-btn {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.abbrechen-btn:hover {
+  background: #bdc3c7;
+}
+
+.speichern-btn {
+  background: #27ae60;
+  color: white;
+}
+
+.speichern-btn:hover {
+  background: #229954;
 }

@@ -1,7 +1,10 @@
 <div class="container">
   <h1>Meine Rezepte</h1>
   
-  <input type="text" class="suchleiste" placeholder="Rezept suchen..." [(ngModel)]="suchbegriff">
+  <div class="header-bereich">
+    <input type="text" class="suchleiste" placeholder="Rezept suchen..." [(ngModel)]="suchbegriff">
+    <button class="hinzufuegen-btn" (click)="oeffneFormular()">+ Neues Rezept</button>
+  </div>
   
   <div class="rezept-liste">
     <div class="rezept-karte" *ngFor="let rezept of gefilterte_rezepte" (click)="zeigeDetails(rezept)">
@@ -64,6 +67,60 @@
             <li *ngFor="let zutat of ausgewaehltes_rezept.zutaten">{{ zutat }}</li>
           </ul>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal für neues Rezept -->
+  <div class="modal" [class.aktiv]="formular_aktiv" (click)="schliesseFormular()">
+    <div class="modal-inhalt" (click)="$event.stopPropagation()">
+      <button class="schliessen-btn" (click)="schliesseFormular()">×</button>
+      
+      <div class="detail-inhalt">
+        <h2 class="detail-titel">Neues Rezept</h2>
+        
+        <form (ngSubmit)="speichereRezept()">
+          <div class="form-gruppe">
+            <label>Rezeptname *</label>
+            <input type="text" [(ngModel)]="neues_rezept.titel" name="titel" class="form-input" required>
+          </div>
+
+          <div class="form-gruppe">
+            <label>Zubereitungszeit</label>
+            <input type="text" [(ngModel)]="neues_rezept.zeit" name="zeit" class="form-input" placeholder="z.B. 30 Min">
+          </div>
+
+          <div class="form-gruppe">
+            <label>Portionen</label>
+            <input type="text" [(ngModel)]="neues_rezept.portionen" name="portionen" class="form-input" placeholder="z.B. 4 Portionen">
+          </div>
+
+          <div class="form-gruppe">
+            <label>Beschreibung</label>
+            <textarea [(ngModel)]="neues_rezept.beschreibung" name="beschreibung" class="form-textarea" rows="3"></textarea>
+          </div>
+
+          <div class="form-gruppe">
+            <label>Bild-URL (optional)</label>
+            <input type="text" [(ngModel)]="neues_rezept.bild" name="bild" class="form-input" placeholder="https://...">
+          </div>
+
+          <div class="form-gruppe">
+            <label>Zutaten</label>
+            <div class="zutaten-liste">
+              <div class="zutat-input" *ngFor="let zutat of neues_rezept.zutaten; let i = index">
+                <input type="text" [(ngModel)]="neues_rezept.zutaten[i]" [name]="'zutat' + i" class="form-input" placeholder="z.B. 200g Mehl">
+                <button type="button" class="entfernen-btn" (click)="entferneZutat(i)" *ngIf="neues_rezept.zutaten.length > 1">×</button>
+              </div>
+            </div>
+            <button type="button" class="zutat-hinzufuegen-btn" (click)="fuegeZutatHinzu()">+ Zutat hinzufügen</button>
+          </div>
+
+          <div class="form-aktionen">
+            <button type="button" class="abbrechen-btn" (click)="schliesseFormular()">Abbrechen</button>
+            <button type="submit" class="speichern-btn">Speichern</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
