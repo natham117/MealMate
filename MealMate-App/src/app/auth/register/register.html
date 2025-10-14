@@ -1,1 +1,81 @@
-<p>register works!</p>
+<div class="auth-card">
+    <h1>Registrieren</h1>
+
+    <form>
+        <!-- Voller Name -->
+        <label for="fullName">Voller Name</label>
+        <input
+            id="fullName"
+            name="fullName"
+            type="text"
+            placeholder="z. B. Max Mustermann"
+            autocomplete="name"
+        />
+
+        <!-- E-Mail -->
+        <label for="email">E-Mail</label>
+        <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="z. B. max@mustermann.de"
+            autocomplete="email"
+        />
+
+        <!-- Benutzername -->
+        <label for="username">Benutzername</label>
+        <input
+            id="username"
+            name="username"
+            type="text"
+            placeholder="z. B. mustermannmax123"
+            autocomplete="username"
+        />
+
+        <!-- Passwort -->
+        <label for="password">Passwort</label>
+        <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="********"
+            autocomplete="new-password"
+        />
+
+        <!-- Passwort wiederholen -->
+        <label for="email">Passwort wiederholen</label>
+        <input
+            id="passwordConfirm"
+            name="passwordConfirm"
+            type="password"
+            placeholder="Passwort erneut eingeben"
+            autocomplete="new-password"
+        />
+
+        <!-- Geburtsdatum -->
+        <label for="username">Geburtsdatum</label>
+        <input
+            id="birthdate"
+            name="birthdate"
+            type="date"
+            autocomplete="bday"
+        />
+
+        <!-- Geschlecht -->
+        <label for="gender">Geschlecht</label>
+        <select id="gender" name="gender" autocomplete="sex">
+            <option value="" selected>Bitte auswählen</option>
+            <option value="female">Weiblich</option>
+            <option value="male">Männlich</option>
+            <option value="diverse">Divers</option>
+            <option value="none">Keine Angabe</option>
+        </select>
+        
+        <button type="submit">Konto erstellen</button>
+
+        <p class="hint">
+            Schon registriert?
+            <a routerLink="/login">Jetzt anmelden.</a>
+        </p>
+    </form>
+</div>
