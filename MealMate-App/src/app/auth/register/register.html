@@ -23,6 +23,9 @@
             autocomplete="email"
             formControlName="email"
         />
+        <div class="error" *ngIf="form.get('email')?.touched && form.get('email')?.errors">
+            Bitte E-Mail-Richtlinien beachten.
+        </div>
 
         <!-- Benutzername -->
         <label for="username">Benutzername</label>
@@ -106,18 +109,37 @@
 <div class="mm-modal" *ngIf="modalOpen()">
     <h2>{{ modalTitle() }}</h2>
 
-    <ng-container *ngIf="modalBody() === null; else singleMsg">
-        <ul>
-            <li>Mindestens 8 Zeichen</li>
-            <li>Mindestens eine Zahl</li>
-            <li>Mindestens ein Groß-/Kleinbuchstabe</li>
-            <li>Keine Leer- oder Unicode-Steuerzeichen</li>
-            <li>Passwort und Wiederholung müssen übereinstimmen</li>
-        </ul>
+    <ng-container *ngIf="modalBody() === null">
+        <ng-container *ngIf="showEmailRules()">
+            <h3>E-Mail-Richtlinien</h3>
+            <ul>
+                <li>Format: <code>local-part@domain</code></li>
+                <li>Local-part: Buchstaben/Ziffern und . ! # $ % &amp; ' * + / = ? ^ _ | &lbrace; ~ &rbrace; ` -</li>
+                <li>Local-part: Nicht mit . beginnen/enden, keine ".."</li>
+                <li>Local-part: Max. 64 Zeichen</li>
+                <li>Domain: Labels durch Punkt, jedes Label beginnt/endet mit Buchstabe/Zahl, "-" nur in der Mitte</li>
+                <li>Domain: Label maximal 64 Zeichen, gesamt maximal 254 Zeichen</li>
+                <li>TLD: mindestens 2 Buchstaben (z. B. <code>de</code>, <code>com</code>)</li>
+                <li>Keine Leer- oder Steuerzeichen</li>
+            </ul>
+        </ng-container>
+
+        <ng-container *ngIf="showPasswordRules()">
+            <h3>Passwort-Richtlinien</h3>
+                <ul>
+                <li>Mindestens 8 Zeichen</li>
+                <li>Mindestens eine Zahl</li>
+                <li>Mindestens ein Groß-/Kleinbuchstabe</li>
+                <li>Keine Leer- oder Unicode-Steuerzeichen</li>
+                <li>Passwort und Wiederholung müssen übereinstimmen</li>
+            </ul>
+        </ng-container>
     </ng-container>
-    <ng-template #singleMsg>
+
+
+    <ng-container *ngIf="modalBody() !== null">
         <p>{{ modalBody() }}</p>
-    </ng-template>
+    </ng-container>
 
     <div class="mm-modal-actions">
         <button type="button" (click)="closeModal()">OK</button>
