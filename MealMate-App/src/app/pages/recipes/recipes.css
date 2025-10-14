@@ -1,0 +1,380 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.header-bereich {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.suchleiste {
+  flex: 1;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  background: white;
+}
+
+.suchleiste:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.hinzufuegen-btn {
+  padding: 15px 30px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+
+.hinzufuegen-btn:hover {
+  background: #229954;
+}
+
+.rezept-liste {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+}
+
+.keine-ergebnisse {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  color: #666;
+  font-size: 1.1em;
+}
+
+.rezept-karte {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.rezept-karte:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.rezept-bild {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.rezept-inhalt {
+  padding: 20px;
+}
+
+.rezept-titel {
+  color: #2c3e50;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.rezept-info {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.rezept-beschreibung {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.rezept-zutaten {
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.rezept-zutaten h3 {
+  font-size: 1em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.rezept-zutaten ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.rezept-zutaten li {
+  padding: 4px 0;
+  color: #666;
+  font-size: 0.95em;
+}
+
+.rezept-zutaten li:before {
+  content: "• ";
+  color: #e74c3c;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+/* Modal für Detailansicht */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.modal.aktiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-inhalt {
+  background: white;
+  border-radius: 12px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.schliessen-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5em;
+  line-height: 1;
+  transition: background 0.3s;
+  z-index: 10;
+}
+
+.schliessen-btn:hover {
+  background: rgba(0,0,0,0.9);
+}
+
+.detail-bild {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.detail-inhalt {
+  padding: 30px;
+}
+
+.detail-titel {
+  color: #2c3e50;
+  font-size: 2em;
+  margin-bottom: 15px;
+}
+
+.detail-info {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.detail-beschreibung {
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 25px;
+  font-size: 1.05em;
+}
+
+.detail-zutaten {
+  border-top: 2px solid #eee;
+  padding-top: 20px;
+}
+
+.detail-zutaten h3 {
+  font-size: 1.3em;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.detail-zutaten ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.detail-zutaten li {
+  padding: 8px 0;
+  color: #555;
+  font-size: 1.05em;
+}
+
+.detail-zutaten li:before {
+  content: "✓ ";
+  color: #27ae60;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* Formular-Styles */
+.form-gruppe {
+  margin-bottom: 20px;
+}
+
+.form-gruppe label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+.zutaten-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.zutat-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.zutat-input input {
+  flex: 1;
+}
+
+.entfernen-btn {
+  width: 35px;
+  height: 35px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: background 0.3s;
+}
+
+.entfernen-btn:hover {
+  background: #c0392b;
+}
+
+.zutat-hinzufuegen-btn {
+  padding: 10px 20px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  border: 2px solid #bdc3c7;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: all 0.3s;
+}
+
+.zutat-hinzufuegen-btn:hover {
+  background: #bdc3c7;
+}
+
+.form-aktionen {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+.abbrechen-btn,
+.speichern-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.abbrechen-btn {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.abbrechen-btn:hover {
+  background: #bdc3c7;
+}
+
+.speichern-btn {
+  background: #27ae60;
+  color: white;
+}
+
+.speichern-btn:hover {
+  background: #229954;
+}
