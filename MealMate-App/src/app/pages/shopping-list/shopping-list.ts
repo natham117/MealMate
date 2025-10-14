@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shopping-list',
@@ -7,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './shopping-list.css'
 })
 export class ShoppingList {
+  constructor(private router: Router) {}
 
+  goToOverview() {
+    this.router.navigate(['/shopping-list-overview']);
+  }
 }

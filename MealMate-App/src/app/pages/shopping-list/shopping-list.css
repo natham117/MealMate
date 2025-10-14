@@ -1,0 +1,13 @@
+.btn-overview {
+  background-color: #0078d7;
+  border: none;
+  color: white;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-overview:hover {
+  background-color: #00569c;
+}
