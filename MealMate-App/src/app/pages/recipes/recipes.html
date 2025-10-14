@@ -1,2 +1,66 @@
-<h2>Rezepte 🍲</h2>
-<p>Hier kannst du deine Lieblingsrezepte ansehen und verwalten.</p>
+<div class="container">
+  <h1>Meine Rezepte</h1>
+  
+  <input type="text" class="suchleiste" placeholder="Rezept suchen...">
+  
+  <div class="rezept-liste">
+    <div class="rezept-karte" *ngFor="let rezept of rezepte" (click)="zeigeDetails(rezept)">
+      <img *ngIf="rezept.bild" class="rezept-bild" [src]="rezept.bild" [alt]="rezept.titel">
+      <div *ngIf="!rezept.bild" class="rezept-bild"></div>
+      
+      <div class="rezept-inhalt">
+        <h2 class="rezept-titel">{{ rezept.titel }}</h2>
+        <div class="rezept-info">
+          <div class="info-item">
+            <span>⏱️</span>
+            <span>{{ rezept.zeit }}</span>
+          </div>
+          <div class="info-item">
+            <span>👥</span>
+            <span>{{ rezept.portionen }}</span>
+          </div>
+        </div>
+        <p class="rezept-beschreibung">
+          {{ rezept.beschreibung }}
+        </p>
+        <div class="rezept-zutaten">
+          <h3>Zutaten:</h3>
+          <ul>
+            <li *ngFor="let zutat of rezept.zutaten">{{ zutat }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal für Detailansicht -->
+  <div class="modal" [class.aktiv]="modal_aktiv" (click)="schliesseModal()">
+    <div class="modal-inhalt" (click)="$event.stopPropagation()" *ngIf="ausgewaehltes_rezept">
+      <button class="schliessen-btn" (click)="schliesseModal()">×</button>
+      
+      <img *ngIf="ausgewaehltes_rezept.bild" class="detail-bild" [src]="ausgewaehltes_rezept.bild" [alt]="ausgewaehltes_rezept.titel">
+      <div *ngIf="!ausgewaehltes_rezept.bild" class="detail-bild"></div>
+      
+      <div class="detail-inhalt">
+        <h2 class="detail-titel">{{ ausgewaehltes_rezept.titel }}</h2>
+        <div class="detail-info">
+          <div class="info-item">
+            <span>⏱️</span>
+            <span>{{ ausgewaehltes_rezept.zeit }}</span>
+          </div>
+          <div class="info-item">
+            <span>👥</span>
+            <span>{{ ausgewaehltes_rezept.portionen }}</span>
+          </div>
+        </div>
+        <p class="detail-beschreibung">{{ ausgewaehltes_rezept.beschreibung }}</p>
+        <div class="detail-zutaten">
+          <h3>Zutaten</h3>
+          <ul>
+            <li *ngFor="let zutat of ausgewaehltes_rezept.zutaten">{{ zutat }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
