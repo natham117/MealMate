@@ -1,0 +1,51 @@
+.auth-card {
+    max-width: 520px;
+    margin: 6vh auto;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    background: #fff;
+}
+
+form { display: grid; gap: 0.9rem;}
+
+label { font-weight: 600; }
+input, select {
+    padding: .75rem .9rem;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    margin-top: .5rem;
+    padding: .9rem 1rem;
+    border: 0;
+    border-radius: 12px;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+}
+
+.hint { font-size: .95rem;}
+
+.error { color: #b00020; font-size: .9rem;}
+
+.mm-modal-backdrop {
+    position: fixed; left: 50%; top: 15%;
+    transform: translateX(-50%);
+    width: min(520px, 92vw);
+    background: #fff; border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.2);
+    padding: 1.25rem 1.25rem 1rem;
+    z-index: 1001;
+}
+.mm-modal h2 {margin: 0 0 .75rem;}
+.mm-modal ul {margin: .25rem 0 .75rem 1.1rem;}
+.mm-modal-actions {display: flex; justify-content: flex-end; gap:.5rem;}
+.mm-modal.actions button { 
+    padding: .6rem .9rem; border: 0; border-radius: 10px;
+    background: #111; color: #fff; cursor: pointer;
+}
