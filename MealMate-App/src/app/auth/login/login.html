@@ -1,23 +1,25 @@
 <div class="auth-card">
     <h1>Login</h1>
 
-    <form>
+    <form (ngSubmit)="onSubmit()">
         <label for="identifier">E-Mail oder Benutzername</label>
         <input
-            id="identifier"
-            name="identifier"
+            [(ngModel)]="email"
+            name="email"
             type="text"
             placeholder="z. B. max@mustermann.de oder mustermannmax123"
             autocomplete="username"
+            required
         />
 
         <label for="password">Passwort</label>
         <input
-            id="password"
+            [(ngModel)]="pwHash"
             name="password"
             type="password"
             placeholder="********"
             autocomplete="current-password"
+            required
         />
 
         <button type="submit">Anmelden</button>

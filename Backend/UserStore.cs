@@ -2,16 +2,15 @@ using Oracle.ManagedDataAccess.Client;
 
 internal class UserStore
 {
-    public static User TraceUser(string firstName, string lastName)
+    public static User TraceUser(string email)
     {
         using var conn = DbConnectionHelper.Connect();
         using var cmd = conn.CreateCommand();
 
         cmd.BindByName = true;
-        cmd.CommandText = "SELECT * FROM users WHERE first_name = :firstName AND last_name = :lastName";
-        
-        cmd.Parameters.Add(":firstName", OracleDbType.Varchar2, 50).Value = firstName;
-        cmd.Parameters.Add(":lastName", OracleDbType.Varchar2, 50).Value = lastName;
+        cmd.CommandText = "SELECT * FROM users WHERE email = :email";
+
+        cmd.Parameters.Add(":email", OracleDbType.Varchar2, 50).Value = email;
 
         var reader = cmd.ExecuteReader();
 
@@ -33,4 +32,6 @@ internal class UserStore
 
         return null;
     }
+    
+
 }
