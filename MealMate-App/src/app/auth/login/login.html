@@ -1,1 +1,30 @@
-<p>login works!</p>
+<div class="auth-card">
+    <h1>Login</h1>
+
+    <form>
+        <label for="identifier">E-Mail oder Benutzername</label>
+        <input
+            id="identifier"
+            name="identifier"
+            type="text"
+            placeholder="z. B. max@mustermann.de oder mustermannmax123"
+            autocomplete="username"
+        />
+
+        <label for="password">Passwort</label>
+        <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="********"
+            autocomplete="current-password"
+        />
+
+        <button type="submit">Anmelden</button>
+
+        <p class="hint">
+            Noch kein Konto?
+            <a routerLink="/register">Jetzt registrieren.</a>
+        </p>
+    </form>
+</div>
