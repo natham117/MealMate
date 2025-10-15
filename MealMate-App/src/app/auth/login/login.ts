@@ -17,11 +17,12 @@ export class Login {
   constructor(private http: HttpClient) { }
 
   onSubmit() {
-    this.http.post('http://localhost:5000/api/login', {
+    this.http.post<{ success: boolean}>('http://localhost:5000/api/login', {
       email: this.email,
       pwHash: this.pwHash
     }).subscribe(result => {
-      if (result == true) {
+      console.log('API result:', result);
+      if (result.success) {
         window.alert('Login erfolgreich!');
       }
       else {

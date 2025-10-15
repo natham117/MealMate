@@ -9,8 +9,10 @@ internal class LogingManager
             Console.WriteLine("Nutzer erfolgreich angemeldet!");
             return queriedUser.PwHash == pwHash;
         }
-        
-        Console.WriteLine("Nutzer konnte nicht gefunden werden!");
-        return false;
+        else
+        {
+            Console.WriteLine("Nutzer konnte nicht gefunden werden!");
+            return false;  
+        }
     }
 }

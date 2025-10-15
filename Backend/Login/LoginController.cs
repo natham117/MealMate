@@ -7,8 +7,9 @@ public class LoginController : ControllerBase
     [HttpPost]
     public IActionResult Login([FromBody] LoginRequest request)
     {
-        LogingManager.Login(request.Email, request.PwHash);
-        return Ok();
+        bool result = LogingManager.Login(request.Email, request.PwHash);
+        Console.WriteLine($"Login-Email: {request.Email}, Login-Ergebnis: {result}");
+        return Ok(new { success = result });
     }
 }
 
