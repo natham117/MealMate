@@ -4,6 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/[controller]")]
 public class RecipesController : ControllerBase
 {
+
+    [HttpGet]
+    public ActionResult<List<RecipeDto>> GetAllRecipes([FromQuery] int? userId)
+    {
+        try
+        {
+            var recipes = RecipeStore.GetAllRecipes(userId);
+            var recipeDtos = recipes.Select(r => MapToDto(r)).ToList();
+            return Ok(recipeDtos);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"FEHLER: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            return StatusCode(500, $"Fehler beim Laden der Rezepte: {ex.Message}");
+        }
+    }
+/*
     [HttpGet]
     public ActionResult<List<RecipeDto>> GetAllRecipes([FromQuery] int? userId)
     {
@@ -17,7 +35,7 @@ public class RecipesController : ControllerBase
         {
             return StatusCode(500, $"Fehler beim Laden der Rezepte: {ex.Message}");
         }
-    }
+    }*/
 
     [HttpGet("{id}")]
     public ActionResult<RecipeDto> GetRecipe(int id)

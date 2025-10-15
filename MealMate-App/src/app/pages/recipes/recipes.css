@@ -151,6 +151,16 @@ h1 {
   margin-bottom: 15px;
 }
 
+.rezept-eigenschaften {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.eigenschaft-badge-klein {
+  font-size: 1.2em;
+}
+
 .rezept-zutaten {
   border-top: 1px solid #eee;
   padding-top: 15px;
@@ -291,6 +301,42 @@ h1 {
   margin-right: 10px;
 }
 
+.detail-section {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+.detail-section h3 {
+  font-size: 1.3em;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.detail-anleitung {
+  line-height: 1.8;
+  color: #555;
+  white-space: pre-line;
+}
+
+.detail-eigenschaften {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+.eigenschaft-badge {
+  display: inline-block;
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
 /* Formular-Styles */
 .form-gruppe {
   margin-bottom: 20px;
@@ -322,6 +368,11 @@ h1 {
 
 .form-textarea {
   resize: vertical;
+}
+
+.eigenschaften-checkboxen {
+  display: flex;
+  gap: 20px;
 }
 
 .zutaten-liste {

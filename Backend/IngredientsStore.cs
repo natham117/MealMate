@@ -1,4 +1,5 @@
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 
 internal class IngredientStore
 {
@@ -10,7 +11,7 @@ internal class IngredientStore
         using var cmd = conn.CreateCommand();
 
         cmd.BindByName = true;
-        cmd.CommandText = "SELECT * FROM ingredients WHERE recipe_id = :recipeId";
+        cmd.CommandText = "SELECT * FROM RECIPE_ITEMS WHERE recipe_id = :recipeId";  // ← RECIPE_ITEMS statt INGREDIENTS
         cmd.Parameters.Add(":recipeId", OracleDbType.Int32).Value = recipeId;
 
         var reader = cmd.ExecuteReader();
@@ -19,7 +20,7 @@ internal class IngredientStore
         {
             ingredients.Add(new Ingredient
             {
-                IngredientId = reader.GetInt32(reader.GetOrdinal("ingredient_id")),
+                IngredientId = reader.GetInt32(reader.GetOrdinal("recipe_item_id")),  // ← recipe_item_id statt ingredient_id
                 RecipeId = reader.GetInt32(reader.GetOrdinal("recipe_id")),
                 ItemId = reader.GetInt32(reader.GetOrdinal("item_id")),
                 Amount = reader.GetInt32(reader.GetOrdinal("amount")),
@@ -37,9 +38,9 @@ internal class IngredientStore
 
         cmd.BindByName = true;
         cmd.CommandText = @"
-            INSERT INTO ingredients (recipe_id, item_id, amount, unit)
+            INSERT INTO RECIPE_ITEMS (recipe_id, item_id, amount, unit)
             VALUES (:recipeId, :itemId, :amount, :unit)
-            RETURNING ingredient_id INTO :ingredientId";
+            RETURNING recipe_item_id INTO :ingredientId";  // ← recipe_item_id
 
         cmd.Parameters.Add(":recipeId", OracleDbType.Int32).Value = ingredient.RecipeId;
         cmd.Parameters.Add(":itemId", OracleDbType.Int32).Value = ingredient.ItemId;
@@ -63,7 +64,7 @@ internal class IngredientStore
         using var cmd = conn.CreateCommand();
 
         cmd.BindByName = true;
-        cmd.CommandText = "DELETE FROM ingredients WHERE recipe_id = :recipeId";
+        cmd.CommandText = "DELETE FROM RECIPE_ITEMS WHERE recipe_id = :recipeId";  // ← RECIPE_ITEMS
         cmd.Parameters.Add(":recipeId", OracleDbType.Int32).Value = recipeId;
 
         cmd.ExecuteNonQuery();
