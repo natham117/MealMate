@@ -53,6 +53,37 @@ h1 {
   background: #229954;
 }
 
+.filter-bereich {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  padding: 15px 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  color: #2c3e50;
+  user-select: none;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #27ae60;
+}
+
+.filter-checkbox:hover {
+  color: #27ae60;
+}
+
 .rezept-liste {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));

@@ -64,6 +64,8 @@ export class Recipes {
 
   ausgewaehltes_rezept: Rezept | null = null;
   modal_aktiv = false;
+filter_vegetarisch: any;
+filter_vegan: any;
 
   get gefilterte_rezepte(): Rezept[] {
     if (!this.suchbegriff.trim()) {

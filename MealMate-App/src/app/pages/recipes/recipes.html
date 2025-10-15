@@ -5,6 +5,17 @@
     <input type="text" class="suchleiste" placeholder="Rezept suchen..." [(ngModel)]="suchbegriff">
     <button class="hinzufuegen-btn" (click)="oeffneFormular()">+ Neues Rezept</button>
   </div>
+
+  <div class="filter-bereich">
+    <label class="filter-checkbox">
+      <input type="checkbox" [(ngModel)]="filter_vegetarisch">
+      <span>Vegetarisch</span>
+    </label>
+    <label class="filter-checkbox">
+      <input type="checkbox" [(ngModel)]="filter_vegan">
+      <span>Vegan</span>
+    </label>
+  </div>
   
   <div class="rezept-liste">
     <div class="rezept-karte" *ngFor="let rezept of gefilterte_rezepte" (click)="zeigeDetails(rezept)">
