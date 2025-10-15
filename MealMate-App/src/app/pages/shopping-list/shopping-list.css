@@ -221,3 +221,70 @@ h1 {
 .detail-item-liste li:last-child {
   border-bottom: none;
 }
+/* Aktionen */
+.aktionen {
+  float: right;
+  display: flex;
+  gap: 8px;
+}
+
+.bearbeiten-btn,
+.loeschen-btn,
+.speichern-mini,
+.hinzufuegen-mini {
+  background: #ecf0f1;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.bearbeiten-btn:hover {
+  background: #f1c40f;
+}
+
+.loeschen-btn:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+.speichern-mini:hover {
+  background: #27ae60;
+  color: white;
+}
+
+.produkt-hinzufuegen {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.small-input {
+  flex: 1;
+  padding: 8px;
+  font-size: 0.95em;
+}
+
+/* Snackbar */
+.snackbar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #27ae60;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-weight: 600;
+  opacity: 0;
+  transition: all 0.4s ease;
+  z-index: 2000;
+}
+
+.snackbar.aktiv {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

@@ -59,19 +59,39 @@
     </div>
   </div>
   <!-- Modal für Detailansicht -->
-<div class="modal" [class.aktiv]="detailAktiv" (click)="schliesseDetails()">
-  <div class="modal-inhalt" (click)="$event.stopPropagation()" *ngIf="ausgewaehlteListe">
-    <button class="schliessen-btn" (click)="schliesseDetails()">×</button>
+  <div class="modal" [class.aktiv]="detailAktiv" (click)="schliesseDetails()">
+    <div class="modal-inhalt" (click)="$event.stopPropagation()" *ngIf="ausgewaehlteListe">
+      <button class="schliessen-btn" (click)="schliesseDetails()">×</button>
 
-    <div class="detail-inhalt">
-      <h2 class="detail-titel">{{ ausgewaehlteListe.titel }}</h2>
-      <ul class="detail-item-liste">
-        <li *ngFor="let item of ausgewaehlteListe.items">
-          {{ item.name }} - {{ item.menge }}
-        </li>
-      </ul>
+      <div class="detail-inhalt">
+        <h2 class="detail-titel">{{ ausgewaehlteListe.titel }}</h2>
+
+        <ul class="detail-item-liste">
+          <li *ngFor="let item of ausgewaehlteListe.items; let i = index">
+            <ng-container *ngIf="!item.bearbeitung">
+              {{ item.name }} - {{ item.menge }}
+              <div class="aktionen">
+                <button class="bearbeiten-btn" (click)="bearbeiteProdukt(item)">✎</button>
+                <button class="loeschen-btn" (click)="loescheProdukt(i)">🗑️</button>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="item.bearbeitung">
+              <input [(ngModel)]="item.name" class="form-input small-input" />
+              <input [(ngModel)]="item.menge" class="form-input small-input" />
+              <button class="speichern-mini" (click)="speichereProdukt(item)">💾</button>
+            </ng-container>
+          </li>
+        </ul>
+
+        <div class="produkt-hinzufuegen">
+          <input [(ngModel)]="neuesProdukt" placeholder="Produktname" class="form-input small-input" />
+          <input [(ngModel)]="neueMenge" placeholder="Menge" class="form-input small-input" />
+          <button class="hinzufuegen-mini" (click)="fuegeProduktHinzu()">+</button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
+  <!-- Snackbar -->
+  <div class="snackbar" [class.aktiv]="snackbarAktiv">{{ snackbarText }}</div>
 </div>

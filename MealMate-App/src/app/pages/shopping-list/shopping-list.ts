@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 interface EinkaufslistenItem {
   name: string;
   menge: string;
+  bearbeitung?: boolean;
 }
 
 interface Einkaufsliste {
@@ -47,7 +48,16 @@ export class ShoppingList {
   gefilterteListen: Einkaufsliste[] = this.listen;
 
   formularAktiv: boolean = false;
+  detailAktiv: boolean = false;
   neueListe: Einkaufsliste = { id: 0, titel: '', items: [{ name: '', menge: '' }] };
+  ausgewaehlteListe: Einkaufsliste | null = null;
+
+  // Wichtig um Produkte einer Liste hinzufügen
+  neuesProdukt: string = '';
+  neueMenge: string = '';
+
+  snackbarText: string = '';
+  snackbarAktiv: boolean = false;
 
   // Filterfunktion
   filtereListen() {
@@ -87,8 +97,6 @@ export class ShoppingList {
     this.schliesseFormular();
   }
   // Für Detailansicht
-  detailAktiv: boolean = false;
-  ausgewaehlteListe: Einkaufsliste | null = null;
 
   zeigeDetails(liste: Einkaufsliste) {
     this.ausgewaehlteListe = liste;
@@ -99,4 +107,38 @@ export class ShoppingList {
     this.detailAktiv = false;
     this.ausgewaehlteListe = null;
   }
+  // Produkt hinzufügen
+  fuegeProduktHinzu() {
+    if (!this.neuesProdukt.trim()) return;
+    this.ausgewaehlteListe?.items.push({
+      name: this.neuesProdukt,
+      menge: this.neueMenge || ''
+    });
+    this.neuesProdukt = '';
+    this.neueMenge = '';
+    this.zeigeSnackbar('Produkt hinzugefügt!');
+  }
+
+  // Produkt löschen
+  loescheProdukt(index: number) {
+    this.ausgewaehlteListe?.items.splice(index, 1);
+  }
+
+  // Produkt bearbeiten
+  bearbeiteProdukt(item: EinkaufslistenItem) {
+    item.bearbeitung = true;
+  }
+
+  speichereProdukt(item: EinkaufslistenItem) {
+    item.bearbeitung = false;
+    this.zeigeSnackbar('Änderungen gespeichert!');
+  }
+
+  // Snackbar Feedback
+  zeigeSnackbar(text: string) {
+    this.snackbarText = text;
+    this.snackbarAktiv = true;
+    setTimeout(() => (this.snackbarAktiv = false), 2000);
+  }
+
 }
