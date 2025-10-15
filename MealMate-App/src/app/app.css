@@ -1,9 +1,24 @@
 .navbar {
   display: flex;
-  gap: 1rem;
+  justify-content: space-between; /* Teilt Navbar in linke/rechte Seite */
+  align-items: center;
   background-color: #f5f5f5;
   padding: 10px 20px;
   border-radius: 10px;
+  gap: 1rem;
+}
+
+/* Linke Seite */
+.nav-left {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Rechte Seite */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .navbar a {
@@ -22,4 +37,28 @@
   color: white;
   padding: 6px 12px;
   border-radius: 6px;
+}
+
+/* Buttons für Login & Register (optisch etwas hervorgehoben) */
+.login-link {
+  border: 2px solid #0078d7;
+  border-radius: 6px;
+  padding: 5px 12px;
+}
+
+.login-link:hover {
+  background-color: #0078d7;
+  color: white;
+}
+
+.register-link {
+  background-color: #0078d7;
+  color: white;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-weight: 600;
+}
+
+.register-link:hover {
+  background-color: #005fa3;
 }
