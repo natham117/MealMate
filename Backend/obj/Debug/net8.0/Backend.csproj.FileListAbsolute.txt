@@ -15,14 +15,11 @@ C:\Users\a913171\Documents\PTI\MealMate\Backend\obj\Debug\net8.0\Backend.genrunt
 C:\Users\a913171\Documents\PTI\MealMate\Backend\obj\Debug\net8.0\ref\Backend.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\Oracle.ManagedDataAccess.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
-C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\System.Diagnostics.EventLog.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\System.Diagnostics.PerformanceCounter.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\System.DirectoryServices.Protocols.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\System.Formats.Asn1.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.Messages.dll
-C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Diagnostics.PerformanceCounter.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\runtimes\linux\lib\net8.0\System.DirectoryServices.Protocols.dll
 C:\Users\a913171\Documents\PTI\MealMate\Backend\bin\Debug\net8.0\runtimes\osx\lib\net8.0\System.DirectoryServices.Protocols.dll
