@@ -1,37 +1,15 @@
-.btn-overview {
-  flex: 1;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 6px;
-  font-size: 1em;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.btn-overview:hover {
-  background-color:  #229954;
-}
-/* Reset + Container-Layout übernehmen */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
 }
 
 h1 {
-  color: #333;
-  margin-bottom: 30px;
   text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
 }
 
-/* Header mit Suche + Button */
 .header-bereich {
   display: flex;
   gap: 15px;
@@ -40,129 +18,168 @@ h1 {
 
 .suchleiste {
   flex: 1;
-  padding: 15px;
+  padding: 12px;
   border: 2px solid #ddd;
   border-radius: 8px;
   font-size: 1em;
-  background: white;
-}
-
-.suchleiste:focus {
-  outline: none;
-  border-color: #3498db;
 }
 
 .hinzufuegen-btn {
-  padding: 15px 30px;
+  padding: 12px 20px;
   background: #27ae60;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1em;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s;
-  white-space: nowrap;
 }
 
 .hinzufuegen-btn:hover {
   background: #229954;
 }
 
-/* Kartenlayout (Artikelboxen) */
-.rezept-liste {
+.liste-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
 
-.rezept-karte {
+.liste-karte {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.rezept-karte:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.rezept-karte.gekauft {
-  opacity: 0.6;
-  text-decoration: line-through;
-}
-
-.rezept-titel {
+.liste-titel {
+  font-size: 1.3em;
   color: #2c3e50;
-  font-size: 1.4em;
   margin-bottom: 10px;
 }
 
-.rezept-info {
+.item-liste {
+  list-style: none;
+  padding: 0;
+}
+
+.item-liste li {
+  padding: 5px 0;
   color: #555;
-  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
 }
 
-.info-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.95em;
+.item-liste li:last-child {
+  border-bottom: none;
 }
 
-/* Formular */
-.formular {
-  background: #fff;
+.keine-ergebnisse {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  background: #fafafa;
   border-radius: 8px;
-  padding: 25px;
-  margin-bottom: 40px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  color: #666;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.aktiv {
+  display: flex;
+}
+
+.modal-inhalt {
+  background: white;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 600px;
+  padding: 30px;
+  position: relative;
+}
+
+.schliessen-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.detail-titel {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .form-gruppe {
   margin-bottom: 20px;
 }
 
-.form-gruppe label {
-  display: block;
-  margin-bottom: 8px;
-  color: #2c3e50;
-  font-weight: 600;
-}
-
 .form-input {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   border: 2px solid #ddd;
   border-radius: 6px;
   font-size: 1em;
-  font-family: inherit;
-  transition: border-color 0.3s;
 }
 
-.form-input:focus {
-  outline: none;
-  border-color: #3498db;
+.menge-input {
+  width: 120px;
+}
+
+.entfernen-btn {
+  background: #e74c3c;
+  border: none;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 1.1em;
+  cursor: pointer;
+}
+
+.zutat-hinzufuegen-btn {
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background: #f8f8f8;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .form-aktionen {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   margin-top: 20px;
 }
 
 .abbrechen-btn,
 .speichern-btn {
   flex: 1;
-  padding: 12px 24px;
+  padding: 10px;
   border: none;
   border-radius: 6px;
-  font-size: 1em;
-  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
+  font-weight: 600;
 }
 
 .abbrechen-btn {
@@ -170,26 +187,37 @@ h1 {
   color: #2c3e50;
 }
 
-.abbrechen-btn:hover {
-  background: #bdc3c7;
-}
-
 .speichern-btn {
   background: #27ae60;
   color: white;
 }
-
-.speichern-btn:hover {
-  background: #229954;
-}
-
-.keine-ergebnisse {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 40px;
+/* Hover-Effekt */
+.liste-karte {
   background: white;
   border-radius: 8px;
-  color: #666;
-  font-size: 1.1em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.liste-karte:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Detail-Modal */
+.detail-item-liste {
+  list-style: none;
+  padding: 0;
+}
+
+.detail-item-liste li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  color: #555;
+}
+
+.detail-item-liste li:last-child {
+  border-bottom: none;
+}

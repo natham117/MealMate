@@ -7,8 +7,7 @@ import { Recipes } from './pages/recipes/recipes';
 import { ShoppingList } from './pages/shopping-list/shopping-list';
 import { Settings } from './pages/settings/settings';
 import { Home } from './pages/home/home';
-import { ShoppingListOverview } from './pages/shopping-list-overview/shopping-list-overview';
-import { ShoppingListDetails } from './pages/shopping-list-details/shopping-list-details';
+
 
 export const routes: Routes = [
 
@@ -40,14 +39,6 @@ export const routes: Routes = [
     {
         path : 'settings',
         component: Settings
-    },
-    {
-        path : 'shopping-list-overview',
-        component: ShoppingListOverview
-    },
-    {
-        path : 'shopping-list-details/:id',
-        component: ShoppingListDetails
     }
 
 ];
