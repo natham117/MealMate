@@ -1,8 +1,24 @@
-﻿public class Program
+﻿using System.Security.Authentication.ExtendedProtection;
+
+public class Program
 {
     static void Main(string[] args)
     {
-        User newUser = UserStore.TraceUser("Benji", "Ewald");
-        Console.WriteLine("Hallo " + newUser.FirstName + " " + newUser.LastName + " " + newUser.Email);
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
+            p.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod()));
+
+        var app = builder.Build();
+
+        app.UseCors();
+
+        app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }));
+
+        app.MapUsersEndpoints();
+
+        app.Run();
     }
 }

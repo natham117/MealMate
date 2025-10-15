@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { RouterLink } from "@angular/router";
+import { RegisterApiService } from './register-api.service';
 
 function emailPolicyValidator(control: AbstractControl): ValidationErrors | null {
   const raw = String(control.value ?? '');
@@ -82,6 +83,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
 })
 export class Register {
   private fb = inject(FormBuilder);
+  private api = inject(RegisterApiService);
 
   modalOpen = signal(false);
   modalTitle = signal('Bitte Eingaben prüfen');
@@ -168,7 +170,29 @@ export class Register {
       this.modalOpen.set(true);
       return;
     }
-    alert('Formular valide (Demo).')
+    
+    const v = this.form.value;
+    const fullName = String (v.fullName ?? '').trim();
+    const [firstName, ...rest] = fullName.split(' ');
+    const lastName = rest.join(' ') || '';
+
+    this.api.register({
+      firstName,
+      lastName,
+      email: String(v.email ?? ''),
+      password: String(v.passwordGroup?.password ?? '')
+      }).subscribe({
+      next: () => {
+        this.modalTitle.set("Registrierung erfolgreich.");
+        this.modalOpen.set(true);
+        this.form.reset();
+      },
+        error: () => {
+        this.modalTitle.set("Fehler");
+        this.modalBody.set("Registrierung fehlgeschlagen.")
+        this.modalOpen.set(true);
+      }
+    });
   }
 
   closeModal() {this.modalOpen.set(false);}
