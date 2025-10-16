@@ -1,6 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+interface ZutatDto {
+  zutat: string;
+  menge: number;
+  einheit: string;
+}
 
 interface Rezept {
   id: number;
@@ -9,71 +16,76 @@ interface Rezept {
   zeit: string;
   portionen: string;
   beschreibung: string;
-  zutaten: string[];
+  anleitung: string;
+  vegetarisch: boolean;
+  vegan: boolean;
+  zutaten: ZutatDto[];
 }
 
 @Component({
   selector: 'app-recipes',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './recipes.html',
   styleUrl: './recipes.css'
 })
-export class Recipes {
+export class Recipes implements OnInit {
+  private apiUrl = 'http://localhost:5000/api/recipes'; // Passe die URL an deinen Backend-Port an
+  
   suchbegriff = '';
+  filter_vegetarisch = false;
+  filter_vegan = false;
+  
+  // Temporäre Variablen für das Formular
+  temp_zeit = 0;
+  temp_portionen = 0;
   
   neues_rezept: Rezept = this.leeres_rezept();
   formular_aktiv = false;
-  rezepte: Rezept[] = [
-    {
-      id: 1,
-      titel: 'Spaghetti Carbonara',
-      bild: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400',
-      zeit: '25 Min',
-      portionen: '4 Portionen',
-      beschreibung: 'Ein klassisches italienisches Pasta-Gericht mit cremiger Sauce aus Eiern, Parmesan und knusprigem Speck.',
-      zutaten: ['400g Spaghetti', '200g Pancetta oder Speck', '4 Eier', '100g Parmesan', 'Salz & Pfeffer']
-    },
-    {
-      id: 2,
-      titel: 'Gemüsecurry',
-      bild: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400',
-      zeit: '35 Min',
-      portionen: '3 Portionen',
-      beschreibung: 'Ein aromatisches vegetarisches Curry mit buntem Gemüse und Kokosmilch. Perfekt mit Reis oder Naan-Brot.',
-      zutaten: ['1 Blumenkohl', '2 Karotten', '1 Dose Kichererbsen', '400ml Kokosmilch', 'Currypaste & Gewürze']
-    },
-    {
-      id: 3,
-      titel: 'Schoko-Brownies',
-      bild: 'https://images.unsplash.com/photo-1607920591413-4ec007e70023?w=400',
-      zeit: '40 Min',
-      portionen: '12 Stücke',
-      beschreibung: 'Saftige Schokoladen-Brownies mit knuspriger Kruste. Ein Traum für alle Schokoladenliebhaber!',
-      zutaten: ['200g Zartbitterschokolade', '150g Butter', '3 Eier', '150g Zucker', '100g Mehl']
-    },
-    {
-      id: 4,
-      titel: 'Tomatensuppe',
-      bild: null,
-      zeit: '30 Min',
-      portionen: '4 Portionen',
-      beschreibung: 'Eine cremige Tomatensuppe, die perfekt an kalten Tagen wärmt. Einfach und köstlich!',
-      zutaten: ['1kg reife Tomaten', '2 Zwiebeln', '3 Knoblauchzehen', '500ml Gemüsebrühe', 'Sahne & Basilikum']
-    }
-  ];
 
+  rezepte: Rezept[] = [];
   ausgewaehltes_rezept: Rezept | null = null;
   modal_aktiv = false;
 
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.ladeRezepte();
+  }
+
+  ladeRezepte(): void {
+    this.http.get<Rezept[]>(this.apiUrl).subscribe({
+      next: (rezepte) => {
+        this.rezepte = rezepte;
+      },
+      error: (error) => {
+        console.error('Fehler beim Laden der Rezepte:', error);
+        alert('Fehler beim Laden der Rezepte. Stelle sicher, dass das Backend läuft.');
+      }
+    });
+  }
+
   get gefilterte_rezepte(): Rezept[] {
-    if (!this.suchbegriff.trim()) {
-      return this.rezepte;
+    let gefiltert = this.rezepte;
+    
+    // Nach Titel filtern
+    if (this.suchbegriff.trim()) {
+      const suche = this.suchbegriff.toLowerCase();
+      gefiltert = gefiltert.filter(rezept => 
+        rezept.titel.toLowerCase().includes(suche)
+      );
     }
     
-    const suche = this.suchbegriff.toLowerCase();
-    return this.rezepte.filter(rezept => 
-      rezept.titel.toLowerCase().includes(suche)
-    );
+    // Nach Vegetarisch filtern
+    if (this.filter_vegetarisch) {
+      gefiltert = gefiltert.filter(rezept => rezept.vegetarisch);
+    }
+    
+    // Nach Vegan filtern
+    if (this.filter_vegan) {
+      gefiltert = gefiltert.filter(rezept => rezept.vegan);
+    }
+    
+    return gefiltert;
   }
 
   zeigeDetails(rezept: Rezept): void {
@@ -88,12 +100,16 @@ export class Recipes {
 
   oeffneFormular(): void {
     this.neues_rezept = this.leeres_rezept();
+    this.temp_zeit = 0;
+    this.temp_portionen = 0;
     this.formular_aktiv = true;
   }
 
   schliesseFormular(): void {
     this.formular_aktiv = false;
     this.neues_rezept = this.leeres_rezept();
+    this.temp_zeit = 0;
+    this.temp_portionen = 0;
   }
 
   speichereRezept(): void {
@@ -102,22 +118,33 @@ export class Recipes {
       return;
     }
 
-    const neues_rezept: Rezept = {
-      id: this.rezepte.length > 0 ? Math.max(...this.rezepte.map(r => r.id)) + 1 : 1,
+    const rezept: Rezept = {
+      id: 0,
       titel: this.neues_rezept.titel.trim(),
       bild: this.neues_rezept.bild || null,
-      zeit: this.neues_rezept.zeit.trim() || 'unbekannt',
-      portionen: this.neues_rezept.portionen.trim() || 'unbekannt',
+      zeit: this.temp_zeit > 0 ? `${this.temp_zeit} Min` : '0 Min',
+      portionen: this.temp_portionen > 0 ? `${this.temp_portionen} Portionen` : '0 Portionen',
       beschreibung: this.neues_rezept.beschreibung.trim(),
-      zutaten: this.neues_rezept.zutaten.filter(z => z.trim())
+      anleitung: this.neues_rezept.anleitung.trim(),
+      vegetarisch: this.neues_rezept.vegetarisch,
+      vegan: this.neues_rezept.vegan,
+      zutaten: this.neues_rezept.zutaten.filter(z => z.zutat.trim() !== '')
     };
 
-    this.rezepte.unshift(neues_rezept);
-    this.schliesseFormular();
+    this.http.post<Rezept>(this.apiUrl, rezept).subscribe({
+      next: (gespeichertesRezept) => {
+        this.rezepte.unshift(gespeichertesRezept);
+        this.schliesseFormular();
+      },
+      error: (error) => {
+        console.error('Fehler beim Speichern:', error);
+        alert('Fehler beim Speichern des Rezepts');
+      }
+    });
   }
 
   fuegeZutatHinzu(): void {
-    this.neues_rezept.zutaten.push('');
+    this.neues_rezept.zutaten.push({ zutat: '', menge: 0, einheit: '' });
   }
 
   entferneZutat(index: number): void {
@@ -132,7 +159,10 @@ export class Recipes {
       zeit: '',
       portionen: '',
       beschreibung: '',
-      zutaten: ['']
+      anleitung: '',
+      vegetarisch: false,
+      vegan: false,
+      zutaten: [{ zutat: '', menge: 0, einheit: '' }]
     };
   }
 }
