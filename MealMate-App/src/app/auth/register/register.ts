@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+import { firstValueFrom } from 'rxjs';
+
+
+const API_BASE = 'http://localhost:5000/api';
+
 
 function emailPolicyValidator(control: AbstractControl): ValidationErrors | null {
   const raw = String(control.value ?? '');
@@ -46,9 +52,6 @@ function passwordPolicyValidator(control: AbstractControl): ValidationErrors | n
   if (!v) return { required: true };
 
   const errors: Record<string, true> = {};
-  // if (v.length < 8) errors.tooShort = true;
-  // if (!/[A-Z]/.test(v)) errors.noUpper = true;
-  // if (!/\d/.test(v)) errors.noDigit = true;
   if (v.length < 8) errors['tooShort'] = true;
   if (!/[A-Z]/.test(v)) errors['noUpper'] = true;
   if (!/\d/.test(v)) errors['noDigit'] = true;
@@ -61,7 +64,6 @@ function passwordPolicyValidator(control: AbstractControl): ValidationErrors | n
     const c = ch.codePointAt(0)!;
     if(c <= 0x1F || c === 0x7F || (c >= 0x80 && c <= 0x9F)) { hasControl = true; break; }
   }
-  // if (hasSpace || hasControl) errors.hasSpaceOrControl = true;
   if (hasSpace || hasControl) errors['hasSpaceOrControl'] = true;
 
   return Object.keys(errors).length ? errors : null;
@@ -82,6 +84,8 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
 })
 export class Register {
   private fb = inject(FormBuilder);
+  private http = inject(HttpClient);
+  private router = inject(Router);
 
   modalOpen = signal(false);
   modalTitle = signal('Bitte Eingaben prüfen');
@@ -89,6 +93,7 @@ export class Register {
 
   showEmailRules = signal(false);
   showPasswordRules = signal(false);
+  busy = signal(false); 
 
   form = this.fb.group({
     fullName: [''],
@@ -141,34 +146,60 @@ export class Register {
   }
 
   // Klick auf "Konto erstellen"
-  submit() {
-    if(this.form.invalid) {
-      this.form.markAllAsTouched();
+  async submit() {
+    if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    this.modalTitle.set('Bitte Eingaben prüfen');
+    this.modalBody.set('Das Formular enthält ungültige Eingaben.');
+    this.modalOpen.set(true);
+    return;
+  }
 
-      const emailErrs = this.emailErrors();
-      const pwdErrs = this.passwordErrors();
-      const totalErrs = emailErrs.length + pwdErrs.length + (this.matchError() ? 1 : 0);
+  this.busy.set(true);
+  try {
+    const email = (this.form.get('email')?.value ?? '').trim();
+    const pwd   = this.form.get('passwordGroup.password')?.value ?? '';
+    const full  = (this.form.get('fullName')?.value ?? '').trim();
 
-      this.modalTitle.set('Bitte Eingaben prüfen');
-      this.modalBody.set(null);
-      this.showEmailRules.set(emailErrs.length > 0);
-      this.showPasswordRules.set(pwdErrs.length > 0 || this.matchError());
+    const [firstNameRaw, ...rest] = full.split(/\s+/).filter(Boolean);
+const lastNameRaw = rest.join(' ');
 
-      if(totalErrs === 1) {
-        const msg =
-          emailErrs[0] ??
-          pwdErrs[0] ??
-          (this.matchError() ? 'Passwörter stimmen nicht überein.' : 'Ungültige Eingabe.');
-        this.modalTitle.set('Hinweis');
-        this.modalBody.set(msg);
-        this.showEmailRules.set(false);
-        this.showPasswordRules.set(false);
-      }
+// Fallbacks, damit Oracle-Not-Null nicht verletzt wird:
+const firstName = firstNameRaw || 'Unbekannt';
+const lastName  = lastNameRaw  || '-';
 
+    const payload = { firstName: firstName ?? '', lastName, email, password: pwd };
+    console.log('[Register] Payload to backend:', payload);
+
+    const url = 'http://localhost:5000/api/register'; 
+    const res = await firstValueFrom(
+      this.http.post<{ success: boolean; userId?: number; message?: string }>(url, payload)
+    );
+
+    console.log('[Register] Response:', res);
+    if (res.success) {
+      this.modalTitle.set('Registrierung erfolgreich');
+      this.modalBody.set(`Konto erstellt (UserId: ${res.userId}).`);
+      this.showEmailRules.set(false);
+      this.showPasswordRules.set(false);
       this.modalOpen.set(true);
-      return;
+    } else {
+      this.modalTitle.set('Registrierung fehlgeschlagen');
+      this.modalBody.set(res.message ?? 'Unbekannter Fehler.');
+      this.modalOpen.set(true);
     }
-    alert('Formular valide (Demo).')
+  } catch (err: any) {
+    console.log('[Register] HTTP error raw:', err);
+    console.log('[Register] Server body:', err?.error);
+    const msg = err?.error?.message
+      ?? (err?.status === 409 ? 'E-Mail ist bereits registriert.'
+      : err?.status ? `Server-Fehler (${err.status}).` : 'Netzwerk/CORS-Fehler (siehe Network).');
+    this.modalTitle.set('Registrierung fehlgeschlagen');
+    this.modalBody.set(msg);
+    this.modalOpen.set(true);
+  } finally {
+    this.busy.set(false);
+  }
   }
 
   closeModal() {this.modalOpen.set(false);}
