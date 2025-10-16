@@ -3,6 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
+interface ZutatDto {
+  zutat: string;
+  menge: number;
+  einheit: string;
+}
+
 interface Rezept {
   id: number;
   titel: string;
@@ -13,7 +19,7 @@ interface Rezept {
   anleitung: string;
   vegetarisch: boolean;
   vegan: boolean;
-  zutaten: string[];
+  zutaten: ZutatDto[];
 }
 
 @Component({
@@ -28,6 +34,10 @@ export class Recipes implements OnInit {
   suchbegriff = '';
   filter_vegetarisch = false;
   filter_vegan = false;
+  
+  // Temporäre Variablen für das Formular
+  temp_zeit = 0;
+  temp_portionen = 0;
   
   neues_rezept: Rezept = this.leeres_rezept();
   formular_aktiv = false;
@@ -90,12 +100,16 @@ export class Recipes implements OnInit {
 
   oeffneFormular(): void {
     this.neues_rezept = this.leeres_rezept();
+    this.temp_zeit = 0;
+    this.temp_portionen = 0;
     this.formular_aktiv = true;
   }
 
   schliesseFormular(): void {
     this.formular_aktiv = false;
     this.neues_rezept = this.leeres_rezept();
+    this.temp_zeit = 0;
+    this.temp_portionen = 0;
   }
 
   speichereRezept(): void {
@@ -108,13 +122,13 @@ export class Recipes implements OnInit {
       id: 0,
       titel: this.neues_rezept.titel.trim(),
       bild: this.neues_rezept.bild || null,
-      zeit: this.neues_rezept.zeit.trim() || '0 Min',
-      portionen: this.neues_rezept.portionen.trim() || '0 Portionen',
+      zeit: this.temp_zeit > 0 ? `${this.temp_zeit} Min` : '0 Min',
+      portionen: this.temp_portionen > 0 ? `${this.temp_portionen} Portionen` : '0 Portionen',
       beschreibung: this.neues_rezept.beschreibung.trim(),
       anleitung: this.neues_rezept.anleitung.trim(),
       vegetarisch: this.neues_rezept.vegetarisch,
       vegan: this.neues_rezept.vegan,
-      zutaten: this.neues_rezept.zutaten.filter(z => z.trim())
+      zutaten: this.neues_rezept.zutaten.filter(z => z.zutat.trim() !== '')
     };
 
     this.http.post<Rezept>(this.apiUrl, rezept).subscribe({
@@ -130,7 +144,7 @@ export class Recipes implements OnInit {
   }
 
   fuegeZutatHinzu(): void {
-    this.neues_rezept.zutaten.push('');
+    this.neues_rezept.zutaten.push({ zutat: '', menge: 0, einheit: '' });
   }
 
   entferneZutat(index: number): void {
@@ -148,7 +162,7 @@ export class Recipes implements OnInit {
       anleitung: '',
       vegetarisch: false,
       vegan: false,
-      zutaten: ['']
+      zutaten: [{ zutat: '', menge: 0, einheit: '' }]
     };
   }
 }

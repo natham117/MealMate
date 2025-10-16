@@ -44,7 +44,10 @@
         <div class="rezept-zutaten">
           <h3>Zutaten:</h3>
           <ul>
-            <li *ngFor="let zutat of rezept.zutaten">{{ zutat }}</li>
+            <li *ngFor="let zutat of rezept.zutaten">
+              <span *ngIf="zutat.menge > 0">{{ zutat.menge }} {{ zutat.einheit }}</span>
+              {{ zutat.zutat }}
+            </li>
           </ul>
         </div>
       </div>
@@ -80,7 +83,10 @@
         <div class="detail-zutaten">
           <h3>Zutaten</h3>
           <ul>
-            <li *ngFor="let zutat of ausgewaehltes_rezept.zutaten">{{ zutat }}</li>
+            <li *ngFor="let zutat of ausgewaehltes_rezept.zutaten">
+              <span *ngIf="zutat.menge > 0">{{ zutat.menge }} {{ zutat.einheit }}</span>
+              {{ zutat.zutat }}
+            </li>
           </ul>
         </div>
 
@@ -112,13 +118,13 @@
           </div>
 
           <div class="form-gruppe">
-            <label>Zubereitungszeit</label>
-            <input type="text" [(ngModel)]="neues_rezept.zeit" name="zeit" class="form-input" placeholder="z.B. 30 Min">
+            <label>Zubereitungszeit (in Minuten)</label>
+            <input type="number" [(ngModel)]="temp_zeit" name="zeit" class="form-input" placeholder="z.B. 30" min="0">
           </div>
 
           <div class="form-gruppe">
             <label>Portionen</label>
-            <input type="text" [(ngModel)]="neues_rezept.portionen" name="portionen" class="form-input" placeholder="z.B. 4 Portionen">
+            <input type="number" [(ngModel)]="temp_portionen" name="portionen" class="form-input" placeholder="z.B. 4" min="0">
           </div>
 
           <div class="form-gruppe">
@@ -153,8 +159,10 @@
           <div class="form-gruppe">
             <label>Zutaten</label>
             <div class="zutaten-liste">
-              <div class="zutat-input" *ngFor="let zutat of neues_rezept.zutaten; let i = index">
-                <input type="text" [(ngModel)]="neues_rezept.zutaten[i]" [name]="'zutat' + i" class="form-input" placeholder="z.B. 200g Mehl">
+              <div class="zutat-zeile" *ngFor="let zutat of neues_rezept.zutaten; let i = index">
+                <input type="text" [(ngModel)]="neues_rezept.zutaten[i].zutat" [name]="'zutat' + i" class="form-input zutat-name" placeholder="Zutat">
+                <input type="number" [(ngModel)]="neues_rezept.zutaten[i].menge" [name]="'menge' + i" class="form-input zutat-menge" placeholder="Menge">
+                <input type="text" [(ngModel)]="neues_rezept.zutaten[i].einheit" [name]="'einheit' + i" class="form-input zutat-einheit" placeholder="Einheit">
                 <button type="button" class="entfernen-btn" (click)="entferneZutat(i)" *ngIf="neues_rezept.zutaten.length > 1">×</button>
               </div>
             </div>

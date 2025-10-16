@@ -382,14 +382,23 @@ h1 {
   margin-bottom: 10px;
 }
 
-.zutat-input {
-  display: flex;
+.zutat-zeile {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
   gap: 10px;
   align-items: center;
 }
 
-.zutat-input input {
-  flex: 1;
+.zutat-name {
+  grid-column: 1;
+}
+
+.zutat-menge {
+  grid-column: 2;
+}
+
+.zutat-einheit {
+  grid-column: 3;
 }
 
 .entfernen-btn {
