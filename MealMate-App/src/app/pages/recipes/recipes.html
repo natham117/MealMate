@@ -5,6 +5,17 @@
     <input type="text" class="suchleiste" placeholder="Rezept suchen..." [(ngModel)]="suchbegriff">
     <button class="hinzufuegen-btn" (click)="oeffneFormular()">+ Neues Rezept</button>
   </div>
+
+  <div class="filter-bereich">
+    <label class="filter-checkbox">
+      <input type="checkbox" [(ngModel)]="filter_vegetarisch">
+      <span>Vegetarisch</span>
+    </label>
+    <label class="filter-checkbox">
+      <input type="checkbox" [(ngModel)]="filter_vegan">
+      <span>Vegan</span>
+    </label>
+  </div>
   
   <div class="rezept-liste">
     <div class="rezept-karte" *ngFor="let rezept of gefilterte_rezepte" (click)="zeigeDetails(rezept)">
@@ -26,10 +37,17 @@
         <p class="rezept-beschreibung">
           {{ rezept.beschreibung }}
         </p>
+        <div class="rezept-eigenschaften" *ngIf="rezept.vegetarisch || rezept.vegan">
+          <span class="eigenschaft-badge-klein" *ngIf="rezept.vegetarisch">🌱</span>
+          <span class="eigenschaft-badge-klein" *ngIf="rezept.vegan">🌿</span>
+        </div>
         <div class="rezept-zutaten">
           <h3>Zutaten:</h3>
           <ul>
-            <li *ngFor="let zutat of rezept.zutaten">{{ zutat }}</li>
+            <li *ngFor="let zutat of rezept.zutaten">
+              <span *ngIf="zutat.menge > 0">{{ zutat.menge }} {{ zutat.einheit }}</span>
+              {{ zutat.zutat }}
+            </li>
           </ul>
         </div>
       </div>
@@ -61,11 +79,25 @@
           </div>
         </div>
         <p class="detail-beschreibung">{{ ausgewaehltes_rezept.beschreibung }}</p>
+        
         <div class="detail-zutaten">
           <h3>Zutaten</h3>
           <ul>
-            <li *ngFor="let zutat of ausgewaehltes_rezept.zutaten">{{ zutat }}</li>
+            <li *ngFor="let zutat of ausgewaehltes_rezept.zutaten">
+              <span *ngIf="zutat.menge > 0">{{ zutat.menge }} {{ zutat.einheit }}</span>
+              {{ zutat.zutat }}
+            </li>
           </ul>
+        </div>
+
+        <div class="detail-section" *ngIf="ausgewaehltes_rezept.anleitung">
+          <h3>Zubereitung</h3>
+          <p class="detail-anleitung">{{ ausgewaehltes_rezept.anleitung }}</p>
+        </div>
+
+        <div class="detail-eigenschaften" *ngIf="ausgewaehltes_rezept.vegetarisch || ausgewaehltes_rezept.vegan">
+          <span class="eigenschaft-badge" *ngIf="ausgewaehltes_rezept.vegetarisch">🌱 Vegetarisch</span>
+          <span class="eigenschaft-badge" *ngIf="ausgewaehltes_rezept.vegan">🌿 Vegan</span>
         </div>
       </div>
     </div>
@@ -86,13 +118,13 @@
           </div>
 
           <div class="form-gruppe">
-            <label>Zubereitungszeit</label>
-            <input type="text" [(ngModel)]="neues_rezept.zeit" name="zeit" class="form-input" placeholder="z.B. 30 Min">
+            <label>Zubereitungszeit (in Minuten)</label>
+            <input type="number" [(ngModel)]="temp_zeit" name="zeit" class="form-input" placeholder="z.B. 30" min="0">
           </div>
 
           <div class="form-gruppe">
             <label>Portionen</label>
-            <input type="text" [(ngModel)]="neues_rezept.portionen" name="portionen" class="form-input" placeholder="z.B. 4 Portionen">
+            <input type="number" [(ngModel)]="temp_portionen" name="portionen" class="form-input" placeholder="z.B. 4" min="0">
           </div>
 
           <div class="form-gruppe">
@@ -101,15 +133,36 @@
           </div>
 
           <div class="form-gruppe">
+            <label>Zubereitung</label>
+            <textarea [(ngModel)]="neues_rezept.anleitung" name="anleitung" class="form-textarea" rows="5" placeholder="Schritt-für-Schritt Anleitung..."></textarea>
+          </div>
+
+          <div class="form-gruppe">
             <label>Bild-URL (optional)</label>
             <input type="text" [(ngModel)]="neues_rezept.bild" name="bild" class="form-input" placeholder="https://...">
           </div>
 
           <div class="form-gruppe">
+            <label>Eigenschaften</label>
+            <div class="eigenschaften-checkboxen">
+              <label class="filter-checkbox">
+                <input type="checkbox" [(ngModel)]="neues_rezept.vegetarisch" name="vegetarisch">
+                <span>Vegetarisch</span>
+              </label>
+              <label class="filter-checkbox">
+                <input type="checkbox" [(ngModel)]="neues_rezept.vegan" name="vegan">
+                <span>Vegan</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-gruppe">
             <label>Zutaten</label>
             <div class="zutaten-liste">
-              <div class="zutat-input" *ngFor="let zutat of neues_rezept.zutaten; let i = index">
-                <input type="text" [(ngModel)]="neues_rezept.zutaten[i]" [name]="'zutat' + i" class="form-input" placeholder="z.B. 200g Mehl">
+              <div class="zutat-zeile" *ngFor="let zutat of neues_rezept.zutaten; let i = index">
+                <input type="text" [(ngModel)]="neues_rezept.zutaten[i].zutat" [name]="'zutat' + i" class="form-input zutat-name" placeholder="Zutat">
+                <input type="number" [(ngModel)]="neues_rezept.zutaten[i].menge" [name]="'menge' + i" class="form-input zutat-menge" placeholder="Menge">
+                <input type="text" [(ngModel)]="neues_rezept.zutaten[i].einheit" [name]="'einheit' + i" class="form-input zutat-einheit" placeholder="Einheit">
                 <button type="button" class="entfernen-btn" (click)="entferneZutat(i)" *ngIf="neues_rezept.zutaten.length > 1">×</button>
               </div>
             </div>
