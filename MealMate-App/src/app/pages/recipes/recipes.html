@@ -15,6 +15,14 @@
       <input type="checkbox" [(ngModel)]="filter_vegan">
       <span>Vegan</span>
     </label>
+    <label class="filter-checkbox">
+      <input type="checkbox" [(ngModel)]="filter_favoriten">
+      <span>⭐ Favoriten</span>
+    </label>
+    <label class="filter-checkbox">
+      <input type="checkbox" [(ngModel)]="filter_eigene_rezepte">
+      <span>👤 Eigene Rezepte</span>
+    </label>
   </div>
   
   <div class="rezept-liste">
@@ -71,7 +79,13 @@
         <div class="detail-inhalt">
           <div class="detail-header">
             <h2 class="detail-titel">{{ ausgewaehltes_rezept.titel }}</h2>
-            <button class="bearbeiten-btn" (click)="starteBearbeitung()">✏️ Bearbeiten</button>
+            <div class="detail-aktionen">
+              <button class="favorit-btn" [class.ist-favorit]="ausgewaehltes_rezept.istFavorit" (click)="toggleFavorit()">
+                <span *ngIf="!ausgewaehltes_rezept.istFavorit">☆ Favorit</span>
+                <span *ngIf="ausgewaehltes_rezept.istFavorit">★ Favorit</span>
+              </button>
+              <button class="bearbeiten-btn" (click)="starteBearbeitung()">✏️ Bearbeiten</button>
+            </div>
           </div>
           
           <div class="detail-info">

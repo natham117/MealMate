@@ -19,6 +19,7 @@ interface Rezept {
   anleitung: string;
   vegetarisch: boolean;
   vegan: boolean;
+  istFavorit: boolean;
   zutaten: ZutatDto[];
 }
 
@@ -34,6 +35,8 @@ export class Recipes implements OnInit {
   suchbegriff = '';
   filter_vegetarisch = false;
   filter_vegan = false;
+  filter_favoriten = false;
+  filter_eigene_rezepte = false;
   
   // Temporäre Variablen für das Formular
   temp_zeit = 0;
@@ -88,6 +91,17 @@ export class Recipes implements OnInit {
     // Nach Vegan filtern
     if (this.filter_vegan) {
       gefiltert = gefiltert.filter(rezept => rezept.vegan);
+    }
+    
+    // Nach Favoriten filtern
+    if (this.filter_favoriten) {
+      gefiltert = gefiltert.filter(rezept => rezept.istFavorit);
+    }
+    
+    // Nach eigene Rezepte filtern (später implementieren)
+    if (this.filter_eigene_rezepte) {
+      // TODO: Implementierung wenn User-Authentifizierung vorhanden
+      // gefiltert = gefiltert.filter(rezept => rezept.userId === currentUserId);
     }
     
     return gefiltert;
@@ -180,6 +194,30 @@ export class Recipes implements OnInit {
     }
   }
 
+  toggleFavorit(): void {
+    if (!this.ausgewaehltes_rezept) return;
+
+    const rezeptId = this.ausgewaehltes_rezept.id;
+    const neuerStatus = !this.ausgewaehltes_rezept.istFavorit;
+
+    this.http.post(`${this.apiUrl}/${rezeptId}/favorite`, { isFavorite: neuerStatus }).subscribe({
+      next: () => {
+        // Aktualisiere lokale Daten
+        if (this.ausgewaehltes_rezept) {
+          this.ausgewaehltes_rezept.istFavorit = neuerStatus;
+        }
+        const rezeptInListe = this.rezepte.find(r => r.id === rezeptId);
+        if (rezeptInListe) {
+          rezeptInListe.istFavorit = neuerStatus;
+        }
+      },
+      error: (error) => {
+        console.error('Fehler beim Setzen des Favoriten-Status:', error);
+        alert('Fehler beim Setzen des Favoriten-Status');
+      }
+    });
+  }
+
   oeffneFormular(): void {
     this.neues_rezept = this.leeres_rezept();
     this.temp_zeit = 0;
@@ -210,6 +248,7 @@ export class Recipes implements OnInit {
       anleitung: this.neues_rezept.anleitung.trim(),
       vegetarisch: this.neues_rezept.vegetarisch,
       vegan: this.neues_rezept.vegan,
+      istFavorit: false,
       zutaten: this.neues_rezept.zutaten.filter(z => z.zutat.trim() !== '')
     };
 
@@ -244,6 +283,7 @@ export class Recipes implements OnInit {
       anleitung: '',
       vegetarisch: false,
       vegan: false,
+      istFavorit: false,
       zutaten: [{ zutat: '', menge: '', einheit: '' }]
     };
   }
