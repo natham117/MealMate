@@ -5,7 +5,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 interface ZutatDto {
   zutat: string;
-  menge: number;
+  menge: string | number;  // String für Input, wird später zu Number konvertiert
   einheit: string;
 }
 
@@ -158,13 +158,25 @@ export class Recipes implements OnInit {
 
   fuegeBearbeitungsZutatHinzu(): void {
     if (this.bearbeitetes_rezept) {
-      this.bearbeitetes_rezept.zutaten.push({ zutat: '', menge: 0, einheit: '' });
+      this.bearbeitetes_rezept.zutaten.push({ zutat: '', menge: '', einheit: '' });
     }
   }
 
   entferneBearbeitungsZutat(index: number): void {
     if (this.bearbeitetes_rezept) {
       this.bearbeitetes_rezept.zutaten.splice(index, 1);
+    }
+  }
+
+  onVeganChange(): void {
+    if (this.neues_rezept.vegan) {
+      this.neues_rezept.vegetarisch = true;
+    }
+  }
+
+  onBearbeitungVeganChange(): void {
+    if (this.bearbeitetes_rezept && this.bearbeitetes_rezept.vegan) {
+      this.bearbeitetes_rezept.vegetarisch = true;
     }
   }
 
@@ -214,7 +226,7 @@ export class Recipes implements OnInit {
   }
 
   fuegeZutatHinzu(): void {
-    this.neues_rezept.zutaten.push({ zutat: '', menge: 0, einheit: '' });
+    this.neues_rezept.zutaten.push({ zutat: '', menge: '', einheit: '' });
   }
 
   entferneZutat(index: number): void {
@@ -232,7 +244,7 @@ export class Recipes implements OnInit {
       anleitung: '',
       vegetarisch: false,
       vegan: false,
-      zutaten: [{ zutat: '', menge: 0, einheit: '' }]
+      zutaten: [{ zutat: '', menge: '', einheit: '' }]
     };
   }
 }
