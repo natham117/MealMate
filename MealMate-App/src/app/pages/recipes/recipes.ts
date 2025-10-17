@@ -45,6 +45,11 @@ export class Recipes implements OnInit {
   rezepte: Rezept[] = [];
   ausgewaehltes_rezept: Rezept | null = null;
   modal_aktiv = false;
+  
+  bearbeitungsmodus = false;
+  bearbeitetes_rezept: Rezept | null = null;
+  temp_bearbeitung_zeit = 0;
+  temp_bearbeitung_portionen = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -96,6 +101,71 @@ export class Recipes implements OnInit {
   schliesseModal(): void {
     this.modal_aktiv = false;
     this.ausgewaehltes_rezept = null;
+    this.bearbeitungsmodus = false;
+    this.bearbeitetes_rezept = null;
+  }
+
+  starteBearbeitung(): void {
+    if (this.ausgewaehltes_rezept) {
+      // Deep Copy des Rezepts für die Bearbeitung
+      this.bearbeitetes_rezept = JSON.parse(JSON.stringify(this.ausgewaehltes_rezept));
+      
+      // Zeit und Portionen extrahieren
+      const zeitMatch = this.ausgewaehltes_rezept.zeit.match(/\d+/);
+      const portionenMatch = this.ausgewaehltes_rezept.portionen.match(/\d+/);
+      
+      this.temp_bearbeitung_zeit = zeitMatch ? parseInt(zeitMatch[0]) : 0;
+      this.temp_bearbeitung_portionen = portionenMatch ? parseInt(portionenMatch[0]) : 0;
+      
+      this.bearbeitungsmodus = true;
+    }
+  }
+
+  abbrechenBearbeitung(): void {
+    this.bearbeitungsmodus = false;
+    this.bearbeitetes_rezept = null;
+  }
+
+  speichereBearbeitung(): void {
+    if (!this.bearbeitetes_rezept) return;
+
+    const aktualisiertes_rezept: Rezept = {
+      ...this.bearbeitetes_rezept,
+      zeit: this.temp_bearbeitung_zeit > 0 ? `${this.temp_bearbeitung_zeit} Min` : '0 Min',
+      portionen: this.temp_bearbeitung_portionen > 0 ? `${this.temp_bearbeitung_portionen} Portionen` : '0 Portionen',
+      zutaten: this.bearbeitetes_rezept.zutaten.filter(z => z.zutat.trim() !== '')
+    };
+
+    this.http.put<Rezept>(`${this.apiUrl}/${aktualisiertes_rezept.id}`, aktualisiertes_rezept).subscribe({
+      next: (gespeichertesRezept) => {
+        // Aktualisiere das Rezept in der Liste
+        const index = this.rezepte.findIndex(r => r.id === gespeichertesRezept.id);
+        if (index !== -1) {
+          this.rezepte[index] = gespeichertesRezept;
+        }
+        
+        // Aktualisiere die Detailansicht
+        this.ausgewaehltes_rezept = gespeichertesRezept;
+        this.bearbeitungsmodus = false;
+        this.bearbeitetes_rezept = null;
+      },
+      error: (error) => {
+        console.error('Fehler beim Speichern:', error);
+        alert('Fehler beim Speichern des Rezepts');
+      }
+    });
+  }
+
+  fuegeBearbeitungsZutatHinzu(): void {
+    if (this.bearbeitetes_rezept) {
+      this.bearbeitetes_rezept.zutaten.push({ zutat: '', menge: 0, einheit: '' });
+    }
+  }
+
+  entferneBearbeitungsZutat(index: number): void {
+    if (this.bearbeitetes_rezept) {
+      this.bearbeitetes_rezept.zutaten.splice(index, 1);
+    }
   }
 
   oeffneFormular(): void {

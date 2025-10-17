@@ -63,42 +63,118 @@
     <div class="modal-inhalt" (click)="$event.stopPropagation()" *ngIf="ausgewaehltes_rezept">
       <button class="schliessen-btn" (click)="schliesseModal()">×</button>
       
-      <img *ngIf="ausgewaehltes_rezept.bild" class="detail-bild" [src]="ausgewaehltes_rezept.bild" [alt]="ausgewaehltes_rezept.titel">
-      <div *ngIf="!ausgewaehltes_rezept.bild" class="detail-bild"></div>
-      
-      <div class="detail-inhalt">
-        <h2 class="detail-titel">{{ ausgewaehltes_rezept.titel }}</h2>
-        <div class="detail-info">
-          <div class="info-item">
-            <span>⏱️</span>
-            <span>{{ ausgewaehltes_rezept.zeit }}</span>
-          </div>
-          <div class="info-item">
-            <span>👥</span>
-            <span>{{ ausgewaehltes_rezept.portionen }}</span>
-          </div>
-        </div>
-        <p class="detail-beschreibung">{{ ausgewaehltes_rezept.beschreibung }}</p>
+      <!-- Ansichtsmodus -->
+      <div *ngIf="!bearbeitungsmodus">
+        <img *ngIf="ausgewaehltes_rezept.bild" class="detail-bild" [src]="ausgewaehltes_rezept.bild" [alt]="ausgewaehltes_rezept.titel">
+        <div *ngIf="!ausgewaehltes_rezept.bild" class="detail-bild"></div>
         
-        <div class="detail-zutaten">
-          <h3>Zutaten</h3>
-          <ul>
-            <li *ngFor="let zutat of ausgewaehltes_rezept.zutaten">
-              <span *ngIf="zutat.menge > 0">{{ zutat.menge }} {{ zutat.einheit }}</span>
-              {{ zutat.zutat }}
-            </li>
-          </ul>
-        </div>
+        <div class="detail-inhalt">
+          <div class="detail-header">
+            <h2 class="detail-titel">{{ ausgewaehltes_rezept.titel }}</h2>
+            <button class="bearbeiten-btn" (click)="starteBearbeitung()">✏️ Bearbeiten</button>
+          </div>
+          
+          <div class="detail-info">
+            <div class="info-item">
+              <span>⏱️</span>
+              <span>{{ ausgewaehltes_rezept.zeit }}</span>
+            </div>
+            <div class="info-item">
+              <span>👥</span>
+              <span>{{ ausgewaehltes_rezept.portionen }}</span>
+            </div>
+          </div>
+          <p class="detail-beschreibung">{{ ausgewaehltes_rezept.beschreibung }}</p>
+          
+          <div class="detail-zutaten">
+            <h3>Zutaten</h3>
+            <ul>
+              <li *ngFor="let zutat of ausgewaehltes_rezept.zutaten">
+                <span *ngIf="zutat.menge > 0">{{ zutat.menge }} {{ zutat.einheit }}</span>
+                {{ zutat.zutat }}
+              </li>
+            </ul>
+          </div>
 
-        <div class="detail-section" *ngIf="ausgewaehltes_rezept.anleitung">
-          <h3>Zubereitung</h3>
-          <p class="detail-anleitung">{{ ausgewaehltes_rezept.anleitung }}</p>
-        </div>
+          <div class="detail-section" *ngIf="ausgewaehltes_rezept.anleitung">
+            <h3>Zubereitung</h3>
+            <p class="detail-anleitung">{{ ausgewaehltes_rezept.anleitung }}</p>
+          </div>
 
-        <div class="detail-eigenschaften" *ngIf="ausgewaehltes_rezept.vegetarisch || ausgewaehltes_rezept.vegan">
-          <span class="eigenschaft-badge" *ngIf="ausgewaehltes_rezept.vegetarisch">🌱 Vegetarisch</span>
-          <span class="eigenschaft-badge" *ngIf="ausgewaehltes_rezept.vegan">🌿 Vegan</span>
+          <div class="detail-eigenschaften" *ngIf="ausgewaehltes_rezept.vegetarisch || ausgewaehltes_rezept.vegan">
+            <span class="eigenschaft-badge" *ngIf="ausgewaehltes_rezept.vegetarisch">🌱 Vegetarisch</span>
+            <span class="eigenschaft-badge" *ngIf="ausgewaehltes_rezept.vegan">🌿 Vegan</span>
+          </div>
         </div>
+      </div>
+
+      <!-- Bearbeitungsmodus -->
+      <div *ngIf="bearbeitungsmodus && bearbeitetes_rezept" class="detail-inhalt">
+        <h2 class="detail-titel">Rezept bearbeiten</h2>
+        
+        <form (ngSubmit)="speichereBearbeitung()">
+          <div class="form-gruppe">
+            <label>Rezeptname *</label>
+            <input type="text" [(ngModel)]="bearbeitetes_rezept.titel" name="titel" class="form-input" required>
+          </div>
+
+          <div class="form-gruppe">
+            <label>Zubereitungszeit (in Minuten)</label>
+            <input type="number" [(ngModel)]="temp_bearbeitung_zeit" name="zeit" class="form-input" placeholder="z.B. 30" min="0">
+          </div>
+
+          <div class="form-gruppe">
+            <label>Portionen</label>
+            <input type="number" [(ngModel)]="temp_bearbeitung_portionen" name="portionen" class="form-input" placeholder="z.B. 4" min="0">
+          </div>
+
+          <div class="form-gruppe">
+            <label>Beschreibung</label>
+            <textarea [(ngModel)]="bearbeitetes_rezept.beschreibung" name="beschreibung" class="form-textarea" rows="3"></textarea>
+          </div>
+
+          <div class="form-gruppe">
+            <label>Zubereitung</label>
+            <textarea [(ngModel)]="bearbeitetes_rezept.anleitung" name="anleitung" class="form-textarea" rows="5" placeholder="Schritt-für-Schritt Anleitung..."></textarea>
+          </div>
+
+          <div class="form-gruppe">
+            <label>Bild-URL (optional)</label>
+            <input type="text" [(ngModel)]="bearbeitetes_rezept.bild" name="bild" class="form-input" placeholder="https://...">
+          </div>
+
+          <div class="form-gruppe">
+            <label>Eigenschaften</label>
+            <div class="eigenschaften-checkboxen">
+              <label class="filter-checkbox">
+                <input type="checkbox" [(ngModel)]="bearbeitetes_rezept.vegetarisch" name="vegetarisch">
+                <span>Vegetarisch</span>
+              </label>
+              <label class="filter-checkbox">
+                <input type="checkbox" [(ngModel)]="bearbeitetes_rezept.vegan" name="vegan">
+                <span>Vegan</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-gruppe">
+            <label>Zutaten</label>
+            <div class="zutaten-liste">
+              <div class="zutat-zeile" *ngFor="let zutat of bearbeitetes_rezept.zutaten; let i = index">
+                <input type="text" [(ngModel)]="bearbeitetes_rezept.zutaten[i].zutat" [name]="'bearbeitung_zutat' + i" class="form-input zutat-name" placeholder="Zutat">
+                <input type="number" [(ngModel)]="bearbeitetes_rezept.zutaten[i].menge" [name]="'bearbeitung_menge' + i" class="form-input zutat-menge" placeholder="Menge">
+                <input type="text" [(ngModel)]="bearbeitetes_rezept.zutaten[i].einheit" [name]="'bearbeitung_einheit' + i" class="form-input zutat-einheit" placeholder="Einheit">
+                <button type="button" class="entfernen-btn" (click)="entferneBearbeitungsZutat(i)" *ngIf="bearbeitetes_rezept.zutaten.length > 1">×</button>
+              </div>
+            </div>
+            <button type="button" class="zutat-hinzufuegen-btn" (click)="fuegeBearbeitungsZutatHinzu()">+ Zutat hinzufügen</button>
+          </div>
+
+          <div class="form-aktionen">
+            <button type="button" class="abbrechen-btn" (click)="abbrechenBearbeitung()">Abbrechen</button>
+            <button type="submit" class="speichern-btn">Speichern</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
