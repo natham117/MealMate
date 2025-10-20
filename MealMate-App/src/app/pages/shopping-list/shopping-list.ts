@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 
 interface ShoppingItem {
   itemId?: number;
@@ -113,37 +114,56 @@ export class ShoppingList implements OnInit {
   }
 
   speichereListe(): void {
-    if (!this.neueListe.listName.trim()) {
-      this.zeigeSnackbar('Bitte gib einen Listennamen ein!');
-      return;
-    }
-
-    const payload = {
-      UserId: this.userId,
-      ListName: this.neueListe.listName.trim(),
-      Items: this.neueListe.items.map(i => ({
-        ItemName: i.itemName.trim(),
-        Amount: Number(i.amount) || 0,
-        Unit: i.unit.trim() || ''
-      }))
-    };
-
-
-    console.log('📤 Sende Payload:', payload);
-
-    this.http.post(`${this.baseUrl}`, payload).subscribe({
-      next: (res) => {
-        console.log('✅ Antwort vom Server:', res);
-        this.zeigeSnackbar('Liste erfolgreich gespeichert!');
-        this.schliesseFormular();
-        this.ladeEinkaufslisten();
-      },
-      error: (err) => {
-        console.error('❌ Fehler beim Speichern:', err);
-        this.zeigeSnackbar('Fehler beim Speichern!');
-      }
-    });
+  if (!this.neueListe.listName.trim()) {
+    this.zeigeSnackbar('Bitte gib einen Listennamen ein!');
+    return;
   }
+
+  const payload = {
+    userId: this.userId,
+    listName: this.neueListe.listName.trim(),
+    items: this.neueListe.items
+      .filter(i => i.itemName.trim() !== '')
+      .map(i => ({
+        itemName: i.itemName.trim(),
+        amount: Number(i.amount) || 0,
+        unit: i.unit.trim() || ''
+      }))
+  };
+
+  console.log('📤 Sende Payload:', payload);
+
+  this.http.post(`${this.baseUrl}`, payload).subscribe({
+    next: (res: any) => {
+      console.log('✅ Liste erfolgreich gespeichert:', res);
+
+      // Falls das Backend eine ListId zurückgibt → gleich lokal hinzufügen
+      if (res?.listId) {
+        this.listen.unshift({
+          listId: res.listId,
+          userId: this.userId,
+          listName: this.neueListe.listName.trim(),
+          items: this.neueListe.items
+        });
+      }
+
+      this.zeigeSnackbar('🛒 Einkaufsliste erfolgreich erstellt!');
+      this.schliesseFormular();
+
+      // Optional: komplette Liste nochmal vom Server ziehen
+      this.ladeEinkaufslisten();
+    },
+    error: (err) => {
+      console.error('❌ Fehler beim Speichern:', err);
+      // Snackbar mit dem genauen Fehlertext aus dem Backend
+      const msg = err?.error?.message || 'Fehler beim Erstellen der Liste!';
+      this.zeigeSnackbar(`⚠️ ${msg}`);
+    }
+  });
+}
+
+
+
 
   // ------------------------------------------------------------
   // 📋 Detailansicht
