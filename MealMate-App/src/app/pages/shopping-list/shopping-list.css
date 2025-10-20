@@ -1,5 +1,6 @@
+/* ---------- Layout ---------- */
 .container {
-  max-width: 1000px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -16,6 +17,7 @@ h1 {
   margin-bottom: 30px;
 }
 
+/* ---------- Suchleiste & Button ---------- */
 .suchleiste {
   flex: 1;
   padding: 12px;
@@ -39,17 +41,25 @@ h1 {
   background: #229954;
 }
 
+/* ---------- Einkaufslisten ---------- */
 .liste-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
 }
 
 .liste-karte {
-  background: white;
+  background: #f8f9fa;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
   padding: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.liste-karte:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
 
 .liste-titel {
@@ -82,7 +92,7 @@ h1 {
   color: #666;
 }
 
-/* Modal */
+/* ---------- Modal ---------- */
 .modal {
   display: none;
   position: fixed;
@@ -124,12 +134,56 @@ h1 {
   cursor: pointer;
 }
 
-.detail-titel {
-  color: #2c3e50;
-  margin-bottom: 20px;
-  text-align: center;
+/* ---------- Titelzeile im Modal ---------- */
+.titel-zeile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
+.detail-titel {
+  color: #2c3e50;
+  font-size: 1.5em;
+  margin: 0;
+}
+
+/* ---------- Aktionen (Buttons) ---------- */
+.listen-aktionen {
+  display: flex;
+  gap: 10px;
+}
+
+.listen-aktionen button,
+.bearbeiten-btn,
+.loeschen-btn,
+.speichern-mini,
+.hinzufuegen-mini {
+  background: #ecf0f1;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.bearbeiten-btn:hover,
+.listen-aktionen .bearbeiten-btn:hover {
+  background: #f1c40f;
+}
+
+.loeschen-btn:hover,
+.listen-aktionen .loeschen-btn:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+.speichern-mini:hover {
+  background: #27ae60;
+  color: white;
+}
+
+/* ---------- Formular ---------- */
 .form-gruppe {
   margin-bottom: 20px;
 }
@@ -144,26 +198,6 @@ h1 {
 
 .menge-input {
   width: 120px;
-}
-
-.entfernen-btn {
-  background: #e74c3c;
-  border: none;
-  color: white;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  font-size: 1.1em;
-  cursor: pointer;
-}
-
-.zutat-hinzufuegen-btn {
-  padding: 10px;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  background: #f8f8f8;
-  cursor: pointer;
-  margin-top: 10px;
 }
 
 .form-aktionen {
@@ -191,22 +225,17 @@ h1 {
   background: #27ae60;
   color: white;
 }
-/* Hover-Effekt */
-.liste-karte {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+.speichern-btn.loeschen {
+  background: #e74c3c;
+  color: white;
 }
 
-.liste-karte:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.speichern-btn.loeschen:hover {
+  background: #c0392b;
 }
 
-/* Detail-Modal */
+/* ---------- Produktliste im Modal ---------- */
 .detail-item-liste {
   list-style: none;
   padding: 0;
@@ -220,38 +249,6 @@ h1 {
 
 .detail-item-liste li:last-child {
   border-bottom: none;
-}
-/* Aktionen */
-.aktionen {
-  float: right;
-  display: flex;
-  gap: 8px;
-}
-
-.bearbeiten-btn,
-.loeschen-btn,
-.speichern-mini,
-.hinzufuegen-mini {
-  background: #ecf0f1;
-  border: none;
-  border-radius: 6px;
-  padding: 4px 8px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.bearbeiten-btn:hover {
-  background: #f1c40f;
-}
-
-.loeschen-btn:hover {
-  background: #e74c3c;
-  color: white;
-}
-
-.speichern-mini:hover {
-  background: #27ae60;
-  color: white;
 }
 
 .produkt-hinzufuegen {
@@ -267,7 +264,7 @@ h1 {
   font-size: 0.95em;
 }
 
-/* Snackbar */
+/* ---------- Snackbar ---------- */
 .snackbar {
   position: fixed;
   bottom: 20px;
