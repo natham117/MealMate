@@ -96,11 +96,9 @@ export class Register {
   busy = signal(false); 
 
   form = this.fb.group({
-    fullName: [''],
+    firstName: [''],
+    lastName: [''],
     email: ['', [Validators.required, emailPolicyValidator]],
-    username: [''],
-    birthdate: [''],
-    gender: [''],
     passwordGroup: this.fb.group({
       password: ['', [Validators.required, passwordPolicyValidator]],
       passwordConfirm: ['', [Validators.required]]
@@ -159,16 +157,10 @@ export class Register {
   try {
     const email = (this.form.get('email')?.value ?? '').trim();
     const pwd   = this.form.get('passwordGroup.password')?.value ?? '';
-    const full  = (this.form.get('fullName')?.value ?? '').trim();
+    const firstName = this.form.get('firstName')?.value ?? '';
+    const lastName = this.form.get('lastName')?.value ?? '';
 
-    const [firstNameRaw, ...rest] = full.split(/\s+/).filter(Boolean);
-const lastNameRaw = rest.join(' ');
-
-// Fallbacks, damit Oracle-Not-Null nicht verletzt wird:
-const firstName = firstNameRaw || 'Unbekannt';
-const lastName  = lastNameRaw  || '-';
-
-    const payload = { firstName: firstName ?? '', lastName, email, password: pwd };
+    const payload = { firstName, lastName, email, password: pwd };
     console.log('[Register] Payload to backend:', payload);
 
     const url = 'http://localhost:5000/api/register'; 
@@ -178,15 +170,18 @@ const lastName  = lastNameRaw  || '-';
 
     console.log('[Register] Response:', res);
     if (res.success) {
-      this.modalTitle.set('Registrierung erfolgreich');
-      this.modalBody.set(`Konto erstellt (UserId: ${res.userId}).`);
-      this.showEmailRules.set(false);
-      this.showPasswordRules.set(false);
-      this.modalOpen.set(true);
+      // this.modalTitle.set('Registrierung erfolgreich');
+      // this.modalBody.set(`Konto erstellt (UserId: ${res.userId}).`);
+      // this.showEmailRules.set(false);
+      // this.showPasswordRules.set(false);
+      // this.modalOpen.set(true);
+        window.alert('Registrierung erfolgreich!');
+        this.router.navigate(['/login']);
     } else {
-      this.modalTitle.set('Registrierung fehlgeschlagen');
-      this.modalBody.set(res.message ?? 'Unbekannter Fehler.');
-      this.modalOpen.set(true);
+      // this.modalTitle.set('Registrierung fehlgeschlagen');
+      // this.modalBody.set(res.message ?? 'Unbekannter Fehler.');
+      // this.modalOpen.set(true);
+      window.alert('Registrierung fehlgeschlagen: ' + (res.message ?? 'Unbekannter Fehler.'));
     }
   } catch (err: any) {
     console.log('[Register] HTTP error raw:', err);

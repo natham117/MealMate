@@ -1,2 +1,11 @@
 <h2>Einstellungen ⚙️</h2>
 <p>Hier kannst du das Verhalten der App anpassen.</p>
+
+<h3>Profil</h3>
+<div class="profil-container" *ngIf="user">
+    <img [src]="user.imageUrl || 'https://randomuser.me/api/portraits/men/1.jpg'" alt="Profilbild" class="profilbild">
+    <div>Vorname: {{ user.firstName }}</div>
+    <div>Nachname: {{ user.lastName }}</div>
+    <div>Email: {{ user.email }}</div>
+    <div>Passwort: {{ user.pwHash }}</div>
+</div>

@@ -2,15 +2,26 @@
     <h1>Registrieren</h1>
 
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-        <!-- Voller Name -->
-        <label for="fullName">Voller Name</label>
+        <!-- Vorname -->
+        <label for="firstName">Vorname</label>
         <input
-            id="fullName"
-            name="fullName"
+            id="firstName"
+            name="firstName"
             type="text"
-            placeholder="z. B. Max Mustermann"
+            placeholder="z.B. Max"
             autocomplete="name"
-            formControlName="fullName"
+            formControlName="firstName"
+        />
+
+        <!-- Nachname -->
+        <label for="lastName">Nachname</label>
+        <input
+            id="lastName"
+            name="lastName"
+            type="text"
+            placeholder="z.B. Mustermann"
+            autocomplete="name"
+            formControlName="lastName"
         />
 
         <!-- E-Mail -->
@@ -27,7 +38,7 @@
             Bitte E-Mail-Richtlinien beachten.
         </div>
 
-        <!-- Benutzername -->
+        <!-- Benutzername
         <label for="username">Benutzername</label>
         <input
             id="username"
@@ -36,27 +47,27 @@
             placeholder="z. B. mustermannmax123"
             autocomplete="username"
             formControlName="username"
-        />
+        /> -->
 
         <!-- Geburtsdatum -->
-        <label for="username">Geburtsdatum</label>
+        <!-- <label for="username">Geburtsdatum</label>
         <input
             id="birthdate"
             name="birthdate"
             type="date"
             autocomplete="bday"
             formControlName="birthdate"
-        />
+        /> -->
 
         <!-- Geschlecht -->
-        <label for="gender">Geschlecht</label>
+        <!-- <label for="gender">Geschlecht</label>
         <select id="gender" name="gender" autocomplete="sex" formControlName="gender">
             <option value="" selected>Bitte auswählen</option>
             <option value="female">Weiblich</option>
             <option value="male">Männlich</option>
             <option value="diverse">Divers</option>
             <option value="none">Keine Angabe</option>
-        </select>
+        </select> -->
 
 
         <!-- Passwortbereich -->
