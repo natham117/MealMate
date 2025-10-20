@@ -119,16 +119,15 @@ export class ShoppingList implements OnInit {
     }
 
     const payload = {
-      userId: this.userId,
-      listName: this.neueListe.listName.trim(),
-      items: this.neueListe.items
-        .filter(i => i.itemName.trim() !== '')
-        .map(i => ({
-          itemName: i.itemName.trim(),
-          amount: Number(i.amount) || 0,
-          unit: i.unit.trim() || ''
-        }))
+      UserId: this.userId,
+      ListName: this.neueListe.listName.trim(),
+      Items: this.neueListe.items.map(i => ({
+        ItemName: i.itemName.trim(),
+        Amount: Number(i.amount) || 0,
+        Unit: i.unit.trim() || ''
+      }))
     };
+
 
     console.log('📤 Sende Payload:', payload);
 
@@ -159,23 +158,88 @@ export class ShoppingList implements OnInit {
     this.ausgewaehlteListe = null;
   }
 
-  fuegeProduktHinzu(): void {
-    if (!this.neuesProdukt.trim()) return;
-    const neuesItem: ShoppingItem = {
-      itemName: this.neuesProdukt.trim(),
-      amount: this.neueMenge ?? 0,
-      unit: this.neueEinheit.trim()
-    };
-    this.ausgewaehlteListe?.items.push(neuesItem);
-    this.neuesProdukt = '';
-    this.neueMenge = null;
-    this.neueEinheit = '';
-    this.zeigeSnackbar('Produkt hinzugefügt!');
+  // fuegeProduktHinzu(): void {
+  //   if (!this.neuesProdukt.trim()) return;
+  //   const neuesItem: ShoppingItem = {
+  //     itemName: this.neuesProdukt.trim(),
+  //     amount: this.neueMenge ?? 0,
+  //     unit: this.neueEinheit.trim()
+  //   };
+  //   this.ausgewaehlteListe?.items.push(neuesItem);
+  //   this.neuesProdukt = '';
+  //   this.neueMenge = null;
+  //   this.neueEinheit = '';
+  //   this.zeigeSnackbar('Produkt hinzugefügt!');
+  // }
+  fuegeProduktHinzu() {
+  if (!this.ausgewaehlteListe) return;
+  if (!this.neuesProdukt.trim()) {
+    this.zeigeSnackbar('❌ Bitte gib einen Produktnamen ein!');
+    return;
   }
 
+  const payload = {
+  itemId: this.ausgewaehlteListe.listId, // ⬅️ das ist die LIST_ID!
+  itemName: this.neuesProdukt.trim(),
+  amount: this.neueMenge ?? 0,
+  unit: this.neueEinheit.trim(),
+  category: '' // optional, weil Base-Klasse es verlangt
+  };
+
+
+  this.http.post(`${this.baseUrl}/item`, payload).subscribe({
+    next: () => {
+      // Direkt in der Liste anzeigen
+      this.ausgewaehlteListe!.items.push({
+        itemName: payload.itemName,
+        amount: payload.amount,
+        unit: payload.unit
+      });
+
+      this.zeigeSnackbar('✅ Produkt erfolgreich hinzugefügt!');
+      this.neuesProdukt = '';
+      this.neueMenge = null;
+      this.neueEinheit = '';
+    },
+    error: (err) => {
+      console.error('Fehler beim Hinzufügen:', err);
+      
+      // 💡 Zeige den Fehler hübsch in der Snackbar
+      const msg =
+        err.status === 0
+          ? '⚠️ Keine Verbindung zum Server!'
+          : `❌ Fehler beim Hinzufügen (${err.status}): ${err.error?.message ?? 'Unbekannter Fehler'}`;
+      this.zeigeSnackbar(msg);
+    }
+  });
+}
+
+
   loescheProdukt(index: number): void {
-    this.ausgewaehlteListe?.items.splice(index, 1);
+  if (!this.ausgewaehlteListe) return;
+
+  const item = this.ausgewaehlteListe.items[index];
+  if (!item) return;
+
+  const listId = this.ausgewaehlteListe.listId;
+  const itemName = item.itemName;
+
+  this.http.delete(`${this.baseUrl}/item`, {
+  params: {
+    listId: String(listId),
+    itemName: String(itemName)
   }
+  }).subscribe({
+    next: () => {
+      this.ausgewaehlteListe!.items.splice(index, 1);
+      this.zeigeSnackbar(`'${itemName}' wurde gelöscht!`);
+    },
+    error: (err) => {
+      console.error('Fehler beim Löschen:', err);
+      this.zeigeSnackbar('❌ Fehler beim Löschen!');
+    }
+  });
+}
 
   // ------------------------------------------------------------
   // 🔔 Snackbar & Hilfsfunktionen
@@ -192,4 +256,30 @@ export class ShoppingList implements OnInit {
       items: [{ itemName: '', amount: 0, unit: '' }]
     };
   }
+  bearbeiteProdukt(item: any) {
+  item.bearbeitung = true;
+}
+
+speichereProdukt(item: any) {
+  if (!this.ausgewaehlteListe) return;
+
+  const payload = {
+    listId: this.ausgewaehlteListe.listId,
+    itemName: item.itemName,
+    amount: item.amount,
+    unit: item.unit,
+  };
+
+  this.http.put(`${this.baseUrl}/item`, payload).subscribe({
+    next: () => {
+      item.bearbeitung = false;
+      this.zeigeSnackbar('Änderungen gespeichert!');
+    },
+    error: (err) => {
+      console.error('Fehler beim Speichern:', err);
+      this.zeigeSnackbar('❌ Fehler beim Speichern!');
+    },
+  });
+}
+
 }
