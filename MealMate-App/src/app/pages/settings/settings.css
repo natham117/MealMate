@@ -1,0 +1,106 @@
+/* Page-level container: zentrierte Überschriften / Texte */
+.settings-page {
+  padding: 1.25rem;
+}
+
+/* Überschriften und Einleitung zentrieren */
+.settings-page h1,
+.settings-page p,
+.settings-page h3 {
+  text-align: center;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* Einheitliche auth-card wie auf anderen Seiten */
+.auth-card {
+  max-width: 420px;
+  margin: 8vh auto;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  background: #fff;
+}
+
+/* Profil-Header (Bild zentrieren) */
+.profil-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.profilbild {
+  width: 100px;
+  height: 100px;
+  border-radius: 999px;
+  object-fit: cover;
+  display: inline-block;
+  border: 2px solid rgba(0,0,0,0.04);
+}
+
+/* Formular-Layout */
+form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+/* Label / Inputs */
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: .25rem;
+}
+
+input, select, textarea {
+  padding: .75rem .9rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  color: #111;
+}
+
+/* Action-Buttons ausrichten */
+.actions {
+  display: flex;
+  gap: .5rem;
+  justify-content: flex-end;
+  margin-top: .6rem;
+}
+
+/* Buttons */
+button {
+  margin-top: .5rem;
+  padding: .8rem 1rem;
+  border: 0;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* Sekundärer Button */
+.btn-secondary {
+  background: transparent;
+  border: 1px solid #ddd;
+  color: #111;
+}
+
+/* Hinweise / Fehler */
+.hint { font-size: .95rem; color: #666; }
+.error { color: #b00020; font-size: .9rem; }
+
+/* Kleine Bildschirme: Karte etwas anpassen */
+@media (max-width: 480px) {
+  .auth-card {
+    margin: 4vh 1rem;
+    padding: 1.25rem;
+  }
+
+  .profilbild {
+    width: 72px;
+    height: 72px;
+  }
+}
