@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +15,7 @@ export class Login {
   email: string = '';
   pw: string = '';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
 
   onSubmit() {
     this.http.post<{ success: boolean}>('http://localhost:5000/api/login', {
@@ -25,6 +25,7 @@ export class Login {
       console.log('API result:', result);
       if (result.success) {
         window.alert('Login erfolgreich!');
+        this.authService.setEmail(this.email);
         this.router.navigate(['/app-home']);
       }
       else {
@@ -33,4 +34,8 @@ export class Login {
     }
     )
   };
+
+  getEmail(){
+    return this.email;
+  }
 }
