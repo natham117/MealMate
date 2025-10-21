@@ -1,6 +1,7 @@
 <div class="container">
   <h1>Meine Einkaufslisten</h1>
 
+  <!-- Suchleiste + Button -->
   <div class="header-bereich">
     <input
       type="text"
@@ -12,21 +13,27 @@
     <button class="hinzufuegen-btn" (click)="oeffneFormular()">+ Neue Einkaufsliste</button>
   </div>
 
+  <!-- Einkaufslisten -->
   <div class="liste-grid">
-  <div *ngFor="let liste of gefilterteListen" class="liste-karte" (click)="zeigeDetails(liste)">
-    <h2 class="liste-titel">{{ liste.titel }}</h2>
-    <ul class="item-liste">
-      <li *ngFor="let item of liste.items">{{ item.name }} - {{ item.menge }}</li>
-    </ul>
+    <div
+      *ngFor="let liste of gefilterteListen"
+      class="liste-karte"
+      (click)="zeigeDetails(liste)"
+    >
+      <h2 class="liste-titel">{{ liste.listName }}</h2>
+      <ul class="item-liste">
+        <li *ngFor="let item of liste.items">
+          {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="gefilterteListen.length === 0" class="keine-ergebnisse">
+      <p>Keine Einkaufslisten gefunden für "{{ suchbegriff }}"</p>
+    </div>
   </div>
 
-  <div *ngIf="gefilterteListen.length === 0" class="keine-ergebnisse">
-    <p>Keine Einkaufslisten gefunden für "{{ suchbegriff }}"</p>
-  </div>
-</div>
-
-
-  <!-- Formular für neue Liste -->
+  <!-- Modal: Neue Liste -->
   <div class="modal" [class.aktiv]="formularAktiv" (click)="schliesseFormular()">
     <div class="modal-inhalt" (click)="$event.stopPropagation()">
       <button class="schliessen-btn" (click)="schliesseFormular()">×</button>
@@ -35,63 +42,145 @@
         <h2 class="detail-titel">Neue Einkaufsliste</h2>
 
         <form (ngSubmit)="speichereListe()">
+          <!-- Name -->
           <div class="form-gruppe">
             <label>Listenname *</label>
-            <input type="text" [(ngModel)]="neueListe.titel" name="titel" class="form-input" required />
+            <input
+              type="text"
+              [(ngModel)]="neueListe.listName"
+              name="listName"
+              class="form-input"
+              required
+            />
           </div>
 
+          <!-- Produkte -->
           <div class="form-gruppe">
             <label>Produkte</label>
-            <div class="item-eingabe" *ngFor="let item of neueListe.items; let i = index">
-              <input type="text" [(ngModel)]="item.name" [name]="'itemName' + i" class="form-input" placeholder="z.B. Tomaten" required />
-              <input type="text" [(ngModel)]="item.menge" [name]="'itemMenge' + i" class="form-input menge-input" placeholder="z.B. 2 Stk" />
-              <button type="button" class="entfernen-btn" (click)="entferneItem(i)" *ngIf="neueListe.items.length > 1">×</button>
+            <div
+              class="item-eingabe"
+              *ngFor="let item of neueListe.items; let i = index"
+            >
+              <input
+                type="text"
+                [(ngModel)]="item.itemName"
+                [name]="'itemName' + i"
+                class="form-input"
+                placeholder="z.B. Tomaten"
+                required
+              />
+              <input
+                type="number"
+                [(ngModel)]="item.amount"
+                [name]="'itemAmount' + i"
+                class="form-input menge-input"
+                placeholder="Menge"
+                min="0"
+              />
+              <input
+                type="text"
+                [(ngModel)]="item.unit"
+                [name]="'itemUnit' + i"
+                class="form-input menge-input"
+                placeholder="Einheit"
+              />
+              <button
+                type="button"
+                class="entfernen-btn"
+                (click)="entferneItem(i)"
+                *ngIf="neueListe.items.length > 1"
+              >
+                ×
+              </button>
             </div>
-            <button type="button" class="zutat-hinzufuegen-btn" (click)="fuegeItemHinzu()">+ Produkt hinzufügen</button>
+
+            <button
+              type="button"
+              class="zutat-hinzufuegen-btn"
+              (click)="fuegeItemHinzu()"
+            >
+              + Produkt hinzufügen
+            </button>
           </div>
 
+          <!-- Aktionen -->
           <div class="form-aktionen">
-            <button type="button" class="abbrechen-btn" (click)="schliesseFormular()">Abbrechen</button>
+            <button
+              type="button"
+              class="abbrechen-btn"
+              (click)="schliesseFormular()"
+            >
+              Abbrechen
+            </button>
             <button type="submit" class="speichern-btn">Speichern</button>
           </div>
         </form>
       </div>
     </div>
   </div>
-  <!-- Modal für Detailansicht -->
+
+  <!-- Modal: Detailansicht -->
   <div class="modal" [class.aktiv]="detailAktiv" (click)="schliesseDetails()">
-    <div class="modal-inhalt" (click)="$event.stopPropagation()" *ngIf="ausgewaehlteListe">
+    <div
+      class="modal-inhalt"
+      (click)="$event.stopPropagation()"
+      *ngIf="ausgewaehlteListe"
+    >
       <button class="schliessen-btn" (click)="schliesseDetails()">×</button>
 
       <div class="detail-inhalt">
-        <h2 class="detail-titel">{{ ausgewaehlteListe.titel }}</h2>
+        <h2 class="detail-titel">{{ ausgewaehlteListe.listName }}</h2>
 
-        <ul class="detail-item-liste">
-          <li *ngFor="let item of ausgewaehlteListe.items; let i = index">
-            <ng-container *ngIf="!item.bearbeitung">
-              {{ item.name }} - {{ item.menge }}
-              <div class="aktionen">
-                <button class="bearbeiten-btn" (click)="bearbeiteProdukt(item)">✎</button>
-                <button class="loeschen-btn" (click)="loescheProdukt(i)">🗑️</button>
-              </div>
-            </ng-container>
+          <ul class="detail-item-liste">
+            <li *ngFor="let item of ausgewaehlteListe.items; let i = index">
+              <ng-container *ngIf="!item.bearbeitung">
+                {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
+                <div class="aktionen">
+                  <button class="bearbeiten-btn" (click)="bearbeiteProdukt(item)">✎</button>
+                  <button class="loeschen-btn" (click)="loescheProdukt(i)">🗑️</button>
+                </div>
+              </ng-container>
 
-            <ng-container *ngIf="item.bearbeitung">
-              <input [(ngModel)]="item.name" class="form-input small-input" />
-              <input [(ngModel)]="item.menge" class="form-input small-input" />
-              <button class="speichern-mini" (click)="speichereProdukt(item)">💾</button>
-            </ng-container>
-          </li>
-        </ul>
+              <ng-container *ngIf="item.bearbeitung">
+                <input [(ngModel)]="item.itemName" class="form-input small-input" />
+                <input
+                  type="number"
+                  [(ngModel)]="item.amount"
+                  class="form-input small-input"
+                  min="0"
+                />
+                <input [(ngModel)]="item.unit" class="form-input small-input" />
+                <button class="speichern-mini" (click)="speichereProdukt(item)">💾</button>
+              </ng-container>
+            </li>
+          </ul>
 
         <div class="produkt-hinzufuegen">
-          <input [(ngModel)]="neuesProdukt" placeholder="Produktname" class="form-input small-input" />
-          <input [(ngModel)]="neueMenge" placeholder="Menge" class="form-input small-input" />
+          <input
+            [(ngModel)]="neuesProdukt"
+            placeholder="Produktname"
+            class="form-input small-input"
+          />
+          <input
+            type="number"
+            [(ngModel)]="neueMenge"
+            placeholder="Menge"
+            class="form-input small-input"
+            min="0"
+          />
+          <input
+            [(ngModel)]="neueEinheit"
+            placeholder="Einheit"
+            class="form-input small-input"
+          />
           <button class="hinzufuegen-mini" (click)="fuegeProduktHinzu()">+</button>
         </div>
       </div>
     </div>
   </div>
+
   <!-- Snackbar -->
-  <div class="snackbar" [class.aktiv]="snackbarAktiv">{{ snackbarText }}</div>
+  <div class="snackbar" [class.aktiv]="snackbarAktiv">
+    {{ snackbarText }}
+  </div>
 </div>
