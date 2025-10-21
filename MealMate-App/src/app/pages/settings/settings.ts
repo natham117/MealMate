@@ -18,6 +18,7 @@ export class Settings {
   showImageModal: boolean = false;
   fallbackUrl = 'https://static.vecteezy.com/ti/gratis-vektor/t1/2534006-social-media-chatting-online-leeres-profil-bild-kopf-und-korper-symbol-menschen-stehend-symbol-grauer-hintergrund-kostenlos-vektor.jpg';
   errorMessage: string = '';
+  successMessage: string = '';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -52,13 +53,13 @@ export class Settings {
     }).subscribe(result => {
       if(result.success){
         console.log("Es wurden", result.rows, "erfolgreich verändert:", result.success)
-        window.alert("Aktualisierung des Profils erfolgreich!");
         this.errorMessage = ""; 
+        this.successMessage = "Aktualisierung des Profils erfolgreich!";
         this.authService.setEmail(this.user.email);
       }
       else{
         console.log("Es konnten keine Daten geändert werden.", result.success, result.errorMessage)
-        window.alert("Aktualisierung des Profils fehlgeschlagen!");
+        this.successMessage = "";
         this.errorMessage = result.errorMessage;
       }
     });
