@@ -1,6 +1,6 @@
 .navbar {
   display: flex;
-  justify-content: space-between; /* Teilt Navbar in linke/rechte Seite */
+  justify-content: space-between;
   align-items: center;
   background-color: #f5f5f5;
   padding: 10px 20px;
@@ -8,13 +8,11 @@
   gap: 1rem;
 }
 
-/* Linke Seite */
 .nav-left {
   display: flex;
   gap: 1rem;
 }
 
-/* Rechte Seite */
 .nav-right {
   display: flex;
   align-items: center;
@@ -39,7 +37,7 @@
   border-radius: 6px;
 }
 
-/* Buttons für Login & Register (optisch etwas hervorgehoben) */
+/* Buttons für Login & Register */
 .login-link {
   border: 2px solid #0078d7;
   border-radius: 6px;
@@ -61,4 +59,27 @@
 
 .register-link:hover {
   background-color: #005fa3;
+}
+
+.user-info {
+  color: #2c3e50;
+  font-weight: 500;
+  padding: 5px 10px;
+  background-color: #e8f5e9;
+  border-radius: 6px;
+}
+
+.logout-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
 }

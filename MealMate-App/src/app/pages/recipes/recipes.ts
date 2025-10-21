@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../../auth/login/auth.service';
 
 interface ZutatDto {
   zutat: string;
@@ -30,7 +31,7 @@ interface Rezept {
   styleUrl: './recipes.css'
 })
 export class Recipes implements OnInit {
-  private apiUrl = 'http://localhost:5000/api/recipes'; // Passe die URL an deinen Backend-Port an
+  private apiUrl = 'http://localhost:5000/api/recipes';
   
   suchbegriff = '';
   filter_vegetarisch = false;
@@ -54,7 +55,7 @@ export class Recipes implements OnInit {
   temp_bearbeitung_zeit = 0;
   temp_bearbeitung_portionen = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.ladeRezepte();
@@ -67,7 +68,11 @@ export class Recipes implements OnInit {
       },
       error: (error) => {
         console.error('Fehler beim Laden der Rezepte:', error);
-        alert('Fehler beim Laden der Rezepte. Stelle sicher, dass das Backend läuft.');
+        if (error.status === 401) {
+          alert('Bitte zuerst einloggen!');
+        } else {
+          alert('Fehler beim Laden der Rezepte. Stelle sicher, dass das Backend läuft.');
+        }
       }
     });
   }
@@ -98,7 +103,7 @@ export class Recipes implements OnInit {
       gefiltert = gefiltert.filter(rezept => rezept.istFavorit);
     }
     
-    // Nach eigene Rezepte filtern (später implementieren)
+    // Nach eigene Rezepte filtern
     if (this.filter_eigene_rezepte) {
       // TODO: Implementierung wenn User-Authentifizierung vorhanden
       // gefiltert = gefiltert.filter(rezept => rezept.userId === currentUserId);
@@ -197,6 +202,13 @@ export class Recipes implements OnInit {
   toggleFavorit(): void {
     if (!this.ausgewaehltes_rezept) return;
 
+    // Prüfe ob eingeloggt
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      alert('Bitte zuerst einloggen, um Favoriten zu setzen!');
+      return;
+    }
+
     const rezeptId = this.ausgewaehltes_rezept.id;
     const neuerStatus = !this.ausgewaehltes_rezept.istFavorit;
 
@@ -213,7 +225,11 @@ export class Recipes implements OnInit {
       },
       error: (error) => {
         console.error('Fehler beim Setzen des Favoriten-Status:', error);
-        alert('Fehler beim Setzen des Favoriten-Status');
+        if (error.status === 401) {
+          alert('Bitte zuerst einloggen!');
+        } else {
+          alert('Fehler beim Setzen des Favoriten-Status');
+        }
       }
     });
   }
