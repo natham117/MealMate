@@ -28,7 +28,6 @@ export class Settings {
 
   onLoad() {
     this.email = this.authService.getEmail();
-    console.log('Lade Profil für:', this.email);
     this.http.post(
       'http://localhost:5000/api/profile',
       JSON.stringify(this.email),
@@ -36,7 +35,7 @@ export class Settings {
     ).subscribe(result => {
       this.user = result;
       if (this.user) {
-        console.log('API result:', this.user.firstName);
+        console.log('Lade Profil für:', this.user.email);
       }
       else {
         console.log('API result: Kein Benutzer gefunden');
@@ -45,37 +44,39 @@ export class Settings {
   };
 
   onSubmit() {
-    this.http.post<{ success: boolean, rows: number, errorMessage: string}>(
+    this.successMessage = "";
+    this.errorMessage = "";
+
+    this.http.post<{ success: boolean, rows: number, errorMessage: string }>(
       "http://localhost:5000/api/profile/update", {
       user: this.user,
-      oldEmail: this.email,
+      oldEmail: this.authService.getEmail(),
       newPassword: this.newPassword
     }).subscribe(result => {
-      if(result.success){
-        console.log("Es wurden", result.rows, "erfolgreich verändert:", result.success)
-        this.errorMessage = ""; 
-        this.successMessage = "Aktualisierung des Profils erfolgreich!";
-        this.authService.setEmail(this.user.email);
-      }
-      else{
-        console.log("Es konnten keine Daten geändert werden.", result.success, result.errorMessage)
-        this.successMessage = "";
-        this.errorMessage = result.errorMessage;
-      }
+      setTimeout(() => {
+        if (result.success) {
+          this.errorMessage = "";
+          this.successMessage = "Aktualisierung des Profils erfolgreich!";
+          this.authService.setEmail(this.user.email);
+        } else {
+          this.successMessage = "";
+          this.errorMessage = result.errorMessage;
+        }
+      }, 50);
     });
   }
 
-  openImageModal(){
+  openImageModal() {
     this.showImageModal = true;
   }
 
-  closeImageModal(){
+  closeImageModal() {
     this.showImageModal = false;
     this.newImageUrl = '';
   }
 
-  updateImageUrl(){
-    if (this.newImageUrl.trim() !== ''){
+  updateImageUrl() {
+    if (this.newImageUrl.trim() !== '') {
       this.user.imageUrl = this.newImageUrl.trim();
     }
     this.onSubmit();
