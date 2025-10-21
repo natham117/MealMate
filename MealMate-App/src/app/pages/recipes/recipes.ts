@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/login/auth.service';
 
 interface ZutatDto {
   zutat: string;
-  menge: string | number;  // String für Input, wird später zu Number konvertiert
+  menge: string | number;
   einheit: string;
 }
 
 interface Rezept {
   id: number;
+  userId: number;
   titel: string;
   bild: string | null;
   zeit: string;
@@ -26,7 +27,7 @@ interface Rezept {
 
 @Component({
   selector: 'app-recipes',
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './recipes.html',
   styleUrl: './recipes.css'
 })
@@ -39,7 +40,6 @@ export class Recipes implements OnInit {
   filter_favoriten = false;
   filter_eigene_rezepte = false;
   
-  // Temporäre Variablen für das Formular
   temp_zeit = 0;
   temp_portionen = 0;
   
@@ -55,23 +55,27 @@ export class Recipes implements OnInit {
   temp_bearbeitung_zeit = 0;
   temp_bearbeitung_portionen = 0;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, public authService: AuthService) {}
 
   ngOnInit(): void {
+    console.log('🔄 [Recipes] Komponente wird initialisiert');
+    console.log('🔍 [Recipes] User-ID aus localStorage:', localStorage.getItem('userId'));
     this.ladeRezepte();
   }
 
   ladeRezepte(): void {
+    console.log('📥 [Recipes] Lade Rezepte...');
     this.http.get<Rezept[]>(this.apiUrl).subscribe({
       next: (rezepte) => {
+        console.log('✅ [Recipes] Rezepte geladen:', rezepte.length);
         this.rezepte = rezepte;
       },
       error: (error) => {
-        console.error('Fehler beim Laden der Rezepte:', error);
+        console.error('❌ [Recipes] Fehler beim Laden:', error);
         if (error.status === 401) {
           alert('Bitte zuerst einloggen!');
         } else {
-          alert('Fehler beim Laden der Rezepte. Stelle sicher, dass das Backend läuft.');
+          alert('Fehler beim Laden der Rezepte.');
         }
       }
     });
@@ -105,8 +109,11 @@ export class Recipes implements OnInit {
     
     // Nach eigene Rezepte filtern
     if (this.filter_eigene_rezepte) {
-      // TODO: Implementierung wenn User-Authentifizierung vorhanden
-      // gefiltert = gefiltert.filter(rezept => rezept.userId === currentUserId);
+      const currentUserId = this.authService.getUserId();
+      if (currentUserId) {
+        gefiltert = gefiltert.filter(rezept => rezept.userId === currentUserId);
+        console.log(`🔍 [Recipes] Filter "Eigene Rezepte": ${gefiltert.length} von ${this.rezepte.length}`);
+      }
     }
     
     return gefiltert;
@@ -126,10 +133,8 @@ export class Recipes implements OnInit {
 
   starteBearbeitung(): void {
     if (this.ausgewaehltes_rezept) {
-      // Deep Copy des Rezepts für die Bearbeitung
       this.bearbeitetes_rezept = JSON.parse(JSON.stringify(this.ausgewaehltes_rezept));
       
-      // Zeit und Portionen extrahieren
       const zeitMatch = this.ausgewaehltes_rezept.zeit.match(/\d+/);
       const portionenMatch = this.ausgewaehltes_rezept.portionen.match(/\d+/);
       
@@ -157,13 +162,11 @@ export class Recipes implements OnInit {
 
     this.http.put<Rezept>(`${this.apiUrl}/${aktualisiertes_rezept.id}`, aktualisiertes_rezept).subscribe({
       next: (gespeichertesRezept) => {
-        // Aktualisiere das Rezept in der Liste
         const index = this.rezepte.findIndex(r => r.id === gespeichertesRezept.id);
         if (index !== -1) {
           this.rezepte[index] = gespeichertesRezept;
         }
         
-        // Aktualisiere die Detailansicht
         this.ausgewaehltes_rezept = gespeichertesRezept;
         this.bearbeitungsmodus = false;
         this.bearbeitetes_rezept = null;
@@ -202,7 +205,6 @@ export class Recipes implements OnInit {
   toggleFavorit(): void {
     if (!this.ausgewaehltes_rezept) return;
 
-    // Prüfe ob eingeloggt
     const userId = this.authService.getUserId();
     if (!userId) {
       alert('Bitte zuerst einloggen, um Favoriten zu setzen!');
@@ -212,9 +214,11 @@ export class Recipes implements OnInit {
     const rezeptId = this.ausgewaehltes_rezept.id;
     const neuerStatus = !this.ausgewaehltes_rezept.istFavorit;
 
+    console.log(`🌟 [Recipes] Favorit ${neuerStatus ? 'setzen' : 'entfernen'} für Rezept ${rezeptId}`);
+
     this.http.post(`${this.apiUrl}/${rezeptId}/favorite`, { isFavorite: neuerStatus }).subscribe({
       next: () => {
-        // Aktualisiere lokale Daten
+        console.log('✅ [Recipes] Favorit erfolgreich gesetzt');
         if (this.ausgewaehltes_rezept) {
           this.ausgewaehltes_rezept.istFavorit = neuerStatus;
         }
@@ -224,7 +228,7 @@ export class Recipes implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Fehler beim Setzen des Favoriten-Status:', error);
+        console.error('❌ [Recipes] Fehler beim Setzen des Favoriten:', error);
         if (error.status === 401) {
           alert('Bitte zuerst einloggen!');
         } else {
@@ -256,6 +260,7 @@ export class Recipes implements OnInit {
 
     const rezept: Rezept = {
       id: 0,
+      userId: 0,  // Wird vom Backend gesetzt
       titel: this.neues_rezept.titel.trim(),
       bild: this.neues_rezept.bild || null,
       zeit: this.temp_zeit > 0 ? `${this.temp_zeit} Min` : '0 Min',
@@ -291,6 +296,7 @@ export class Recipes implements OnInit {
   private leeres_rezept(): Rezept {
     return {
       id: 0,
+      userId: 0,
       titel: '',
       bild: null,
       zeit: '',
