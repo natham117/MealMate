@@ -45,6 +45,7 @@ export class Login {
 
         if(body?.success) {
           window.alert('Login erfolgreich!');
+          this.authService.setEmail(email);
           this.router.navigate(['/app-home']);
         } else {
           window.alert(body?.message ?? 'Login fehlgeschlagen.')

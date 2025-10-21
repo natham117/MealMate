@@ -4,7 +4,7 @@
 
   <h3>Profil</h3>
 
-  <div class="auth-card" *ngIf="user">
+  <div class="auth-card" *ngIf="user; else notLoggedIn">
     <div class="profil-header">
       <img [src]="user.imageUrl || fallbackUrl" alt="Profilbild" class="profilbild" (click)="openImageModal()">
     </div>
@@ -35,6 +35,9 @@
         {{ errorMessage }}
       </div>
 
+      <div class="success-message" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
 
       <div class="actions">
         <button type="submit">Speichern</button>
@@ -54,3 +57,9 @@
     </div>
   </div>
 </div>
+
+<ng-template #notLoggedIn>
+  <div class="auth-card">
+    <p class="error-message">Bitte melde dich zunächst an.</p>
+  </div>
+</ng-template>
