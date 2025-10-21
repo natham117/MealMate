@@ -170,17 +170,9 @@ export class Register {
 
     console.log('[Register] Response:', res);
     if (res.success) {
-      // this.modalTitle.set('Registrierung erfolgreich');
-      // this.modalBody.set(`Konto erstellt (UserId: ${res.userId}).`);
-      // this.showEmailRules.set(false);
-      // this.showPasswordRules.set(false);
-      // this.modalOpen.set(true);
-        window.alert('Registrierung erfolgreich!');
+        window.alert('Registrierung gestartet. Eine Bestätigungs-Mail wurde an deine Email gesendet. Bitte klicke auf den Link in der E-Mail, um dein Konto zu aktivieren und dich anschließend einzuloggen.');
         this.router.navigate(['/login']);
     } else {
-      // this.modalTitle.set('Registrierung fehlgeschlagen');
-      // this.modalBody.set(res.message ?? 'Unbekannter Fehler.');
-      // this.modalOpen.set(true);
       window.alert('Registrierung fehlgeschlagen: ' + (res.message ?? 'Unbekannter Fehler.'));
     }
   } catch (err: any) {
