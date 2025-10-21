@@ -110,6 +110,10 @@ h1 {
 .modal.aktiv {
   display: flex;
 }
+/* Rename-Modal soll über der Detailansicht liegen */
+.modal.rename {
+  z-index: 2000;
+}
 
 .modal-inhalt {
   background: white;
@@ -284,4 +288,41 @@ h1 {
 .snackbar.aktiv {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+.detail-item-liste li {
+  display: flex;
+  justify-content: space-between; /* Produkt links, Buttons rechts */
+  align-items: center; /* gleiche Höhe */
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  color: #555;
+}
+
+.detail-item-liste li:last-child {
+  border-bottom: none;
+}
+
+/* Buttons rechts etwas voneinander trennen */
+.aktionen {
+  display: flex;
+  gap: 8px;
+}
+
+.aktionen button {
+  background: #ecf0f1;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.aktionen .bearbeiten-btn:hover {
+  background: #f1c40f;
+}
+
+.aktionen .loeschen-btn:hover {
+  background: #e74c3c;
+  color: white;
 }
