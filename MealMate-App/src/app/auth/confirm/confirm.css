@@ -1,0 +1,25 @@
+.card {
+  max-width: 520px;
+  margin: 5rem auto;
+  padding: 2rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  background: #fff;
+  text-align: center;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+h1 { margin-top: 0; font-size: 1.6rem; }
+.info { margin: 1rem 0 1.5rem; color: #444; }
+.info.ok { color: #1b5e20; }
+.info.err { color: #b00020; }
+button {
+  padding: .75rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background: #2e7d32;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+button[disabled] { opacity: .6; cursor: default; }
+.hint { margin-top: 1rem; }

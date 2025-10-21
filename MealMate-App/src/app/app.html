@@ -1,17 +1,34 @@
+<!-- Navbar ganz oben -->
 <nav class="navbar">
   <div class="nav-left">
-    <a routerLink="/app-home" routerLinkActive="active">🏠 Startseite</a>
-    <a routerLink="/recipes" routerLinkActive="active">🍲 Rezepte</a>
-    <a routerLink="/shopping-list" routerLinkActive="active">🛒 Einkaufsliste</a>
-    <a routerLink="/settings" routerLinkActive="active">⚙️ Einstellungen</a>
+    <a routerLink="/app-home" routerLinkActive="active">Home</a>
+    <a routerLink="/recipes" routerLinkActive="active">Rezepte</a>
+    <a routerLink="/shopping-list" routerLinkActive="active">Einkaufslisten</a>
+    <a routerLink="/settings" routerLinkActive="active">Einstellungen</a>
   </div>
 
   <div class="nav-right">
-    <a routerLink="/login" routerLinkActive="active" class="login-link">Login</a>
-    <a routerLink="/register" routerLinkActive="active" class="register-link">Registrieren</a>
+    <!-- Zeige Login/Register nur wenn NICHT eingeloggt -->
+    @if (!authService.isLoggedIn()) {
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+      <a routerLink="/register" routerLinkActive="active">Registrieren</a>
+    }
+
+    <!-- Zeige User-Info + Logout wenn eingeloggt -->
+    @if (authService.isLoggedIn()) {
+      <span class="user-info">{{ authService.getEmail() }}</span>
+      <button class="logout-btn" (click)="logout()">Abmelden</button>
+    }
   </div>
 </nav>
 
-<hr />
+<!-- Danach kommt der restliche Layout-Container -->
+<div class="page-container">
+  <div class="side-bar left-bar"></div>
 
-<router-outlet></router-outlet>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <div class="side-bar right-bar"></div>
+</div>

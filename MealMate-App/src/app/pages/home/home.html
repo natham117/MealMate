@@ -1,2 +1,85 @@
-<h2>Willkommen bei MealMate 👋</h2>
-<p>Hier findest du alles rund um deine Rezepte, Einkaufslisten und Einstellungen.</p>
+<h1>Willkommen bei MealMate!</h1>
+<p class="intro-text">
+  Deine Hilfe bei der Essensplanung. Tauche ein in Rezepte anderer, gestalte deine individuellen Einkaufslisten und Rezepte. 
+</p>
+<p class="intro-text">
+  Revolutioniere deine Essensplanung.
+</p>
+<div class="search-bar">
+  <span class="search-icon">🔍</span>
+  <input
+    type="text"
+    placeholder="Rezepte Suchen"
+    [(ngModel)]="searchQuery"
+  />
+  <span class="clear-icon" (click)="clearSearch()">x</span>
+</div>
+<div *ngIf="recipeOfTheDay" class="rezept-des-tages">
+  <h2 class="rezept-tages-titel">🍽️ Rezept des Tages</h2>
+
+  <div class="rezept-karte">
+    <img
+      *ngIf="recipeOfTheDay.bild"
+      class="rezept-bild"
+      [src]="recipeOfTheDay.bild"
+      [alt]="recipeOfTheDay.titel"
+    />
+    <div *ngIf="!recipeOfTheDay.bild" class="rezept-bild"></div>
+
+    <div class="rezept-inhalt">
+      <h2 class="rezept-titel">{{ recipeOfTheDay.titel }}</h2>
+
+      <div class="rezept-info">
+        <div class="info-item">
+          <span>⏱️</span>
+          <span>{{ recipeOfTheDay.zeit }}</span>
+        </div>
+        <div class="info-item">
+          <span>👥</span>
+          <span>{{ recipeOfTheDay.portionen }}</span>
+        </div>
+      </div>
+
+      <p class="rezept-beschreibung">
+        {{ recipeOfTheDay.beschreibung }}
+      </p>
+
+      <div
+        class="rezept-eigenschaften"
+        *ngIf="recipeOfTheDay.vegetarisch || recipeOfTheDay.vegan"
+      >
+        <span
+          class="eigenschaft-badge-klein"
+          *ngIf="recipeOfTheDay.vegetarisch"
+          >🌱</span
+        >
+        <span
+          class="eigenschaft-badge-klein"
+          *ngIf="recipeOfTheDay.vegan"
+          >🌿</span
+        >
+      </div>
+
+      <div class="rezept-zutaten">
+        <h3>Zutaten:</h3>
+        <ul>
+          <li *ngFor="let zutat of recipeOfTheDay.zutaten">
+            <span
+              *ngIf="
+                zutat.menge &&
+                zutat.menge !== '' &&
+                zutat.menge !== '0' &&
+                zutat.menge !== 0
+              "
+              >{{ zutat.menge }} {{ zutat.einheit }}</span
+            >
+            {{ zutat.zutat }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,5 +1,8 @@
 <div class="container">
   <h1>Meine Einkaufslisten</h1>
+  <div class = "text-intro">
+    <p>Verwalte hier deine Einkaufslisten. Du kannst neue Listen erstellen, bestehende umbenennen oder löschen und die Details jeder Liste einsehen.</p>
+  </div>
 
   <!-- Suchleiste + Button -->
   <div class="header-bereich">
@@ -13,25 +16,32 @@
     <button class="hinzufuegen-btn" (click)="oeffneFormular()">+ Neue Einkaufsliste</button>
   </div>
 
-  <!-- Einkaufslisten -->
-  <div class="liste-grid">
-    <div
-      *ngFor="let liste of gefilterteListen"
-      class="liste-karte"
-      (click)="zeigeDetails(liste)"
+  <div class="liste-grid" >
+  <div
+    *ngFor="let liste of gefilterteListen"
+    class="liste-karte"
+    (click)="zeigeDetails(liste)"
     >
-      <h2 class="liste-titel">{{ liste.listName }}</h2>
-      <ul class="item-liste">
-        <li *ngFor="let item of liste.items">
-          {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
-        </li>
-      </ul>
+    <div class="listen-header">
+      <h2 class="liste-titel">
+        {{ liste.listName }}
+      </h2>
+      
     </div>
 
-    <div *ngIf="gefilterteListen.length === 0" class="keine-ergebnisse">
-      <p>Keine Einkaufslisten gefunden für "{{ suchbegriff }}"</p>
-    </div>
+    <ul class="item-liste">
+      <li *ngFor="let item of liste.items">
+        {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
+      </li>
+    </ul>
   </div>
+
+  <div *ngIf="gefilterteListen.length === 0" class="keine-ergebnisse">
+    <p>Keine Einkaufslisten gefunden für "{{ suchbegriff }}"</p>
+  </div>
+</div>
+
+
 
   <!-- Modal: Neue Liste -->
   <div class="modal" [class.aktiv]="formularAktiv" (click)="schliesseFormular()">
@@ -118,6 +128,63 @@
       </div>
     </div>
   </div>
+  <!-- Modal: Liste umbenennen -->
+<div class="modal rename" [class.aktiv]="renameAktiv" (click)="schliesseRenameDialog()">
+  <div class="modal-inhalt" (click)="$event.stopPropagation()">
+    <button class="schliessen-btn" (click)="schliesseRenameDialog()">×</button>
+
+    <div class="detail-inhalt">
+      <h2 class="detail-titel">Liste umbenennen</h2>
+
+      <div class="form-gruppe">
+        <label>Neuer Listenname *</label>
+        <input
+          type="text"
+          [(ngModel)]="neuerListenname"
+          name="renameListName"
+          class="form-input"
+          required
+        />
+      </div>
+
+      <div class="form-aktionen">
+        <button type="button" class="abbrechen-btn" (click)="schliesseRenameDialog()">
+          Abbrechen
+        </button>
+        <button type="button" class="speichern-btn" (click)="speichereRename()">
+          Speichern
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal: Liste löschen -->
+<div class="modal" [class.aktiv]="deleteAktiv" (click)="schliesseDeleteDialog()">
+  <div class="modal-inhalt" (click)="$event.stopPropagation()">
+    <button class="schliessen-btn" (click)="schliesseDeleteDialog()">×</button>
+
+    <div class="detail-inhalt">
+      <h2 class="detail-titel">Liste löschen</h2>
+
+      <p>
+        Möchtest du die Liste
+        <strong>{{ zuLoeschendeListe?.listName }}</strong>
+        wirklich löschen? 🗑️
+      </p>
+
+      <div class="form-aktionen">
+        <button type="button" class="abbrechen-btn" (click)="schliesseDeleteDialog()">
+          Abbrechen
+        </button>
+        <button type="button" class="speichern-btn loeschen" (click)="bestaetigeDelete()">
+          Löschen
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 
   <!-- Modal: Detailansicht -->
   <div class="modal" [class.aktiv]="detailAktiv" (click)="schliesseDetails()">
@@ -130,6 +197,10 @@
 
       <div class="detail-inhalt">
         <h2 class="detail-titel">{{ ausgewaehlteListe.listName }}</h2>
+        <div class="listen-aktionen">
+        <button class="bearbeiten-btn" (click)="oeffneRenameDialog(ausgewaehlteListe)">✎</button>
+        <button class="loeschen-btn" (click)="bestaetigeLoeschen(ausgewaehlteListe)">🗑️</button>
+      </div>
 
           <ul class="detail-item-liste">
             <li *ngFor="let item of ausgewaehlteListe.items; let i = index">

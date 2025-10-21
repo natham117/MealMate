@@ -1,85 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+
+/* Standard-Browser-Margin entfernen */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f6f7f1; /* dein globaler Hintergrund */
+  overflow-x: hidden; /* verhindert weißen Rand rechts */
+}
+
+/* Sicherstellen, dass alles den ganzen Viewport nutzt */
+
+.page-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: transparent; /* keine helle Fläche hinter Balken */
+}
+
+/* === Seitenbalken === */
+.side-bar {
+  position: fixed;
+  top: 0;
+  width: 240px; /* oder was du willst */
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 900; /* leicht unter der Navbar, damit Navbar drüber liegt */
+}
+
+/* Beispielbilder – ersetze mit deinen eigenen URLs */
+.left-bar {
+  background-image: url('../assets/images/sidebar-left.jpg');
+  left: 0;
+}
+
+.right-bar {
+  background-image: url('../assets/images/sidebar-right.jpg');
+  right: 0;
+}
+
+/* === Hauptinhalt === */
+.content {
+  margin: 0 240px;
+  padding: 40px 60px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 70px);
+  overflow-x: hidden;
+  background-color: #fffef9;
+  font-family: 'Alice', serif;
+}
+
+/* Navbar Style */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f5f5f5;
-  padding: 10px 20px;
-  border-radius: 10px;
-  gap: 1rem;
+  background-color: #f6f7f1;
+  padding: 15px 40px;
+  border-bottom: 2px solid #dce0d2;
+  font-family: 'Alice', serif;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
-.nav-left {
-  display: flex;
-  gap: 1rem;
-}
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.navbar a {
+.nav-left a,
+.nav-right a {
   text-decoration: none;
-  color: #555;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
+  color: #2f2f2f;
+  margin-right: 25px;
+  font-size: 1.15rem;
+  transition: color 0.2s ease;
 }
 
-.navbar a:hover {
-  color: #0078d7;
-}
-
-.navbar a.active {
-  background-color: #0078d7;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-}
-
-/* Buttons für Login & Register */
-.login-link {
-  border: 2px solid #0078d7;
-  border-radius: 6px;
-  padding: 5px 12px;
-}
-
-.login-link:hover {
-  background-color: #0078d7;
-  color: white;
-}
-
-.register-link {
-  background-color: #0078d7;
-  color: white;
-  border-radius: 6px;
-  padding: 6px 14px;
+.nav-left a:hover,
+.nav-right a:hover,
+a.active {
+  color: #567d46;
   font-weight: 600;
 }
 
-.register-link:hover {
-  background-color: #005fa3;
-}
-
+/* Styles für User-Info (wenn eingeloggt) */
 .user-info {
-  color: #2c3e50;
+  color: #2f2f2f;
   font-weight: 500;
-  padding: 5px 10px;
+  padding: 5px 12px;
+  margin-right: 15px;
   background-color: #e8f5e9;
   border-radius: 6px;
+  font-size: 1rem;
+  border: 1px solid #dce0d2;
+  font-family: 'Alice', serif;
 }
 
+/* Styles für Logout-Button */
 .logout-btn {
-  background-color: #e74c3c;
+  background-color: #8b7355;
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 6px 14px;
+  padding: 8px 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
 }
 
 .logout-btn:hover {
-  background-color: #c0392b;
+  background-color: #6d5943;
+}
+
+/* === Mobile === */
+@media (max-width: 1024px) {
+  .side-bar {
+    display: none;
+  }
+  .content {
+    margin: 0;
+    padding: 20px;
+  }
 }
