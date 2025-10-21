@@ -29,7 +29,7 @@ export class Login {
         this.router.navigate(['/app-home']);
       }
       else {
-        window.alert('Login fehlgeschlagen!');
+        window.alert('Email oder Password falsch!');
       }
     }
     )

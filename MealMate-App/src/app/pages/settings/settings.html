@@ -6,8 +6,7 @@
 
   <div class="auth-card" *ngIf="user">
     <div class="profil-header">
-      <img [src]="user.imageUrl || 'https://media0.faz.net/ppmedia/w1240/aktuell/1021900142/1.8543712/16x9/rainer-winkler-alias.jpg'"
-           alt="Profilbild" class="profilbild">
+      <img [src]="user.imageUrl || fallbackUrl" alt="Profilbild" class="profilbild" (click)="openImageModal()">
     </div>
 
     <form (ngSubmit)="onSubmit()" novalidate>
@@ -32,10 +31,26 @@
         <div class="hint">Lass das Feld leer, wenn du das Passwort nicht ändern willst.</div>
       </div>
 
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+
       <div class="actions">
-        <button type="button" class="btn-secondary">Abbrechen</button>
         <button type="submit">Speichern</button>
       </div>
     </form>
+  </div>
+
+  <div class="image-modal" *ngIf="showImageModal">
+    <div class="modal-content">
+      <span class="close" (click)="closeImageModal()">&times;</span>
+      <img [src]="user.imageUrl || fallbackUrl" alt="Profilbild groß" class="large-image" />
+      <div class="url-input">
+        <label>Neue Bild-URL:</label>
+        <input type="text" [(ngModel)]="newImageUrl" placeholder="https://..." />
+        <button (click)="updateImageUrl()">Ändern</button>
+      </div>
+    </div>
   </div>
 </div>

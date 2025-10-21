@@ -14,6 +14,10 @@ export class Settings {
   user: any = null;
   email: string = '';
   newPassword: string = '';
+  newImageUrl: string = '';
+  showImageModal: boolean = false;
+  fallbackUrl = 'https://static.vecteezy.com/ti/gratis-vektor/t1/2534006-social-media-chatting-online-leeres-profil-bild-kopf-und-korper-symbol-menschen-stehend-symbol-grauer-hintergrund-kostenlos-vektor.jpg';
+  errorMessage: string = '';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -40,7 +44,7 @@ export class Settings {
   };
 
   onSubmit() {
-    this.http.post<{ success: boolean, rows: number}>(
+    this.http.post<{ success: boolean, rows: number, errorMessage: string}>(
       "http://localhost:5000/api/profile/update", {
       user: this.user,
       oldEmail: this.email,
@@ -49,12 +53,31 @@ export class Settings {
       if(result.success){
         console.log("Es wurden", result.rows, "erfolgreich verändert:", result.success)
         window.alert("Aktualisierung des Profils erfolgreich!");
+        this.errorMessage = ""; 
         this.authService.setEmail(this.user.email);
       }
       else{
-        console.log("Es konnten keine Daten geändert werden.", result.success)
+        console.log("Es konnten keine Daten geändert werden.", result.success, result.errorMessage)
         window.alert("Aktualisierung des Profils fehlgeschlagen!");
+        this.errorMessage = result.errorMessage;
       }
     });
+  }
+
+  openImageModal(){
+    this.showImageModal = true;
+  }
+
+  closeImageModal(){
+    this.showImageModal = false;
+    this.newImageUrl = '';
+  }
+
+  updateImageUrl(){
+    if (this.newImageUrl.trim() !== ''){
+      this.user.imageUrl = this.newImageUrl.trim();
+    }
+    this.onSubmit();
+    this.closeImageModal();
   }
 }
