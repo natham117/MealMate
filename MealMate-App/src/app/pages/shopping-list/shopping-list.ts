@@ -301,5 +301,101 @@ speichereProdukt(item: any) {
     },
   });
 }
+// oeffneRenameDialog(liste: ShoppingListData): void {
+//   const neuerName = prompt("Neuer Listenname:", liste.listName);
+//   if (!neuerName || !neuerName.trim()) return;
+
+//   this.http.put(`${this.baseUrl}/${liste.listId}`, { newName: neuerName.trim() }).subscribe({
+//     next: () => {
+//       this.zeigeSnackbar('Liste umbenannt!');
+//       liste.listName = neuerName.trim();
+//     },
+//     error: () => this.zeigeSnackbar('Fehler beim Umbenennen!')
+//   });
+// }
+// bestaetigeLoeschen(liste: ShoppingListData): void {
+//   const sicher = confirm(`Willst du die Liste "${liste.listName}" wirklich löschen?`);
+//   if (!sicher) return;
+
+//   this.http.delete(`${this.baseUrl}/${liste.listId}`).subscribe({
+//     next: () => {
+//       this.listen = this.listen.filter(l => l.listId !== liste.listId);
+//       this.gefilterteListen = this.gefilterteListen.filter(l => l.listId !== liste.listId);
+//       this.zeigeSnackbar('Liste gelöscht!');
+//     },
+//     error: () => this.zeigeSnackbar('Fehler beim Löschen!')
+//   });
+// }
+//Liste umbenennen und so
+renameAktiv = false;
+listeZumUmbenennen: ShoppingListData | null = null;
+neuerListenname = '';
+
+oeffneRenameDialog(liste: ShoppingListData): void {
+  this.listeZumUmbenennen = liste;
+  this.neuerListenname = liste.listName;
+  this.renameAktiv = true;
+}
+
+schliesseRenameDialog(): void {
+  this.renameAktiv = false;
+  this.listeZumUmbenennen = null;
+  this.neuerListenname = '';
+}
+
+speichereRename(): void {
+  if (!this.listeZumUmbenennen || !this.neuerListenname.trim()) {
+    this.zeigeSnackbar('Bitte gib einen gültigen Namen ein!');
+    return;
+  }
+
+  const payload = { newName: this.neuerListenname.trim() };
+  const listId = this.listeZumUmbenennen.listId;
+
+  this.http.put(`${this.baseUrl}/${listId}`, payload).subscribe({
+    next: () => {
+      this.listeZumUmbenennen!.listName = this.neuerListenname.trim();
+      this.zeigeSnackbar('Listenname erfolgreich geändert!');
+      this.schliesseRenameDialog();
+    },
+    error: (err) => {
+      console.error('Fehler beim Umbenennen:', err);
+      this.zeigeSnackbar('Fehler beim Umbenennen!');
+    }
+  });
+}
+deleteAktiv: boolean = false;
+zuLoeschendeListe: ShoppingListData | null = null;
+bestaetigeLoeschen(liste: ShoppingListData) {
+  this.zuLoeschendeListe = liste;
+  this.deleteAktiv = true;
+}
+
+schliesseDeleteDialog() {
+  this.deleteAktiv = false;
+  this.zuLoeschendeListe = null;
+}
+
+bestaetigeDelete() {
+  if (!this.zuLoeschendeListe) return;
+
+  const listId = this.zuLoeschendeListe.listId;
+
+  this.http.delete(`${this.baseUrl}/${listId}`).subscribe({
+    next: () => {
+      this.gefilterteListen = this.gefilterteListen.filter(
+        (l) => l.listId !== listId
+      );
+      this.zeigeSnackbar('Liste erfolgreich gelöscht!');
+      this.schliesseDeleteDialog();
+    },
+    error: (err) => {
+      console.error('Fehler beim Löschen:', err);
+      this.zeigeSnackbar('Fehler beim Löschen!');
+    }
+  });
+}
+
+
 
 }
