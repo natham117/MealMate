@@ -53,15 +53,15 @@ export class Settings {
     }).subscribe(result => {
       if(result.success){
         console.log("Es wurden", result.rows, "erfolgreich verändert:", result.success)
-        this.errorMessage = ""; 
-        this.successMessage = "Aktualisierung des Profils erfolgreich!";
-        this.authService.setEmail(this.user.email);
+          this.errorMessage = "";
+          this.successMessage = "Aktualisierung des Profils erfolgreich!";
+          this.authService.setEmail(this.user.email);
       }
       else{
         console.log("Es konnten keine Daten geändert werden.", result.success, result.errorMessage)
-        this.successMessage = "";
-        this.errorMessage = result.errorMessage;
-      }
+          this.successMessage = "";
+          this.errorMessage = result.errorMessage;
+        }
     });
   }
 
