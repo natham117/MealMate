@@ -16,7 +16,7 @@
       <span>Vegan</span>
     </label>
     
-    <!-- ✅ Filter nur für eingeloggte User (neue @if Syntax) -->
+    <!-- Filter nur für eingeloggte User (neue @if Syntax) -->
     @if (authService.isLoggedIn()) {
       <label class="filter-checkbox">
         <input type="checkbox" [(ngModel)]="filter_favoriten">
@@ -106,7 +106,7 @@
               <div class="detail-header">
                 <h2 class="detail-titel">{{ ausgewaehltes_rezept.titel }}</h2>
                 <div class="detail-aktionen">
-                  <!-- ✅ Favorit-Button nur für eingeloggte User -->
+                  <!-- Favorit-Button nur für eingeloggte User -->
                   @if (authService.isLoggedIn()) {
                     <button class="favorit-btn" [class.ist-favorit]="ausgewaehltes_rezept.istFavorit" (click)="toggleFavorit()">
                       @if (!ausgewaehltes_rezept.istFavorit) {
@@ -116,7 +116,10 @@
                       }
                     </button>
                   }
-                  <button class="bearbeiten-btn" (click)="starteBearbeitung()">✏️ Bearbeiten</button>
+                  <!-- Bearbeiten-Button nur für eigene Rezepte -->
+                  @if (authService.isLoggedIn() && authService.getUserId() === ausgewaehltes_rezept.userId) {
+                    <button class="bearbeiten-btn" (click)="starteBearbeitung()">✏️ Bearbeiten</button>
+                  }
                 </div>
               </div>
               

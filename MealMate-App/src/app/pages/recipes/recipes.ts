@@ -132,17 +132,30 @@ export class Recipes implements OnInit {
   }
 
   starteBearbeitung(): void {
-    if (this.ausgewaehltes_rezept) {
-      this.bearbeitetes_rezept = JSON.parse(JSON.stringify(this.ausgewaehltes_rezept));
-      
-      const zeitMatch = this.ausgewaehltes_rezept.zeit.match(/\d+/);
-      const portionenMatch = this.ausgewaehltes_rezept.portionen.match(/\d+/);
-      
-      this.temp_bearbeitung_zeit = zeitMatch ? parseInt(zeitMatch[0]) : 0;
-      this.temp_bearbeitung_portionen = portionenMatch ? parseInt(portionenMatch[0]) : 0;
-      
-      this.bearbeitungsmodus = true;
+    if (!this.ausgewaehltes_rezept) return;
+
+    // Prüfe ob User eingeloggt ist
+    const currentUserId = this.authService.getUserId();
+    if (!currentUserId) {
+      alert('Bitte zuerst einloggen, um Rezepte zu bearbeiten!');
+      return;
     }
+
+    // Prüfe ob das Rezept dem aktuellen User gehört
+    if (this.ausgewaehltes_rezept.userId !== currentUserId) {
+      alert('Du kannst nur deine eigenen Rezepte bearbeiten!');
+      return;
+    }
+
+    this.bearbeitetes_rezept = JSON.parse(JSON.stringify(this.ausgewaehltes_rezept));
+    
+    const zeitMatch = this.ausgewaehltes_rezept.zeit.match(/\d+/);
+    const portionenMatch = this.ausgewaehltes_rezept.portionen.match(/\d+/);
+    
+    this.temp_bearbeitung_zeit = zeitMatch ? parseInt(zeitMatch[0]) : 0;
+    this.temp_bearbeitung_portionen = portionenMatch ? parseInt(portionenMatch[0]) : 0;
+    
+    this.bearbeitungsmodus = true;
   }
 
   abbrechenBearbeitung(): void {
