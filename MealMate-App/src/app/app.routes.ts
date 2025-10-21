@@ -39,6 +39,10 @@ export const routes: Routes = [
     {
         path : 'settings',
         component: Settings
+    },
+    {
+        path: 'confirm',
+        loadComponent: () => import('./auth/confirm/confirm').then(m => m.Confirm)
     }
 
 ];

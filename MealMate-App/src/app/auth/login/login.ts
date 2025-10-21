@@ -14,25 +14,56 @@ import { AuthService } from './auth.service';
 export class Login {
   email: string = '';
   pw: string = '';
+  busy = false;
 
-  constructor(private http: HttpClient, private router: Router, private authService: AuthService) { }
+  constructor(
+    private http: HttpClient, 
+    private router: Router, 
+    private authService: AuthService
+  ) {}
 
   onSubmit() {
-    this.http.post<{ success: boolean}>('http://localhost:5000/api/login', {
-      email: this.email,
-      pw: this.pw
-    }).subscribe(result => {
-      console.log('API result:', result);
-      if (result.success) {
-        window.alert('Login erfolgreich!');
-        this.authService.setEmail(this.email);
-        this.router.navigate(['/app-home']);
-      }
-      else {
-        window.alert('Login fehlgeschlagen!');
-      }
+    if(this.busy) return;
+    const email = (this.email ?? '').trim();
+    const password = this.pw ?? '';
+
+    if(!email || !password) {
+      window.alert('Bitte E-Mail und Passwort eingeben.');
+      return;
     }
-    )
+
+    this.busy = true;
+
+    this.http.post<{ success: boolean; message?: string }>(
+      'http://localhost:5000/api/login',
+      { email, password },
+      { observe: 'response' }
+    ).subscribe({
+      next: (res) => {
+        console.log('[Login] response:', res);
+        const body = res.body;
+
+        if(body?.success) {
+          window.alert('Login erfolgreich!');
+          this.router.navigate(['/app-home']);
+        } else {
+          window.alert(body?.message ?? 'Login fehlgeschlagen.')
+        }
+      },
+      error: (err) => {
+        console.log('[Login] error:', err);
+
+        if(err?.status === 403) {
+          window.alert(err?.error?.message ?? 'Bitte bestätigen Sie Ihre E-Mail-Adresse, um sich einloggen zu können.');
+        } else if(err?.status === 401) {
+          window.alert('E-Mail oder Passwort ist falsch.');
+        } else {
+          window.alert(err?.error?.message ?? `Server-/Netzwerkfehler (${err?.status ?? 'unbekannt'}).`);
+        }
+      },
+      complete: () => this.busy = false
+    })
+    
   };
 
   getEmail(){

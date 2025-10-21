@@ -1,0 +1,17 @@
+<div class="card">
+  <h1>E-Mail bestätigen</h1>
+
+  <p class="info" [class.ok]="ok() === true" [class.err]="ok() === false">
+    {{ msg() }}
+  </p>
+
+  <ng-container *ngIf="ok() !== true">
+    <button (click)="confirm()" [disabled]="busy() || !email || !token">
+      {{ busy() ? 'Bestätige…' : 'E-Mail jetzt bestätigen' }}
+    </button>
+  </ng-container>
+
+  <p class="hint">
+    <a routerLink="/login">Zum Login</a>
+  </p>
+</div>
