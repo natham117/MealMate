@@ -1,0 +1,230 @@
+/* -------------------- PAGE CONTAINER -------------------- */
+.profile-page {
+  padding: 1.25rem;
+}
+
+.profile-page h1,
+.profile-page p,
+.profile-page h2 {
+  text-align: center;
+  margin: 0 0.5rem;
+}
+
+/* -------------------- CARD -------------------- */
+.auth-card {
+  max-width: 420px;
+  margin: 8vh auto;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+
+/* -------------------- PROFILE HEADER -------------------- */
+.profil-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.profilbild {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-block;
+  border: 2px solid rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.profilbild:hover {
+  transform: scale(1.05);
+}
+
+/* -------------------- FORM -------------------- */
+form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+input,
+select,
+textarea {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  color: #111;
+}
+
+/* -------------------- BUTTONS -------------------- */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.6rem;
+}
+
+button {
+  margin-top: 0.5rem;
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid #ddd;
+  color: #111;
+}
+
+.btn-delete {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-delete:hover {
+  background-color: #b52b27;
+}
+
+.image-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  background-color: #999 !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* -------------------- MESSAGES -------------------- */
+.error-message {
+  color: #d9534f;
+  background-color: #f9d6d5;
+  border: 1px solid #d9534f;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.success-message {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.required {
+  color: red;
+  margin-left: 2px;
+}
+
+.optional {
+  color: #777;
+  font-size: 0.9em;
+}
+
+.form-hint {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 10px;
+}
+
+/* -------------------- MODAL -------------------- */
+.image-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+}
+
+.large-image {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.url-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.url-input input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.url-input button {
+  padding: 8px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.url-input button:hover {
+  background-color: #0056b3;
+}
+
+/* -------------------- RESPONSIVE -------------------- */
+@media (max-width: 480px) {
+  .auth-card {
+    margin: 4vh 1rem;
+    padding: 1.25rem;
+  }
+
+  .profilbild {
+    width: 72px;
+    height: 72px;
+  }
+}

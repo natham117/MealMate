@@ -5,7 +5,7 @@ import { Register } from './auth/register/register';
 
 import { Recipes } from './pages/recipes/recipes';
 import { ShoppingList } from './pages/shopping-list/shopping-list';
-import { Settings } from './pages/settings/settings';
+import { Profile } from './pages/profile/profile';
 import { Home } from './pages/home/home';
 
 
@@ -37,12 +37,15 @@ export const routes: Routes = [
         component: ShoppingList
     },
     {
-        path : 'settings',
-        component: Settings
+        path : 'profile',
+        component: Profile
     },
     {
         path: 'confirm',
         loadComponent: () => import('./auth/confirm/confirm').then(m => m.Confirm)
+    },
+    {
+        path: 'confirm-email-change',
+        loadComponent: () => import('./auth/confirm/confirm').then(m => m.Confirm)
     }
-
 ];
