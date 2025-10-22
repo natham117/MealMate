@@ -16,36 +16,35 @@
     <button class="hinzufuegen-btn" (click)="oeffneFormular()">+ Neue Einkaufsliste</button>
   </div>
 
-  <div class="liste-grid" >
-  <div
-    *ngFor="let liste of gefilterteListen"
-    class="liste-karte"
-    (click)="zeigeDetails(liste)"
-    >
-    <div class="listen-header">
-      <h2 class="liste-titel">
-        {{ liste.listName }}
-      </h2>
-      
-    </div>
+  <div class="liste-grid">
+    @for (liste of gefilterteListen; track liste.listId) {
+      <div class="liste-karte" (click)="zeigeDetails(liste)">
+        <div class="listen-header">
+          <h2 class="liste-titel">
+            {{ liste.listName }}
+          </h2>
+        </div>
 
-    <ul class="item-liste">
-      <li *ngFor="let item of liste.items">
-        {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
-      </li>
-    </ul>
+        <ul class="item-liste">
+          @for (item of liste.items; track $index) {
+            <li>
+              {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
+            </li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (gefilterteListen.length === 0) {
+      <div class="keine-ergebnisse">
+        <p>Keine Einkaufslisten gefunden für "{{ suchbegriff }}"</p>
+      </div>
+    }
   </div>
-
-  <div *ngIf="gefilterteListen.length === 0" class="keine-ergebnisse">
-    <p>Keine Einkaufslisten gefunden für "{{ suchbegriff }}"</p>
-  </div>
-</div>
-
-
 
   <!-- Modal: Neue Liste -->
-  <div class="modal" [class.aktiv]="formularAktiv" (click)="schliesseFormular()">
-    <div class="modal-inhalt" (click)="$event.stopPropagation()">
+  <div class="modal" [class.aktiv]="formularAktiv">
+    <div class="modal-inhalt">
       <button class="schliessen-btn" (click)="schliesseFormular()">×</button>
 
       <div class="detail-inhalt">
@@ -67,42 +66,42 @@
           <!-- Produkte -->
           <div class="form-gruppe">
             <label>Produkte</label>
-            <div
-              class="item-eingabe"
-              *ngFor="let item of neueListe.items; let i = index"
-            >
-              <input
-                type="text"
-                [(ngModel)]="item.itemName"
-                [name]="'itemName' + i"
-                class="form-input"
-                placeholder="z.B. Tomaten"
-                required
-              />
-              <input
-                type="number"
-                [(ngModel)]="item.amount"
-                [name]="'itemAmount' + i"
-                class="form-input menge-input"
-                placeholder="Menge"
-                min="0"
-              />
-              <input
-                type="text"
-                [(ngModel)]="item.unit"
-                [name]="'itemUnit' + i"
-                class="form-input menge-input"
-                placeholder="Einheit"
-              />
-              <button
-                type="button"
-                class="entfernen-btn"
-                (click)="entferneItem(i)"
-                *ngIf="neueListe.items.length > 1"
-              >
-                ×
-              </button>
-            </div>
+            @for (item of neueListe.items; track $index; let i = $index) {
+              <div class="item-eingabe">
+                <input
+                  type="text"
+                  [(ngModel)]="item.itemName"
+                  [name]="'itemName' + i"
+                  class="form-input"
+                  placeholder="z.B. Tomaten"
+                  required
+                />
+                <input
+                  type="number"
+                  [(ngModel)]="item.amount"
+                  [name]="'itemAmount' + i"
+                  class="form-input menge-input"
+                  placeholder="Menge"
+                  min="0"
+                />
+                <input
+                  type="text"
+                  [(ngModel)]="item.unit"
+                  [name]="'itemUnit' + i"
+                  class="form-input menge-input"
+                  placeholder="Einheit"
+                />
+                @if (neueListe.items.length > 1) {
+                  <button
+                    type="button"
+                    class="entfernen-btn"
+                    (click)="entferneItem(i)"
+                  >
+                    ×
+                  </button>
+                }
+              </div>
+            }
 
             <button
               type="button"
@@ -128,126 +127,126 @@
       </div>
     </div>
   </div>
+  
   <!-- Modal: Liste umbenennen -->
-<div class="modal rename" [class.aktiv]="renameAktiv" (click)="schliesseRenameDialog()">
-  <div class="modal-inhalt" (click)="$event.stopPropagation()">
-    <button class="schliessen-btn" (click)="schliesseRenameDialog()">×</button>
-
-    <div class="detail-inhalt">
-      <h2 class="detail-titel">Liste umbenennen</h2>
-
-      <div class="form-gruppe">
-        <label>Neuer Listenname *</label>
-        <input
-          type="text"
-          [(ngModel)]="neuerListenname"
-          name="renameListName"
-          class="form-input"
-          required
-        />
-      </div>
-
-      <div class="form-aktionen">
-        <button type="button" class="abbrechen-btn" (click)="schliesseRenameDialog()">
-          Abbrechen
-        </button>
-        <button type="button" class="speichern-btn" (click)="speichereRename()">
-          Speichern
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal: Liste löschen -->
-<div class="modal" [class.aktiv]="deleteAktiv" (click)="schliesseDeleteDialog()">
-  <div class="modal-inhalt" (click)="$event.stopPropagation()">
-    <button class="schliessen-btn" (click)="schliesseDeleteDialog()">×</button>
-
-    <div class="detail-inhalt">
-      <h2 class="detail-titel">Liste löschen</h2>
-
-      <p>
-        Möchtest du die Liste
-        <strong>{{ zuLoeschendeListe?.listName }}</strong>
-        wirklich löschen? 🗑️
-      </p>
-
-      <div class="form-aktionen">
-        <button type="button" class="abbrechen-btn" (click)="schliesseDeleteDialog()">
-          Abbrechen
-        </button>
-        <button type="button" class="speichern-btn loeschen" (click)="bestaetigeDelete()">
-          Löschen
-        </button>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-
-  <!-- Modal: Detailansicht -->
-  <div class="modal" [class.aktiv]="detailAktiv" (click)="schliesseDetails()">
-    <div
-      class="modal-inhalt"
-      (click)="$event.stopPropagation()"
-      *ngIf="ausgewaehlteListe"
-    >
-      <button class="schliessen-btn" (click)="schliesseDetails()">×</button>
+  <div class="modal rename" [class.aktiv]="renameAktiv">
+    <div class="modal-inhalt">
+      <button class="schliessen-btn" (click)="schliesseRenameDialog()">×</button>
 
       <div class="detail-inhalt">
-        <h2 class="detail-titel">{{ ausgewaehlteListe.listName }}</h2>
-        <div class="listen-aktionen">
-        <button class="bearbeiten-btn" (click)="oeffneRenameDialog(ausgewaehlteListe)">✎</button>
-        <button class="loeschen-btn" (click)="bestaetigeLoeschen(ausgewaehlteListe)">🗑️</button>
-      </div>
+        <h2 class="detail-titel">Liste umbenennen</h2>
 
-          <ul class="detail-item-liste">
-            <li *ngFor="let item of ausgewaehlteListe.items; let i = index">
-              <ng-container *ngIf="!item.bearbeitung">
-                {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
-                <div class="aktionen">
-                  <button class="bearbeiten-btn" (click)="bearbeiteProdukt(item)">✎</button>
-                  <button class="loeschen-btn" (click)="loescheProdukt(i)">🗑️</button>
-                </div>
-              </ng-container>
+        <div class="form-gruppe">
+          <label>Neuer Listenname *</label>
+          <input
+            type="text"
+            [(ngModel)]="neuerListenname"
+            name="renameListName"
+            class="form-input"
+            required
+          />
+        </div>
 
-              <ng-container *ngIf="item.bearbeitung">
-                <input [(ngModel)]="item.itemName" class="form-input small-input" />
-                <input
-                  type="number"
-                  [(ngModel)]="item.amount"
-                  class="form-input small-input"
-                  min="0"
-                />
-                <input [(ngModel)]="item.unit" class="form-input small-input" />
-                <button class="speichern-mini" (click)="speichereProdukt(item)">💾</button>
-              </ng-container>
-            </li>
-          </ul>
-
-        <div class="produkt-hinzufuegen">
-          <input
-            [(ngModel)]="neuesProdukt"
-            placeholder="Produktname"
-            class="form-input small-input"
-          />
-          <input
-            type="number"
-            [(ngModel)]="neueMenge"
-            placeholder="Menge"
-            class="form-input small-input"
-            min="0"
-          />
-          <input
-            [(ngModel)]="neueEinheit"
-            placeholder="Einheit"
-            class="form-input small-input"
-          />
-          <button class="hinzufuegen-mini" (click)="fuegeProduktHinzu()">+</button>
+        <div class="form-aktionen">
+          <button type="button" class="abbrechen-btn" (click)="schliesseRenameDialog()">
+            Abbrechen
+          </button>
+          <button type="button" class="speichern-btn" (click)="speichereRename()">
+            Speichern
+          </button>
         </div>
       </div>
     </div>
+  </div>
+  
+  <!-- Modal: Liste löschen -->
+  <div class="modal" [class.aktiv]="deleteAktiv">
+    <div class="modal-inhalt">
+      <button class="schliessen-btn" (click)="schliesseDeleteDialog()">×</button>
+
+      <div class="detail-inhalt">
+        <h2 class="detail-titel">Liste löschen</h2>
+
+        <p>
+          Möchtest du die Liste
+          <strong>{{ zuLoeschendeListe?.listName }}</strong>
+          wirklich löschen? 🗑️
+        </p>
+
+        <div class="form-aktionen">
+          <button type="button" class="abbrechen-btn" (click)="schliesseDeleteDialog()">
+            Abbrechen
+          </button>
+          <button type="button" class="speichern-btn loeschen" (click)="bestaetigeDelete()">
+            Löschen
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Detailansicht -->
+  <div class="modal" [class.aktiv]="detailAktiv">
+    @if (ausgewaehlteListe) {
+      <div class="modal-inhalt">
+        <button class="schliessen-btn" (click)="schliesseDetails()">×</button>
+
+        <div class="detail-inhalt">
+          <h2 class="detail-titel">{{ ausgewaehlteListe.listName }}</h2>
+          <div class="listen-aktionen">
+            <button class="bearbeiten-btn" (click)="oeffneRenameDialog(ausgewaehlteListe)">✎</button>
+            <button class="loeschen-btn" (click)="bestaetigeLoeschen(ausgewaehlteListe)">🗑️</button>
+          </div>
+
+          <ul class="detail-item-liste">
+            @for (item of ausgewaehlteListe.items; track $index; let i = $index) {
+              <li>
+                @if (!item.bearbeitung) {
+                  {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
+                  <div class="aktionen">
+                    <button class="bearbeiten-btn" (click)="bearbeiteProdukt(item)">✎</button>
+                    <button class="loeschen-btn" (click)="loescheProdukt(i)">🗑️</button>
+                  </div>
+                }
+
+                @if (item.bearbeitung) {
+                  <input [(ngModel)]="item.itemName" class="form-input small-input" />
+                  <input
+                    type="number"
+                    [(ngModel)]="item.amount"
+                    class="form-input small-input"
+                    min="0"
+                  />
+                  <input [(ngModel)]="item.unit" class="form-input small-input" />
+                  <button class="speichern-mini" (click)="speichereProdukt(item)">💾</button>
+                }
+              </li>
+            }
+          </ul>
+
+          <div class="produkt-hinzufuegen">
+            <input
+              [(ngModel)]="neuesProdukt"
+              placeholder="Produktname"
+              class="form-input small-input"
+            />
+            <input
+              type="number"
+              [(ngModel)]="neueMenge"
+              placeholder="Menge"
+              class="form-input small-input"
+              min="0"
+            />
+            <input
+              [(ngModel)]="neueEinheit"
+              placeholder="Einheit"
+              class="form-input small-input"
+            />
+            <button class="hinzufuegen-mini" (click)="fuegeProduktHinzu()">+</button>
+          </div>
+        </div>
+      </div>
+    }
   </div>
 
   <!-- Snackbar -->
