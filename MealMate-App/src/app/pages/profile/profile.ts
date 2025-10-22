@@ -5,13 +5,14 @@ import { AuthService } from '../../auth/login/auth.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-settings',
+  selector: 'app-profile',
   imports: [CommonModule, FormsModule],
-  templateUrl: './settings.html',
-  styleUrl: './settings.css'
+  templateUrl: './profile.html',
+  styleUrl: './profile.css'
 })
-export class Settings {
-  user: any = null;
+export class Profile {
+  today: string = new Date().toISOString().split('T')[0];
+  user: any = {};
   email: string = '';
   newPassword: string = '';
   newImageUrl: string = '';
@@ -35,6 +36,9 @@ export class Settings {
       { headers: { 'Content-Type': 'application/json' } }
     ).subscribe(result => {
       this.user = result;
+      if (this.user.birthDate) {
+        this.user.birthDate = this.user.birthDate.split('T')[0];
+      }
       if (this.user) {
         console.log('API result:', this.user.firstName);
       }
@@ -45,7 +49,18 @@ export class Settings {
   };
 
   onSubmit() {
+<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.ts
     this.http.post<{ success: boolean, rows: number, errorMessage: string}>(
+=======
+    this.successMessage = "";
+    this.errorMessage = "";
+
+    if (this.user.birthDate === '') {
+      this.user.birthDate = null;
+    }
+
+    this.http.post<{ success: boolean, rows: number, errorMessage: string }>(
+>>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.ts
       "http://localhost:5000/api/profile/update", {
       user: this.user,
       oldEmail: this.email,
@@ -55,10 +70,20 @@ export class Settings {
         console.log("Es wurden", result.rows, "erfolgreich verändert:", result.success)
           this.errorMessage = "";
           this.successMessage = "Aktualisierung des Profils erfolgreich!";
+<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.ts
           this.authService.setEmail(this.user.email);
       }
       else{
         console.log("Es konnten keine Daten geändert werden.", result.success, result.errorMessage)
+=======
+          if (this.user.email === this.authService.getEmail()) {
+            this.authService.setEmail(this.user.email);
+          }
+        } else if (result.errorMessage?.includes("Bestätigungsmail wurde an die neue Adresse gesendet")) {
+          this.successMessage = "Eine Bestätigungsmail wurde an deine neue E-Mail-Adresse gesendet. Bitte überprüfe dein Postfach.";
+          this.errorMessage = "";
+        } else {
+>>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.ts
           this.successMessage = "";
           this.errorMessage = result.errorMessage;
         }
@@ -78,6 +103,12 @@ export class Settings {
     if (this.newImageUrl.trim() !== ''){
       this.user.imageUrl = this.newImageUrl.trim();
     }
+    this.onSubmit();
+    this.closeImageModal();
+  }
+
+  deleteImage() {
+    this.user.imageUrl = null;
     this.onSubmit();
     this.closeImageModal();
   }

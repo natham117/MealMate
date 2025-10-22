@@ -20,38 +20,46 @@ export class Confirm implements OnInit {
   busy = signal(false);
   msg = signal<string>('Bitte bestätige deine E-Mail-Adresse.');
   ok = signal<boolean | null>(null);
+  isEmailChange = false;
 
   ngOnInit() {
     this.email = this.route.snapshot.queryParamMap.get('email') ?? '';
     this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
+    this.isEmailChange = this.router.url.includes('confirm-email-change');
 
-    if(!this.email || !this.token) {
+    if (!this.email || !this.token) {
       this.ok.set(false);
       this.msg.set('Ungültiger oder unvollständiger Link.');
     }
   }
 
   async confirm() {
-    if(!this.email || !this.token || this.busy()) return;
+    if (!this.email || !this.token || this.busy()) return;
     this.busy.set(true);
     this.msg.set('Bestätige...');
 
+    const url = this.isEmailChange
+      ? 'http://localhost:5000/api/profile/confirm-email'
+      : 'http://localhost:5000/api/register/confirm';
+
     try {
-      const url = 'http://localhost:5000/api/register/confirm';
       const res = await this.http.post<{ success: boolean; message?: string }>(
         url,
         { email: this.email, token: this.token },
         { observe: 'response' }
       ).toPromise();
 
-      if(res?.body?.success) {
+      if (res?.body?.success) {
         this.ok.set(true);
-        this.msg.set('E-Mail bestätigt! Dein Konto ist aktiv. Du kannst dich jetzt anmelden.');
+        this.msg.set(
+          this.isEmailChange
+            ? 'E-Mail-Adresse erfolgreich geändert! Du kannst dich jetzt mit deiner neuen Adresse anmelden.'
+            : 'E-Mail bestätigt! Dein Konto ist aktiv. Du kannst dich jetzt anmelden.');
       } else {
         this.ok.set(false);
         this.msg.set(res?.body?.message ?? 'Bestätigung fehlgeschlagen.');
       }
-    } catch(err: any) {
+    } catch (err: any) {
       this.ok.set(false);
       this.msg.set(err?.error?.message ?? 'Bestätigung fehlgeschlagen (Server/Netzwerk).');
     } finally {

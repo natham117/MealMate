@@ -1,0 +1,415 @@
+<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
+/* === Font Import === */
+@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+
+/* === Allgemeines Seitenlayout === */
+.settings-page {
+  max-width: 1000px;
+  margin: 60px auto;
+  background-color: #f9f9f4;
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  font-family: 'Alice', serif;
+}
+
+/* === Überschriften === */
+h1 {
+  color: #4d6c26;
+  font-size: 2.4rem;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+p {
+  color: #2f2f2f;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  text-align: left;
+  max-width: 850px;
+}
+
+h3 {
+  color: #4d6c26;
+  font-size: 1.4rem;
+  margin: 25px 0 15px;
+}
+
+/* === Profilkarte === */
+.auth-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #f9f9f4;
+  border-radius: 25px;
+  padding: 35px 40px;
+  border: 1.5px solid #c8c8b9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+/* === Profilbild === */
+.profil-header {
+  flex: 1;
+  text-align: center;
+  max-width: 250px;
+}
+
+.profilbild {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #d9d9d0;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.profilbild:hover {
+  transform: scale(1.03);
+  border-color: #4d6c26;
+}
+
+/* === Formular === */
+form {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+label {
+  font-weight: 600;
+  color: #2f2f2f;
+  font-size: 1rem;
+}
+
+input {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1.5px solid #c8c8b9;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
+  color: #2f2f2f;
+  background: #fdfdf9;
+  transition: border-color 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4d6c26;
+}
+
+/* === Hinweise & Nachrichten === */
+.hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.error-message {
+  color: #a94442;
+  background: #f8d7da;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #f5c6cb;
+=======
+/* -------------------- PAGE CONTAINER -------------------- */
+.profile-page {
+  padding: 1.25rem;
+}
+
+.profile-page h1,
+.profile-page p,
+.profile-page h2 {
+  text-align: center;
+  margin: 0 0.5rem;
+}
+
+/* -------------------- CARD -------------------- */
+.auth-card {
+  max-width: 420px;
+  margin: 8vh auto;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
+
+/* -------------------- PROFILE HEADER -------------------- */
+.profil-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.profilbild {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-block;
+  border: 2px solid rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.profilbild:hover {
+  transform: scale(1.05);
+}
+
+/* -------------------- FORM -------------------- */
+form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+input,
+select,
+textarea {
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  color: #111;
+}
+
+/* -------------------- BUTTONS -------------------- */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.6rem;
+}
+
+button {
+  margin-top: 0.5rem;
+  padding: 0.8rem 1rem;
+  border: 0;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid #ddd;
+  color: #111;
+}
+
+.btn-delete {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-delete:hover {
+  background-color: #b52b27;
+}
+
+.image-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  background-color: #999 !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* -------------------- MESSAGES -------------------- */
+.error-message {
+  color: #d9534f;
+  background-color: #f9d6d5;
+  border: 1px solid #d9534f;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-size: 0.95rem;
+>>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
+}
+
+.success-message {
+  color: #155724;
+<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
+  background: #d4edda;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #c3e6cb;
+}
+
+/* === Buttons === */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+button {
+  background-color: #4d6c26;
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: 'Alice', serif;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #3d551f;
+}
+
+/* === Modal für Bildbearbeitung === */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+=======
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.required {
+  color: red;
+  margin-left: 2px;
+}
+
+.optional {
+  color: #777;
+  font-size: 0.9em;
+}
+
+.form-hint {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 10px;
+}
+
+/* -------------------- MODAL -------------------- */
+.image-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.7);
+>>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
+  background: #f9f9f4;
+  padding: 30px 40px;
+  border-radius: 15px;
+=======
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+>>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.large-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.url-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.url-input input {
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.url-input button {
+<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
+  align-self: center;
+  background: #4d6c26;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+=======
+  padding: 8px;
+  background-color: #007bff;
+  color: #fff;
+>>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
+  border: none;
+  font-family: 'Alice', serif;
+  cursor: pointer;
+<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
+  transition: background 0.3s;
+}
+
+.url-input button:hover {
+  background: #3d551f;
+}
+=======
+  transition: background-color 0.2s;
+}
+
+.url-input button:hover {
+  background-color: #0056b3;
+}
+
+/* -------------------- RESPONSIVE -------------------- */
+@media (max-width: 480px) {
+  .auth-card {
+    margin: 4vh 1rem;
+    padding: 1.25rem;
+  }
+
+  .profilbild {
+    width: 72px;
+    height: 72px;
+  }
+}
+>>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
