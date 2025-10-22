@@ -6,11 +6,12 @@
   Revolutioniere deine Essensplanung.
 </p>
 <div class="search-bar">
-  <span class="search-icon">🔍</span>
+  <span class="search-icon" (click)="sucheRezepte()">🔍</span>
   <input
     type="text"
     placeholder="Rezepte Suchen"
     [(ngModel)]="searchQuery"
+    (keyup.enter)="sucheRezepte()"
   />
   <span class="clear-icon" (click)="clearSearch()">x</span>
 </div>

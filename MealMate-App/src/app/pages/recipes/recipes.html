@@ -1,12 +1,31 @@
 <div class="container">
-  <h1>Meine Rezepte</h1>
+  <h1>Hier findest du Rezepte!</h1>
+  <p class="intro-text">
+    Stöber durch das Archiv aller öffentlichen Rezepte und lass dich inspirieren. 
+  </p>
+  <p class="intro-text">
+    Oder lege eigene Rezepte an. Du kannst dir aussuchen, ob du sie nur für dich behalten möchtest oder sie mit der MealMate-Community teilen willst. 
+    Wir empfehlen Oma's Geheimrezept nicht für alle sichtbar zu machen! 
+  </p>
   
   <div class="header-bereich">
-    <input type="text" class="suchleiste" placeholder="Rezept suchen..." [(ngModel)]="suchbegriff">
-    <button class="hinzufuegen-btn" (click)="oeffneFormular()">+ Neues Rezept</button>
+  <div class="search-bar">
+    <span class="search-icon" (click)="triggerSearch()">🔍</span>
+    <input
+      type="text"
+      placeholder="Rezept suchen..."
+      [(ngModel)]="suchbegriff"
+      (keyup.enter)="triggerSearch()"
+    />
+    <span class="clear-icon" (click)="clearSearch()">x</span>
   </div>
 
+  <button class="hinzufuegen-btn" (click)="oeffneFormular()">+ Neues Rezept</button>
+</div>
+
+  <p class="filter-titel">Filter:</p>
   <div class="filter-bereich">
+    
     <label class="filter-checkbox">
       <input type="checkbox" [(ngModel)]="filter_vegetarisch">
       <span>Vegetarisch</span>

@@ -1,30 +1,111 @@
+/* === Login Card === */
 .auth-card {
-    max-width: 420px;
-    margin: 8vh auto;
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.08);
-    background: #fff;
+  max-width: 500px;
+  margin: 8vh auto;
+  padding: 2.5rem 3rem;
+  border-radius: 25px;
+  background: #f9f9f4;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Alice', serif;
+  text-align: left;
+  color: #2f2f2f;
 }
 
-form {display: grid; gap: 0.9rem;}
+/* === Titelbereich (Login, Willkommen zurück etc.) === */
+h1 {
+  font-size: 2rem;
+  color: #4d6c26;
+  margin-bottom: 0.3rem;
+  text-align: center;
+}
 
-label {font-weight: 600;}
+p {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.05rem;
+  color: #333;
+}
+
+/* === Formular === */
+form {
+  display: grid;
+  gap: 1rem;
+}
+
+label {
+  font-weight: 600;
+  font-family: 'Alice', serif;
+  font-size: 1.05rem;
+  color: #2f2f2f;
+}
+
 input {
-    padding: .75rem .9rem;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    font: inherit;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #c8c8b9;
+  border-radius: 12px;
+  background-color: #fff;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
+  color: #2f2f2f;
+  transition: border-color 0.2s ease;
 }
 
+input:focus {
+  outline: none;
+  border-color: #4d6c26;
+}
+
+/* === Button-Bereich === */
 button {
-    margin-top: .5rem;
-    padding: .8rem 1rem;
-    border: 0;
-    border-radius: 12px;
-    background: #111;
-    color: #fff;
-    cursor: pointer;
+  padding: 0.75rem 1.3rem;
+  border: none;
+  border-radius: 25px;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.hint {font-size: .95rem;}
+/* Hauptbutton: Anmelden */
+button[type="submit"],
+.anmelden-btn {
+  background-color: #4d6c26;
+  color: white;
+}
+
+button[type="submit"]:hover,
+.anmelden-btn:hover {
+  background-color: #3d551f;
+}
+
+/* Sekundärbutton: Abbrechen */
+.abbrechen-btn {
+  background: transparent;
+  color: #4d6c26;
+  border: 1.5px solid #4d6c26;
+}
+
+.abbrechen-btn:hover {
+  background: #4d6c26;
+  color: white;
+}
+
+/* === Hinweistext unterhalb === */
+.hint {
+  font-size: 0.95rem;
+  text-align: center;
+  color: #333;
+  margin-top: 0.8rem;
+}
+
+.hint a {
+  color: #3b6b2c;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.hint a:hover {
+  text-decoration: underline;
+}
