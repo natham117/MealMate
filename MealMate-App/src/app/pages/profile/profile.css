@@ -1,4 +1,3 @@
-<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
 /* === Font Import === */
 @import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
 
@@ -116,7 +115,6 @@ input:focus {
   padding: 10px 15px;
   border-radius: 10px;
   border: 1px solid #f5c6cb;
-=======
 /* -------------------- PAGE CONTAINER -------------------- */
 .profile-page {
   padding: 1.25rem;
@@ -246,12 +244,10 @@ button:disabled {
   border-radius: 6px;
   margin-top: 10px;
   font-size: 0.95rem;
->>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
 }
 
 .success-message {
   color: #155724;
-<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
   background: #d4edda;
   padding: 10px 15px;
   border-radius: 10px;
@@ -289,7 +285,6 @@ button:hover {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.4);
-=======
   background-color: #d4edda;
   border: 1px solid #c3e6cb;
   padding: 8px 12px;
@@ -320,7 +315,6 @@ button:hover {
   inset: 0;
   z-index: 999;
   background-color: rgba(0, 0, 0, 0.7);
->>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
   display: flex;
   justify-content: center;
   align-items: center;
@@ -328,15 +322,12 @@ button:hover {
 }
 
 .modal-content {
-<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
   background: #f9f9f4;
   padding: 30px 40px;
   border-radius: 15px;
-=======
   background: #fff;
   padding: 20px;
   border-radius: 12px;
->>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
   text-align: center;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   position: relative;
@@ -371,28 +362,23 @@ button:hover {
 }
 
 .url-input button {
-<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
   align-self: center;
   background: #4d6c26;
   color: white;
   padding: 8px 20px;
   border-radius: 8px;
-=======
   padding: 8px;
   background-color: #007bff;
   color: #fff;
->>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
   border: none;
   font-family: 'Alice', serif;
   cursor: pointer;
-<<<<<<< HEAD:MealMate-App/src/app/pages/settings/settings.css
   transition: background 0.3s;
 }
 
 .url-input button:hover {
   background: #3d551f;
 }
-=======
   transition: background-color 0.2s;
 }
 
@@ -412,4 +398,3 @@ button:hover {
     height: 72px;
   }
 }
->>>>>>> adrian:MealMate-App/src/app/pages/profile/profile.css
