@@ -322,4 +322,55 @@ export class Recipes implements OnInit {
       zutaten: [{ zutat: '', menge: '', einheit: '' }]
     };
   }
+
+  pdfLaedt = false;
+  private pdfLaedtIds = new Set<number>();
+
+  laedtPdf(id: number) { return this.pdfLaedtIds.has(id); }
+
+  ladePdf(rezeptId: number, titel?: string, ev?: Event) {
+    ev?.stopPropagation();
+    this.pdfLaedt = true;
+    this.pdfLaedtIds.add(rezeptId);
+
+    this.http.get(`${this.apiUrl}/${rezeptId}/pdf`, {
+      responseType: 'blob',
+      observe: 'response'
+    }).subscribe({
+      next: res => {
+        const blob = res.body!;
+        let filename = this.extractFilename(res.headers.get('Content-Disposition'))
+                      ?? (titel ? `${this.sanitize(titel)}.pdf` : 'rezept.pdf');
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      },
+      error: err => {
+        console.error('PDF-Download fehlgeschlagen:', err);
+        alert('PDF konnte nicht erstellt werden.');
+      }, 
+      complete: () => {
+        this.pdfLaedt = false;
+        this.pdfLaedtIds.delete(rezeptId);
+      }
+    });
+  }
+
+  private extractFilename(cd: string | null): string | null {
+    if(!cd) return null;
+    const utf8 = /filename\*\s*=\s*UTF-8''([^;]+)/i.exec(cd);
+    if(utf8?.[1]) return decodeURIComponent(utf8[1]);
+    const simple = /filename="?([^"]+)"?/i.exec(cd);
+    return simple?.[1] ?? null;
+  }
+
+  private sanitize(name: string): string {
+    return name.replace(/[\\/:*?"<>|]+/g, '_').trim();
+  }
 }

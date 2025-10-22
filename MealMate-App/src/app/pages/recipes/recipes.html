@@ -37,6 +37,13 @@
         } @else {
           <div class="rezept-bild"></div>
         }
+<!-- 
+        <button
+          class="pdf-btn klein"
+          title="PDF herunterladen"
+          (click)="ladePdf(rezept.id, rezept.titel, $event)">
+          ⬇️ PDF
+        </button> -->
         
         <div class="rezept-inhalt">
           <h2 class="rezept-titel">{{ rezept.titel }}</h2>
@@ -119,6 +126,14 @@
                   <!-- Bearbeiten-Button nur für eigene Rezepte -->
                   @if (authService.isLoggedIn() && authService.getUserId() === ausgewaehltes_rezept.userId) {
                     <button class="bearbeiten-btn" (click)="starteBearbeitung()">✏️ Bearbeiten</button>
+                  }
+                  <!-- Herunterladen-Button für PDF_Datei -->
+                  @if (authService.isLoggedIn()) {
+                    <button class="pdf-btn"
+                            [disabled]="pdfLaedt"
+                            (click)="ladePdf(ausgewaehltes_rezept.id, ausgewaehltes_rezept.titel)">
+                      @if (!pdfLaedt) { 🧾 PDF } @else { … lädt … }    
+                    </button>
                   }
                 </div>
               </div>

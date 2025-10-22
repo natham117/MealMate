@@ -542,3 +542,19 @@ h1 {
 .speichern-btn:hover {
   background: #229954;
 }
+
+.pdf-btn {
+  padding: 10px 20px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  border: 2px solid #bdc3c7;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.pdf-btn:hover {
+  background: #bdc3c7;
+}
