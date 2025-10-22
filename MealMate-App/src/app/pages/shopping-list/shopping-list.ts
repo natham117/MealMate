@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
+import { AuthService } from '../../auth/login/auth.service';
 
 interface ShoppingItem {
   itemId?: number;
@@ -20,6 +21,7 @@ interface ShoppingListData {
   items: ShoppingItem[];
 }
 
+
 @Component({
   selector: 'shopping-list',
   standalone: true,
@@ -29,7 +31,8 @@ interface ShoppingListData {
 })
 export class ShoppingList implements OnInit {
   private baseUrl = 'http://localhost:5000/api/shoppinglist';
-  private userId = 2;
+  private userId: number | null = null;
+
 
   suchbegriff = '';
   listen: ShoppingListData[] = [];
@@ -48,16 +51,38 @@ export class ShoppingList implements OnInit {
   snackbarText = '';
   snackbarAktiv = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.ladeEinkaufslisten();
+  this.userId = this.authService.getUserId();
+
+  if (!this.userId) {
+    console.error('⚠️ Kein User eingeloggt – keine Listen geladen.');
+    return;
   }
 
+  this.http.get<ShoppingListData[]>(`${this.baseUrl}/${this.userId}`).subscribe({
+    next: (listen) => {
+      this.listen = listen;
+      this.gefilterteListen = [...listen];
+    },
+    error: (err) => {
+      console.error('Fehler beim Laden der Listen:', err);
+      this.zeigeSnackbar('Fehler beim Laden deiner Einkaufslisten.');
+    }
+  });
+}
+
+  
   // ------------------------------------------------------------
   // 🧩 Listen vom Backend laden
   // ------------------------------------------------------------
   ladeEinkaufslisten(): void {
+    if (!this.userId) {
+      console.warn('⚠️ Kein User eingeloggt.');
+      return;
+    }
+
     this.http.get<any[]>(`${this.baseUrl}/${this.userId}`).subscribe({
       next: (data) => {
         this.listen = (data || []).map((l: any) => ({
@@ -81,6 +106,7 @@ export class ShoppingList implements OnInit {
       }
     });
   }
+
 
   // ------------------------------------------------------------
   // 🔍 Suchfunktion
@@ -118,6 +144,13 @@ export class ShoppingList implements OnInit {
     this.zeigeSnackbar('Bitte gib einen Listennamen ein!');
     return;
   }
+  if (!this.userId) {
+    this.userId = this.authService.getUserId();
+    if (!this.userId) {
+      this.zeigeSnackbar('⚠️ Kein Benutzer gefunden. Bitte neu einloggen.');
+      return;
+    }
+  }
 
   const payload = {
     userId: this.userId,
@@ -131,6 +164,7 @@ export class ShoppingList implements OnInit {
       }))
   };
 
+
   console.log('📤 Sende Payload:', payload);
 
   this.http.post(`${this.baseUrl}`, payload).subscribe({
@@ -141,7 +175,7 @@ export class ShoppingList implements OnInit {
       if (res?.listId) {
         this.listen.unshift({
           listId: res.listId,
-          userId: this.userId,
+          userId: this.userId!,
           listName: this.neueListe.listName.trim(),
           items: this.neueListe.items
         });
@@ -159,8 +193,8 @@ export class ShoppingList implements OnInit {
       const msg = err?.error?.message || 'Fehler beim Erstellen der Liste!';
       this.zeigeSnackbar(`⚠️ ${msg}`);
     }
-  });
-}
+    });
+  }
 
 
 
@@ -178,19 +212,6 @@ export class ShoppingList implements OnInit {
     this.ausgewaehlteListe = null;
   }
 
-  // fuegeProduktHinzu(): void {
-  //   if (!this.neuesProdukt.trim()) return;
-  //   const neuesItem: ShoppingItem = {
-  //     itemName: this.neuesProdukt.trim(),
-  //     amount: this.neueMenge ?? 0,
-  //     unit: this.neueEinheit.trim()
-  //   };
-  //   this.ausgewaehlteListe?.items.push(neuesItem);
-  //   this.neuesProdukt = '';
-  //   this.neueMenge = null;
-  //   this.neueEinheit = '';
-  //   this.zeigeSnackbar('Produkt hinzugefügt!');
-  // }
   fuegeProduktHinzu() {
   if (!this.ausgewaehlteListe) return;
   if (!this.neuesProdukt.trim()) {
@@ -301,31 +322,6 @@ speichereProdukt(item: any) {
     },
   });
 }
-// oeffneRenameDialog(liste: ShoppingListData): void {
-//   const neuerName = prompt("Neuer Listenname:", liste.listName);
-//   if (!neuerName || !neuerName.trim()) return;
-
-//   this.http.put(`${this.baseUrl}/${liste.listId}`, { newName: neuerName.trim() }).subscribe({
-//     next: () => {
-//       this.zeigeSnackbar('Liste umbenannt!');
-//       liste.listName = neuerName.trim();
-//     },
-//     error: () => this.zeigeSnackbar('Fehler beim Umbenennen!')
-//   });
-// }
-// bestaetigeLoeschen(liste: ShoppingListData): void {
-//   const sicher = confirm(`Willst du die Liste "${liste.listName}" wirklich löschen?`);
-//   if (!sicher) return;
-
-//   this.http.delete(`${this.baseUrl}/${liste.listId}`).subscribe({
-//     next: () => {
-//       this.listen = this.listen.filter(l => l.listId !== liste.listId);
-//       this.gefilterteListen = this.gefilterteListen.filter(l => l.listId !== liste.listId);
-//       this.zeigeSnackbar('Liste gelöscht!');
-//     },
-//     error: () => this.zeigeSnackbar('Fehler beim Löschen!')
-//   });
-// }
 //Liste umbenennen und so
 renameAktiv = false;
 listeZumUmbenennen: ShoppingListData | null = null;
@@ -391,7 +387,16 @@ bestaetigeDelete() {
     },
     error: (err) => {
       console.error('Fehler beim Löschen:', err);
-      this.zeigeSnackbar('Fehler beim Löschen!');
+      //this.zeigeSnackbar('Fehler beim Löschen!');
+
+      if (err.status === 404) {
+        console.warn('Liste war wohl nur lokal – entferne sie manuell.');
+        this.gefilterteListen = this.gefilterteListen.filter(l => l.listId !== listId);
+        this.zeigeSnackbar('Liste war nicht in der Datenbank – wurde lokal entfernt.');
+        this.schliesseDeleteDialog();
+      } else {
+        this.zeigeSnackbar('Fehler beim Löschen!');
+      }
     }
   });
 }
