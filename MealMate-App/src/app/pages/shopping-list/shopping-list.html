@@ -200,6 +200,13 @@
         <div class="listen-aktionen">
         <button class="bearbeiten-btn" (click)="oeffneRenameDialog(ausgewaehlteListe)">✎</button>
         <button class="loeschen-btn" (click)="bestaetigeLoeschen(ausgewaehlteListe)">🗑️</button>
+        @if (authService.isLoggedIn()) {
+          <button class="pdf-btn"
+                  [disabled]="pdfLaedt"
+                  (click)="ladePdf(ausgewaehlteListe.listId, ausgewaehlteListe.listName)">
+            🧾 PDF
+          </button>
+        }
       </div>
 
           <ul class="detail-item-liste">

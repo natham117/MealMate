@@ -51,7 +51,7 @@ export class ShoppingList implements OnInit {
   snackbarText = '';
   snackbarAktiv = false;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, public authService: AuthService) {}
 
   ngOnInit(): void {
   this.userId = this.authService.getUserId();
@@ -401,6 +401,35 @@ bestaetigeDelete() {
   });
 }
 
+pdfLaedt = false;
 
+ladePdf(listeId?: number, titel?: string) {
+  this.pdfLaedt = true;
+  this.http.get(`${this.baseUrl}/${listeId}/pdf`, {
+    responseType: 'blob',
+    observe: 'response'
+  }).subscribe({
+    next: res => {
+      const blob = res.body!;
+      let filename = 'einkaufsliste.pdf';
+      const cd = res.headers.get('Content-Disposition');
+      const m = cd?.match(/filename="?([^"]+)"?/i);
+      if (m?.[1]) filename = m[1];
+      else if (titel) filename = `${titel.replace(/[\\/:*?"<>|]+/g, '_')}.pdf`;
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    },
+    error: err => {
+      console.error('PDF-Download fehlgeschlagen:', err);
+      alert('PDF konnte nicht erstellt werden.');
+    },
+    complete: () => this.pdfLaedt = false
+  });
+}
 
 }
