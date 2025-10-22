@@ -1,51 +1,190 @@
+/* === Registrierungs-Card === */
 .auth-card {
-    max-width: 520px;
-    margin: 6vh auto;
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.08);
-    background: #fff;
+  max-width: 700px;
+  margin: 6vh auto;
+  padding: 2.5rem 3rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: #f9f9f4;
+  font-family: 'Alice', serif;
+  color: #2f2f2f;
+  
+  justify-content: space-between;
+  gap: 2rem;
 }
 
-form { display: grid; gap: 0.9rem;}
 
-label { font-weight: 600; }
-input, select {
-    padding: .75rem .9rem;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    font: inherit;
-    width: 100%;
-    box-sizing: border-box;
+/* === Formularseite === */
+form {
+  flex: 1;
+  display: grid;
+  gap: 1rem;
 }
 
+label {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #2f2f2f;
+}
+
+input,
+select {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #c8c8b9;
+  border-radius: 12px;
+  font: inherit;
+  font-family: 'Alice', serif;
+  background-color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+  margin-bottom: 0.7rem;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #4d6c26;
+}
+
+/* === Profilbildbereich === */
+.profilbild-bereich {
+  text-align: center;
+}
+
+.profilbild-bereich img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #c8c8b9;
+  background-color: #fff;
+  margin-bottom: 0.8rem;
+}
+
+.profilbild-bereich a {
+  display: block;
+  color: #3b6b2c;
+  text-decoration: none;
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+}
+
+.profilbild-bereich a:hover {
+  text-decoration: underline;
+}
+
+/* === Buttons === */
 button {
-    margin-top: .5rem;
-    padding: .9rem 1rem;
-    border: 0;
-    border-radius: 12px;
-    background: #111;
-    color: #fff;
-    cursor: pointer;
+  padding: 0.75rem 1.3rem;
+  border: none;
+  border-radius: 25px;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.hint { font-size: .95rem;}
+/* Speichern */
+button[type="submit"],
+.speichern-btn {
+  background-color: #4d6c26;
+  color: white;
+}
 
-.error { color: #b00020; font-size: .9rem;}
+button[type="submit"]:hover,
+.speichern-btn:hover {
+  background-color: #3d551f;
+}
 
+/* Abbrechen */
+.abbrechen-btn {
+  background: transparent;
+  color: #4d6c26;
+  border: 1.5px solid #4d6c26;
+}
+
+.abbrechen-btn:hover {
+  background: #4d6c26;
+  color: white;
+}
+
+/* === Fehlertexte === */
+.error {
+  color: #b00020;
+  font-size: 0.9rem;
+  margin-top: -0.3rem;
+}
+
+/* === Hinweistext (z. B. Passwortanforderung) === */
+.hint {
+  font-size: 0.95rem;
+  color: #444;
+  text-align: center;
+  margin-top: 0.8rem;
+}
+
+/* === Modal Styles (z. B. Passwortanforderungen etc.) === */
 .mm-modal-backdrop {
-    position: fixed; left: 50%; top: 15%;
-    transform: translateX(-50%);
-    width: min(520px, 92vw);
-    background: #fff; border-radius: 14px;
-    box-shadow: 0 10px 40px rgba(0,0,0,.2);
-    padding: 1.25rem 1.25rem 1rem;
-    z-index: 1001;
+  position: fixed;
+  left: 50%;
+  top: 15%;
+  transform: translateX(-50%);
+  width: min(520px, 92vw);
+  background: #f9f9f4;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem 1.5rem 1.25rem;
+  z-index: 1001;
+  font-family: 'Alice', serif;
 }
-.mm-modal h2 {margin: 0 0 .75rem;}
-.mm-modal ul {margin: .25rem 0 .75rem 1.1rem;}
-.mm-modal-actions {display: flex; justify-content: flex-end; gap:.5rem;}
-.mm-modal.actions button { 
-    padding: .6rem .9rem; border: 0; border-radius: 10px;
-    background: #111; color: #fff; cursor: pointer;
+
+.mm-modal h2 {
+  margin: 0 0 0.75rem;
+  color: #4d6c26;
+}
+
+.mm-modal ul {
+  margin: 0.25rem 0 0.75rem 1.1rem;
+}
+
+.mm-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.mm-modal-actions button {
+  padding: 0.6rem 0.9rem;
+  border: 0;
+  border-radius: 10px;
+  background: #4d6c26;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.mm-modal-actions button:hover {
+  background-color: #3d551f;
+}
+
+/* === Responsiv === */
+@media (max-width: 768px) {
+  .auth-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  form {
+    width: 100%;
+  }
+
+  .profilbild-bereich {
+    margin-top: 1.5rem;
+  }
+}
+input[type="password"] {
+  margin-bottom: 2rem;
 }

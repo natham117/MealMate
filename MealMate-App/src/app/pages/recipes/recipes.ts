@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/login/auth.service';
+import { ActivatedRoute } from '@angular/router';
+
 
 interface ZutatDto {
   zutat: string;
@@ -55,7 +57,7 @@ export class Recipes implements OnInit {
   temp_bearbeitung_zeit = 0;
   temp_bearbeitung_portionen = 0;
 
-  constructor(private http: HttpClient, public authService: AuthService) {}
+  constructor(private http: HttpClient, public authService: AuthService, private route: ActivatedRoute) {}
 
   // ESC-Taste Handler
   @HostListener('document:keydown.escape')
@@ -73,6 +75,17 @@ export class Recipes implements OnInit {
   ngOnInit(): void {
     console.log('🔄 [Recipes] Komponente wird initialisiert');
     console.log('🔍 [Recipes] User-ID aus localStorage:', localStorage.getItem('userId'));
+    
+    
+    //begin: Suchbegriff aus URL auslesen -> man kann jetzt auf der Homepage nach Rezepten suchen und wird auf die Rezepte-Seite mit dem Suchbegriff weitergeleitet
+    this.route.queryParams.subscribe(params => {
+      const search = params['search'];
+      if (search) {
+        this.suchbegriff = search;
+        console.log('🔍 Suchbegriff aus URL:', this.suchbegriff);
+      }
+    });
+    //end
     this.ladeRezepte();
   }
 
@@ -335,6 +348,25 @@ export class Recipes implements OnInit {
       zutaten: [{ zutat: '', menge: '', einheit: '' }]
     };
   }
+  triggerSearch(): void {
+    const search = this.suchbegriff.trim().toLowerCase();
+
+    if (!search) {
+      console.log('🔍 Kein Suchbegriff eingegeben – zeige alle Rezepte');
+      return;
+    }
+
+    // Wenn du das lokal filterst (nicht im Backend):
+    this.suchbegriff = search;
+    console.log('🔍 Suche nach:', search);
+
+    // Wenn du willst, dass es über URL funktioniert (wie bei Home):
+    // this.router.navigate(['/recipes'], { queryParams: { search } });
+  }
+
+  clearSearch(): void {
+    this.suchbegriff = '';
+  }
 
   pdfLaedt = false;
   private pdfLaedtIds = new Set<number>();
@@ -386,4 +418,5 @@ export class Recipes implements OnInit {
   private sanitize(name: string): string {
     return name.replace(/[\\/:*?"<>|]+/g, '_').trim();
   }
+
 }
