@@ -249,6 +249,33 @@
       </div>
     </div>
   </div>
+  <!-- === Rename Dialog === -->
+<div *ngIf="renameAktiv" class="dialog-overlay">
+  <div class="dialog-box">
+    <h3>Liste umbenennen</h3>
+    <input
+      type="text"
+      [(ngModel)]="neuerListenname"
+      placeholder="Neuer Listenname"
+      class="form-input"
+    />
+    <div class="dialog-actions">
+      <button class="btn-primary" (click)="speichereRename()">Speichern</button>
+      <button class="btn-secondary" (click)="schliesseRenameDialog()">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- === Delete Dialog === -->
+<div *ngIf="deleteAktiv" class="dialog-overlay">
+  <div class="dialog-box">
+    <h3>Soll die Liste "{{ zuLoeschendeListe?.listName }}" wirklich gelöscht werden?</h3>
+    <div class="dialog-actions">
+      <button class="btn-danger" (click)="bestaetigeDelete()">Ja, löschen</button>
+      <button class="btn-secondary" (click)="schliesseDeleteDialog()">Abbrechen</button>
+    </div>
+  </div>
+</div>
 
   <!-- Snackbar -->
   <div class="snackbar" [class.aktiv]="snackbarAktiv">

@@ -1,3 +1,23 @@
+/* === Font Import === */
+@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
+
+/* === Global Font Setup === */
+body,
+.settings-page,
+.auth-card,
+form,
+label,
+input,
+select,
+textarea,
+button,
+.hint,
+.error,
+.success-message,
+.error-message {
+  font-family: 'Alice', serif;
+}
+
 /* Page-level container: zentrierte Überschriften / Texte */
 .settings-page {
   padding: 1.25rem;

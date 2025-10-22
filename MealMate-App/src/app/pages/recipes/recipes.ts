@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -56,6 +56,19 @@ export class Recipes implements OnInit {
   temp_bearbeitung_portionen = 0;
 
   constructor(private http: HttpClient, public authService: AuthService) {}
+
+  // ESC-Taste Handler
+  @HostListener('document:keydown.escape')
+  onEscapePress(): void {
+    // Priorität: Bearbeitungsmodus > Detailansicht > Neues Rezept
+    if (this.bearbeitungsmodus) {
+      this.abbrechenBearbeitung();
+    } else if (this.modal_aktiv) {
+      this.schliesseModal();
+    } else if (this.formular_aktiv) {
+      this.schliesseFormular();
+    }
+  }
 
   ngOnInit(): void {
     console.log('🔄 [Recipes] Komponente wird initialisiert');
