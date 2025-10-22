@@ -1,411 +1,425 @@
-@import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
-
-.dialog-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  font-family: 'Alice', serif;
-}
-
-.dialog-box {
-  background: #fffef9;
-  border-radius: 12px;
-  padding: 2rem;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  text-align: center;
-}
-
-.dialog-box h3 {
-  margin-bottom: 1rem;
-  color: #4d6c26;
-  font-size: 1.3rem;
-}
-
-.dialog-box .form-input {
-  width: 100%;
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-bottom: 1rem;
-  font-family: 'Alice', serif;
-}
-
-.dialog-actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.btn-primary {
-  background: #4d6c26;
-  color: white;
-  border: none;
-  padding: 0.7rem 1.2rem;
-  border-radius: 10px;
-  cursor: pointer;
-  font-family: 'Alice', serif;
-  transition: background 0.2s ease;
-}
-
-.btn-primary:hover {
-  background: #3c541d;
-}
-
-.btn-secondary {
-  background: transparent;
-  border: 1px solid #aaa;
-  color: #111;
-  padding: 0.7rem 1.2rem;
-  border-radius: 10px;
-  cursor: pointer;
-  font-family: 'Alice', serif;
-}
-
-.btn-danger {
-  background: #b00020;
-  color: #fff;
-  border: none;
-  padding: 0.7rem 1.2rem;
-  border-radius: 10px;
-  cursor: pointer;
-  font-family: 'Alice', serif;
-}
-
-.btn-danger:hover {
-  background: #8b001a;
-}
-
-/* ---------- Layout ---------- */
+/* === Seitenstruktur === */
 .container {
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 20px;
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+  font-family: 'Alice', serif;
+  color: #2f2f2f;
 }
 
+/* === Überschrift & Introtext === */
 h1 {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 30px;
+  color: #4d6c26;
+  font-size: 2.4rem;
+  margin-bottom: 10px;
 }
 
+.text-intro p {
+  font-size: 1.05rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  max-width: 800px;
+}
+
+/* === Header: Suchleiste + Button === */
 .header-bereich {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 15px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
-/* ---------- Suchleiste & Button ---------- */
 .suchleiste {
   flex: 1;
-  padding: 12px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 1em;
+  padding: 12px 18px;
+  border: 1.5px solid #c8c8b9;
+  border-radius: 25px;
+  background-color: #f9f9f4;
+  font-size: 1rem;
+  font-family: 'Alice', serif;
+  transition: border-color 0.2s ease;
+}
+
+.suchleiste:focus {
+  outline: none;
+  border-color: #4d6c26;
 }
 
 .hinzufuegen-btn {
-  padding: 12px 20px;
-  background: #27ae60;
+  padding: 12px 25px;
+  background-color: #4d6c26;
   color: white;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 25px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 .hinzufuegen-btn:hover {
-  background: #229954;
+  background-color: #3d551f;
 }
 
-/* ---------- Einkaufslisten ---------- */
+/* === Grid der Einkaufslisten === */
 .liste-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 25px;
+  justify-items: stretch;
+}
+
+@media (max-width: 1000px) {
+  .liste-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .liste-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .liste-karte {
-  background: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
   padding: 20px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  border: 1px solid #e6e6da;
 }
 
 .liste-karte:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* === Titel + Liste === */
 .liste-titel {
-  font-size: 1.3em;
-  color: #2c3e50;
+  font-size: 1.3rem;
+  color: #2f2f2f;
   margin-bottom: 10px;
 }
 
 .item-liste {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .item-liste li {
-  padding: 5px 0;
+  font-size: 0.95rem;
   color: #555;
-  border-bottom: 1px solid #eee;
+  padding: 4px 0;
+  border-bottom: 1px solid #f0f0eb;
 }
 
-.item-liste li:last-child {
-  border-bottom: none;
-}
-
+/* === Keine Ergebnisse === */
 .keine-ergebnisse {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 40px;
-  background: #fafafa;
-  border-radius: 8px;
-  color: #666;
+  color: #777;
+  font-size: 1rem;
+  margin-top: 20px;
 }
 
-/* ---------- Modal ---------- */
+/* === Modal Fenster (Neu, Umbenennen, Löschen, Details) === */
 .modal {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
-  z-index: 1000;
-  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
   justify-content: center;
-  padding: 20px;
+  align-items: center;
+  z-index: 1000;
 }
 
 .modal.aktiv {
   display: flex;
 }
-/* Rename-Modal soll über der Detailansicht liegen */
-.modal.rename {
-  z-index: 2000;
-}
 
 .modal-inhalt {
-  background: white;
-  border-radius: 10px;
-  width: 100%;
+  background: #f9f9f4;
+  padding: 30px 40px;
+  border-radius: 20px;
+  width: 90%;
   max-width: 600px;
-  padding: 30px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   position: relative;
+  animation: popup 0.2s ease;
+}
+
+@keyframes popup {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 .schliessen-btn {
   position: absolute;
   top: 15px;
-  right: 15px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
+  right: 20px;
+  background: none;
   border: none;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  font-size: 1.2em;
+  font-size: 1.5rem;
   cursor: pointer;
-}
-
-/* ---------- Titelzeile im Modal ---------- */
-.titel-zeile {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
+  color: #333;
 }
 
 .detail-titel {
-  color: #2c3e50;
-  font-size: 1.5em;
-  margin: 0;
-}
-
-/* ---------- Aktionen (Buttons) ---------- */
-.listen-aktionen {
-  display: flex;
-  gap: 10px;
-}
-
-.listen-aktionen button,
-.bearbeiten-btn,
-.loeschen-btn,
-.speichern-mini,
-.hinzufuegen-mini {
-  background: #ecf0f1;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.bearbeiten-btn:hover,
-.listen-aktionen .bearbeiten-btn:hover {
-  background: #f1c40f;
-}
-
-.loeschen-btn:hover,
-.listen-aktionen .loeschen-btn:hover {
-  background: #e74c3c;
-  color: white;
-}
-
-.speichern-mini:hover {
-  background: #27ae60;
-  color: white;
-}
-
-/* ---------- Formular ---------- */
-.form-gruppe {
+  color: #4d6c26;
+  font-size: 1.6rem;
   margin-bottom: 20px;
+}
+
+.form-gruppe {
+  margin-bottom: 15px;
 }
 
 .form-input {
   width: 100%;
-  padding: 10px;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  font-size: 1em;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1.5px solid #c8c8b9;
+  background: #fff;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
 }
 
-.menge-input {
-  width: 120px;
+.form-input:focus {
+  outline: none;
+  border-color: #4d6c26;
 }
 
-.form-aktionen {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.abbrechen-btn,
-.speichern-btn {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.abbrechen-btn {
-  background: #ecf0f1;
-  color: #2c3e50;
-}
-
-.speichern-btn {
-  background: #27ae60;
-  color: white;
-}
-
-.speichern-btn.loeschen {
-  background: #e74c3c;
-  color: white;
-}
-
-.speichern-btn.loeschen:hover {
-  background: #c0392b;
-}
-
-/* ---------- Produktliste im Modal ---------- */
-.detail-item-liste {
-  list-style: none;
-  padding: 0;
-}
-
-.detail-item-liste li {
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-  color: #555;
-}
-
-.detail-item-liste li:last-child {
-  border-bottom: none;
-}
-
+/* === Produkt-Hinzufügen-Bereich === */
 .produkt-hinzufuegen {
   display: flex;
   gap: 10px;
   margin-top: 20px;
-  align-items: center;
 }
 
-.small-input {
+.produkt-hinzufuegen .form-input {
   flex: 1;
-  padding: 8px;
-  font-size: 0.95em;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #c8c8b9;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
+  background-color: #fff;
 }
 
-/* ---------- Snackbar ---------- */
+.produkt-hinzufuegen .form-input:focus {
+  outline: none;
+  border-color: #4d6c26;
+}
+
+.hinzufuegen-mini {
+  background-color: #4d6c26;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  padding: 0 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.hinzufuegen-mini:hover {
+  background-color: #3d551f;
+}
+
+/* Responsive fallback für kleine Bildschirme */
+@media (max-width: 650px) {
+  .produkt-hinzufuegen {
+    flex-direction: column;
+  }
+
+  .hinzufuegen-mini {
+    width: 100%;
+    padding: 10px 0;
+  }
+}
+
+/* === Minimalistische Icon-Buttons (✎, 🗑️, 💾) === */
+.listen-aktionen,
+.aktionen {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.bearbeiten-btn,
+.loeschen-btn,
+.speichern-mini {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.bearbeiten-btn {
+  color: #4d6c26;
+}
+
+.bearbeiten-btn:hover {
+  color: #3a531d;
+  transform: scale(1.2);
+}
+
+.loeschen-btn {
+  color: #b53a2d;
+}
+
+.loeschen-btn:hover {
+  color: #922e22;
+  transform: scale(1.2);
+}
+
+.speichern-mini {
+  color: #4d6c26;
+}
+
+.speichern-mini:hover {
+  color: #3a531d;
+  transform: scale(1.2);
+}
+
+/* === Modal Buttons === */
+.form-aktionen {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.speichern-btn {
+  background-color: #4d6c26;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.speichern-btn:hover {
+  background-color: #3d551f;
+}
+
+.abbrechen-btn {
+  background: transparent;
+  color: #4d6c26;
+  border: 1.5px solid #4d6c26;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.abbrechen-btn:hover {
+  background: #4d6c26;
+  color: white;
+}
+
+/* === Snackbar === */
 .snackbar {
   position: fixed;
-  bottom: 20px;
+  bottom: 25px;
   left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: #27ae60;
+  transform: translateX(-50%);
+  background: #4d6c26;
   color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  font-weight: 600;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 1rem;
   opacity: 0;
-  transition: all 0.4s ease;
-  z-index: 2000;
+  transition: opacity 0.3s ease;
 }
 
 .snackbar.aktiv {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 
-.detail-item-liste li {
+/* === Eingabefelder in "Neue Einkaufsliste" nebeneinander === */
+.item-eingabe {
   display: flex;
-  justify-content: space-between; /* Produkt links, Buttons rechts */
-  align-items: center; /* gleiche Höhe */
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-  color: #555;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-.detail-item-liste li:last-child {
-  border-bottom: none;
+.item-eingabe .form-input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #c8c8b9;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
+  background-color: #fff;
 }
 
-/* Buttons rechts etwas voneinander trennen */
-.aktionen {
-  display: flex;
-  gap: 8px;
+.item-eingabe .form-input:focus {
+  outline: none;
+  border-color: #4d6c26;
 }
 
-.aktionen button {
-  background: #ecf0f1;
+.item-eingabe .menge-input {
+  flex: 0.3;
+  max-width: 90px;
+  text-align: center;
+}
+
+/* Entfernen-Button (das kleine "×") */
+.entfernen-btn {
+  background: none;
   border: none;
-  border-radius: 6px;
-  padding: 4px 8px;
+  color: #b53a2d;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: transform 0.15s ease, color 0.2s ease;
+  padding: 4px;
 }
 
-.aktionen .bearbeiten-btn:hover {
-  background: #f1c40f;
+.entfernen-btn:hover {
+  color: #922e22;
+  transform: scale(1.2);
 }
 
-.aktionen .loeschen-btn:hover {
-  background: #e74c3c;
+/* + Produkt hinzufügen Button */
+.zutat-hinzufuegen-btn {
+  margin-top: 10px;
+  background-color: #4d6c26;
   color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  font-family: 'Alice', serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.zutat-hinzufuegen-btn:hover {
+  background-color: #3d551f;
+}
+
+/* Responsive: auf kleineren Screens wieder untereinander */
+@media (max-width: 650px) {
+  .item-eingabe {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .item-eingabe .menge-input {
+    max-width: 100%;
+    text-align: left;
+  }
 }

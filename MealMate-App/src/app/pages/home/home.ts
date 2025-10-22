@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface ZutatDto {
   zutat: string;
@@ -33,8 +34,11 @@ export class Home implements OnInit {
   searchQuery: string = '';
   recipeOfTheDay: Rezept | null = null;
   private apiUrl = 'http://localhost:5000/api/recipes';
+  alleRezepte: Rezept[] = [];
+  gefilterteRezepte: Rezept[] = [];
 
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.loadRecipeOfTheDay();
@@ -62,5 +66,12 @@ export class Home implements OnInit {
         alert('Fehler beim Laden der Rezepte. Stelle sicher, dass das Backend läuft.');
       }
     });
+  }
+  sucheRezepte() {
+    const query = this.searchQuery.trim();
+    if (query) {
+      // Redirect auf Rezepte-Seite mit Query-Param
+      this.router.navigate(['/recipes'], { queryParams: { search: query } });
+    }
   }
 }
