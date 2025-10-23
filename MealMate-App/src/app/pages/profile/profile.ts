@@ -28,6 +28,10 @@ export class Profile {
   passwordError: string = '';
   passwordSuccess: string = '';
 
+  // Snackbar stuff
+  snackbarText = '';
+  snackbarAktiv = false;
+
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   ngOnInit() {
@@ -157,5 +161,11 @@ export class Profile {
         this.passwordError = err.error.message;
       },
     })
+  }
+
+  zeigeSnackbar(text: string): void {
+    this.snackbarText = text;
+    this.snackbarAktiv = true;
+    setTimeout(() => (this.snackbarAktiv = false), 2000);
   }
 }

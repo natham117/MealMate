@@ -525,4 +525,13 @@ h1 {
   transform: scale(1.1);
 }
 
+.zeile { display: flex; align-items: center; gap: 8px; }
+.zeile .text { line-height: 1.4; }
+.zeile.checked .text { text-decoration: line-through; opacity: 0.6; }
 
+.detail-item-liste li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
