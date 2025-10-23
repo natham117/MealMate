@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/login/auth.service';
 import { FormsModule } from '@angular/forms';
+import { Data } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -17,16 +18,17 @@ export class Profile {
   newImageUrl: string = '';
   showImageModal: boolean = false;
   fallbackUrl = 'https://static.vecteezy.com/ti/gratis-vektor/t1/2534006-social-media-chatting-online-leeres-profil-bild-kopf-und-korper-symbol-menschen-stehend-symbol-grauer-hintergrund-kostenlos-vektor.jpg';
-  errorMessage: string = '';
-  successMessage: string = '';
 
   // Password-Modal
   showPasswordModal: boolean = false;
   oldPassword = '';
   newPassword: string = '';
   confirmPassword: string = '';
-  passwordError: string = '';
-  passwordSuccess: string = '';
+
+  // Snackbar
+  snackbarMessage = '';
+  snackbarType: 'ok' | 'fail' = 'ok';
+  showSnackbar = false;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -37,52 +39,45 @@ export class Profile {
   onLoad() {
     this.email = this.authService.getEmail();
     console.log('Lade Profil für:', this.email);
-    this.http.post(
+    this.http.post<{ success: boolean, message: string, user: Data }>(
       'http://localhost:5000/api/profile/load',
       JSON.stringify(this.email),
       { headers: { 'Content-Type': 'application/json' } }
     ).subscribe(result => {
-      this.user = result;
-      if (this.user.birthDate) {
-        this.user.birthDate = this.user.birthDate.split('T')[0];
+      if (result.success) {
+        this.user = result.user;
+        if (this.user.birthDate) {
+          this.user.birthDate = this.user.birthDate.split('T')[0];
+        }
       }
-      if (this.user) {
-        console.log('API result:', this.user.firstName);
-      }
-      else {
-        console.log('API result: Kein Benutzer gefunden');
-      }
+      console.log(result.message);
     });
   };
 
-  onSubmit() {
-    this.successMessage = "";
-    this.errorMessage = "";
-
+  updateUser() {
     if (this.user.birthDate === '') {
       this.user.birthDate = null;
     }
 
-    this.http.post<{ success: boolean, rows: number, errorMessage: string }>(
+    this.http.post<{ success: boolean, rows: number, message: string }>(
       "http://localhost:5000/api/profile/update", {
       user: this.user,
       oldEmail: this.email,
       newPassword: this.newPassword
-    }).subscribe(result => {
-      if (result.success) {
-        console.log("Es wurden", result.rows, "erfolgreich verändert:", result.success)
-        this.errorMessage = "";
-        this.successMessage = "Aktualisierung des Profils erfolgreich!";
+    }).subscribe({
+      next: (res) => {
+      if (res.success) {
+        this.showSnackbarMessage("Profilinformationen erfolgreich aktualisiert.", "ok")
         if (this.user.email === this.authService.getEmail()) {
           this.authService.setEmail(this.user.email);
         }
-      } else if (result.errorMessage?.includes("Bestätigungsmail wurde an die neue Adresse gesendet")) {
-        this.successMessage = "Eine Bestätigungsmail wurde an deine neue E-Mail-Adresse gesendet. Bitte überprüfe dein Postfach.";
-        this.errorMessage = "";
-      } else {
-        this.successMessage = "";
-        this.errorMessage = result.errorMessage;
+      } else if (res.message?.includes("Bestätigungsmail wurde an die neue Adresse gesendet")) {
+        this.showSnackbarMessage("Eine Bestätigungsmail wurde an deine neue E-Mail-Adresse gesendet. Bitte überprüfe dein Postfach.", "ok")
       }
+    },
+    error: (err) => {
+      this.showSnackbarMessage(err.error.message, "fail");
+    }
     });
   }
 
@@ -100,21 +95,19 @@ export class Profile {
     if (this.newImageUrl.trim() !== '') {
       this.user.imageUrl = this.newImageUrl.trim();
     }
-    this.onSubmit();
+    this.updateUser();
     this.closeImageModal();
   }
 
   deleteImage() {
     this.user.imageUrl = null;
-    this.onSubmit();
+    this.updateUser();
     this.closeImageModal();
   }
 
   // Funktionen des Password-Modals
   openPasswordModal() {
     this.showPasswordModal = true;
-    this.passwordError = '';
-    this.passwordSuccess = '';
   }
 
   closePasswordModal() {
@@ -122,20 +115,18 @@ export class Profile {
   }
 
   updatePassword() {
-    console.log("updatePassword() wurde aufgerufen");
-
     if (!this.oldPassword || !this.newPassword || !this.confirmPassword) {
-      this.passwordError = 'Bitte alle Felder ausfüllen.';
+      this.showSnackbarMessage("Bitte alle Felder ausfüllen.", "fail");
       return;
     }
 
     if (this.oldPassword == this.newPassword) {
-      this.passwordError = 'Das neue Passwort darf nicht dem alten Password entsprechen.';
+      this.showSnackbarMessage("Das neue Passwort darf nicht dem alten Password entsprechen.", "fail");
       return;
     }
 
     if (this.newPassword !== this.confirmPassword) {
-      this.passwordError = 'Die neuen Passwörter stimmen nicht überein.';
+      this.showSnackbarMessage("Die neuen Passwörter stimmen nicht überein.", "fail");
       return;
     }
 
@@ -146,16 +137,24 @@ export class Profile {
     }).subscribe({
       next: (result: any) => {
         if (result.success) {
-          this.successMessage = "Das Passwort wurde erfolgreich geändert.";
+          this.showSnackbarMessage("Das Passwort wurde erfolgreich geändert.", "ok")
           this.oldPassword = this.newPassword = this.confirmPassword = '';
           this.closePasswordModal();
         } else {
-          this.passwordError = result.message;
+          this.showSnackbarMessage(result.message, "fail");
         }
       },
       error: (err: any) => {
-        this.passwordError = err.error.message;
+        this.showSnackbarMessage(err.error.message, "fail");
       },
     })
+  }
+
+  // Snackbar
+  showSnackbarMessage(msg: string, type: 'ok' | 'fail' = 'ok'): void {
+    this.snackbarMessage = msg;
+    this.snackbarType = type;
+    this.showSnackbar = true;
+    setTimeout(() => (this.showSnackbar = false), 5000);
   }
 }

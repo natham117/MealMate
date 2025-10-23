@@ -4,12 +4,12 @@
 
 <h3>Dein Profil</h3>
 
-<div class="auth-card" *ngIf="user; else notLoggedIn">
+<div class="auth-card" *ngIf="user && user.email; else notLoggedIn">
   <div class="profil-header">
     <img [src]="user.imageUrl || fallbackUrl" alt="Profilbild" class="profilbild" (click)="openImageModal()">
   </div>
 
-  <form (ngSubmit)="onSubmit()" novalidate>
+  <form (ngSubmit)="updateUser()" novalidate>
     <div>
       <label for="firstName">Vorname <span class="required">*</span></label>
       <input id="firstName" type="text" [(ngModel)]="user.firstName" name="firstName" required />
@@ -87,14 +87,6 @@
 
     <p class="form-hint"><span class="required">*</span> Pflichtfeld</p>
 
-    <div class="error-message" *ngIf="errorMessage">
-      {{ errorMessage }}
-    </div>
-
-    <div class="success-message" *ngIf="successMessage">
-      {{ successMessage }}
-    </div>
-
     <div class="actions">
       <button type="reset" class="btn-secondary" (click)="onLoad()">Abbrechen</button>
       <button type="submit">Speichern</button>
@@ -137,9 +129,6 @@
       <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required />
     </div>
 
-    <div class="error-message" *ngIf="passwordError">{{ passwordError }}</div>
-    <div class="success-message" *ngIf="passwordSuccess">{{ passwordSuccess }}</div>
-
     <div class="modal-actions">
       <button type="reset" class="btn-secondary" (click)="closePasswordModal()">Abbrechen</button>
       <button class="btn-primary" (click)="updatePassword()">Ändern</button>
@@ -152,3 +141,8 @@
     <p class="error-message">Bitte melde dich zunächst an.</p>
   </div>
 </ng-template>
+
+<!-- Snackbar -->
+<div class="snackbar" [ngClass]="{'active': showSnackbar, 'ok': snackbarType === 'ok', 'fail': snackbarType === 'fail'}">
+  {{ snackbarMessage }}
+</div>
