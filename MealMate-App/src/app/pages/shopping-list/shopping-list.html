@@ -159,28 +159,18 @@
   </div>
 </div>
 <!-- Modal: Liste löschen -->
-<div class="modal" [class.aktiv]="deleteAktiv" (click)="schliesseDeleteDialog()">
-  <div class="modal-inhalt" (click)="$event.stopPropagation()">
-    <button class="schliessen-btn" (click)="schliesseDeleteDialog()">×</button>
-
-    <div class="detail-inhalt">
-      <h2 class="detail-titel">Liste löschen</h2>
-
-      <p>
-        Möchtest du die Liste
-        <strong>{{ zuLoeschendeListe?.listName }}</strong>
-        wirklich löschen? 🗑️
-      </p>
-
-      <div class="form-aktionen">
-        <button type="button" class="abbrechen-btn" (click)="schliesseDeleteDialog()">
-          Abbrechen
-        </button>
-        <button type="button" class="speichern-btn loeschen" (click)="bestaetigeDelete()">
-          Löschen
-        </button>
-
-      </div>
+<div class="delete-modal-overlay" *ngIf="deleteAktiv" (click)="schliesseDeleteDialog()">
+  <div class="delete-modal-box" (click)="$event.stopPropagation()">
+    <button class="delete-close" (click)="schliesseDeleteDialog()">×</button>
+    <h2>Liste löschen</h2>
+    <p>
+      Möchtest du die Liste
+      <strong>{{ zuLoeschendeListe?.listName }}</strong>
+      wirklich löschen?
+    </p>
+    <div class="delete-actions">
+      <button class="cancel-btn" (click)="schliesseDeleteDialog()">Abbrechen</button>
+      <button class="delete-btn" (click)="bestaetigeDelete()">Löschen</button>
     </div>
   </div>
 </div>
@@ -210,28 +200,35 @@
       </div>
 
           <ul class="detail-item-liste">
-            <li *ngFor="let item of ausgewaehlteListe.items; let i = index">
-              <ng-container *ngIf="!item.bearbeitung">
-                {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
-                <div class="aktionen">
-                  <button class="bearbeiten-btn" (click)="bearbeiteProdukt(item)">✎</button>
-                  <button class="loeschen-btn" (click)="loescheProdukt(i)">🗑️</button>
-                </div>
-              </ng-container>
+  <li *ngFor="let item of ausgewaehlteListe?.items; let i = index; trackBy: trackByItem">
 
-              <ng-container *ngIf="item.bearbeitung">
-                <input [(ngModel)]="item.itemName" class="form-input small-input" />
-                <input
-                  type="number"
-                  [(ngModel)]="item.amount"
-                  class="form-input small-input"
-                  min="0"
-                />
-                <input [(ngModel)]="item.unit" class="form-input small-input" />
-                <button class="speichern-mini" (click)="speichereProdukt(item)">💾</button>
-              </ng-container>
-            </li>
-          </ul>
+    <!-- Anzeige-Modus -->
+    <ng-container *ngIf="!item.bearbeitung">
+      <label class="zeile" [class.checked]="item.isChecked">
+        <input type="checkbox"
+               [checked]="item.isChecked"
+               (change)="onToggleItem(ausgewaehlteListe!, item, $event.target.checked)" />
+        <span class="text">
+          {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
+        </span>
+      </label>
+
+      <div class="aktionen">
+        <button class="bearbeiten-btn" (click)="bearbeiteProdukt(item)">✎</button>
+        <button class="loeschen-btn"   (click)="loescheProdukt(i)">🗑️</button>
+      </div>
+    </ng-container>
+
+    <!-- Bearbeiten-Modus -->
+    <ng-container *ngIf="item.bearbeitung">
+      <input [(ngModel)]="item.itemName" class="form-input small-input" />
+      <input type="number" [(ngModel)]="item.amount" class="form-input small-input" min="0" />
+      <input [(ngModel)]="item.unit" class="form-input small-input" />
+      <button class="speichern-mini" (click)="speichereProdukt(item)">💾</button>
+    </ng-container>
+
+  </li>
+</ul>
 
         <div class="produkt-hinzufuegen">
           <input
@@ -273,16 +270,7 @@
   </div>
 </div>
 
-<!-- === Delete Dialog === -->
-<div *ngIf="deleteAktiv" class="dialog-overlay">
-  <div class="dialog-box">
-    <h3>Soll die Liste "{{ zuLoeschendeListe?.listName }}" wirklich gelöscht werden?</h3>
-    <div class="dialog-actions">
-      <button class="btn-danger" (click)="bestaetigeDelete()">Ja, löschen</button>
-      <button class="btn-secondary" (click)="schliesseDeleteDialog()">Abbrechen</button>
-    </div>
-  </div>
-</div>
+
 
   <!-- Snackbar -->
   <div class="snackbar" [class.aktiv]="snackbarAktiv">
