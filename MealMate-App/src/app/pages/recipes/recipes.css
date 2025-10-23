@@ -147,7 +147,7 @@ h1 {
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #4d6c26; /* 🟢 gleiches Grün wie Buttons */
+  accent-color: #4d6c26;
   transition: transform 0.15s ease;
 }
 
@@ -169,8 +169,6 @@ h1 {
   font-weight: 500;
   letter-spacing: 0.3px;
 }
-
-
 
 .rezept-liste {
   display: grid;
@@ -378,10 +376,10 @@ h1 {
 
 .bearbeiten-btn {
   padding: 10px 20px;
-  background: #3498db;
-  color: white;
-  border: none;
+  background: #7fc6f5;
+  border: 2px solid #3496d8;
   border-radius: 6px;
+  color: white;
   cursor: pointer;
   font-size: 1em;
   transition: background 0.3s;
@@ -389,7 +387,7 @@ h1 {
 }
 
 .bearbeiten-btn:hover {
-  background: #2980b9;
+  background: #3ba4eb;
 }
 
 .favorit-btn {
@@ -645,4 +643,36 @@ h1 {
 
 .pdf-btn:hover {
   background: #bdc3c7;
+}
+/* Einkaufsliste-Button */
+.einkaufsliste-btn {
+  padding: 10px 20px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 2px solid #81c784;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.einkaufsliste-btn:hover {
+  background: #c8e6c9;
+  border-color: #66bb6a;
+}
+
+.einkaufsliste-btn:active {
+  transform: scale(0.98);
+}
+
+/* Einkaufslisten-Dialog spezifisches Styling */
+.einkaufslisten-dialog {
+  max-width: 500px;
+}
+
+.dialog-beschreibung {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 0.95em;
 }

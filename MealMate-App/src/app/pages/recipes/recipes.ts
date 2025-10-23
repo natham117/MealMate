@@ -371,6 +371,11 @@ export class Recipes implements OnInit {
   pdfLaedt = false;
   private pdfLaedtIds = new Set<number>();
 
+  // Einkaufslisten-Dialog
+  einkaufslisten_dialog_aktiv = false;
+  einkaufslisten_name = '';
+  einkaufslisten_erstellen_laeuft = false;
+
   laedtPdf(id: number) { return this.pdfLaedtIds.has(id); }
 
   ladePdf(rezeptId: number, titel?: string, ev?: Event) {
@@ -417,6 +422,102 @@ export class Recipes implements OnInit {
 
   private sanitize(name: string): string {
     return name.replace(/[\\/:*?"<>|]+/g, '_').trim();
+  }
+
+
+  // Einkaufslisten-Methoden
+  oeffneEinkaufslistenDialog(): void {
+    if (!this.ausgewaehltes_rezept) return;
+    
+    // Prüfe ob User eingeloggt ist
+    const currentUserId = this.authService.getUserId();
+    if (!currentUserId) {
+      alert('Bitte zuerst einloggen, um Einkaufslisten zu erstellen!');
+      return;
+    }
+
+    // Setze Rezeptname als Vorschlag
+    this.einkaufslisten_name = `Einkauf für ${this.ausgewaehltes_rezept.titel}`;
+    this.einkaufslisten_dialog_aktiv = true;
+  }
+
+  schliesseEinkaufslistenDialog(): void {
+    this.einkaufslisten_dialog_aktiv = false;
+    this.einkaufslisten_name = '';
+    this.einkaufslisten_erstellen_laeuft = false;
+  }
+
+  erstelleEinkaufsliste(): void {
+    if (!this.ausgewaehltes_rezept) return;
+    
+    const name = this.einkaufslisten_name.trim();
+    if (!name) {
+      alert('Bitte gib einen Namen für die Einkaufsliste ein!');
+      return;
+    }
+
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      alert('Bitte zuerst einloggen!');
+      return;
+    }
+
+    // Zutaten in ShoppingListItems umwandeln
+    const items = this.ausgewaehltes_rezept.zutaten
+      .filter(zutat => zutat.zutat.trim() !== '')
+      .map(zutat => ({
+        itemId: 0,
+        itemName: zutat.zutat,
+        amount: this.parseAmount(zutat.menge),
+        unit: zutat.einheit || ''
+      }));
+
+    if (items.length === 0) {
+      alert('Dieses Rezept hat keine Zutaten, die zur Einkaufsliste hinzugefügt werden können.');
+      return;
+    }
+
+    // Einkaufsliste erstellen
+    const shoppingList = {
+      listId: 0,
+      userId: userId,
+      listName: name,
+      items: items
+    };
+
+    console.log('🛒 Erstelle Einkaufsliste:', shoppingList);
+    this.einkaufslisten_erstellen_laeuft = true;
+
+    this.http.post('http://localhost:5000/api/shoppinglist', shoppingList).subscribe({
+      next: (response: any) => {
+        console.log('✅ Einkaufsliste erfolgreich erstellt:', response);
+        alert(`Einkaufsliste "${name}" wurde erfolgreich erstellt!`);
+        this.schliesseEinkaufslistenDialog();
+      },
+      error: (error) => {
+        console.error('❌ Fehler beim Erstellen der Einkaufsliste:', error);
+        alert('Fehler beim Erstellen der Einkaufsliste. Bitte versuche es erneut.');
+        this.einkaufslisten_erstellen_laeuft = false;
+      }
+    });
+  }
+
+  private parseAmount(menge: string | number): number {
+    if (typeof menge === 'number') {
+      return menge;
+    }
+    
+    if (!menge || menge === '' || menge === '0') {
+      return 0;
+    }
+
+    // Extrahiere Zahl aus String (z.B. "200" aus "200 g")
+    const match = String(menge).match(/[\d.,]+/);
+    if (match) {
+      return parseFloat(match[0].replace(',', '.'));
+    }
+    
+    return 0;
   }
 
 }
