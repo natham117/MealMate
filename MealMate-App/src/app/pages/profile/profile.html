@@ -1,120 +1,148 @@
-<div class="profile-page">
-  <h1>Profileinstellungen</h1>
-  <p>Möchstest du nachträglich noch etwas an deinem Profil ändern? Dann bist du hier genau richtig! Ändere deinen Namen,
-    dein Profilbild, oder dein Passwort. Oder füge Informationen hinzu.</p>
+<h1>Profileinstellungen</h1>
+<p>Möchstest du nachträglich noch etwas an deinem Profil ändern? Dann bist du hier genau richtig! Ändere deinen Namen,
+  dein Profilbild, oder dein Passwort. Oder füge Informationen hinzu.</p>
 
-  <h3>Dein Profil</h3>
+<h3>Dein Profil</h3>
 
-  <div class="auth-card" *ngIf="user; else notLoggedIn">
-    <div class="profil-header">
-      <img [src]="user.imageUrl || fallbackUrl" alt="Profilbild" class="profilbild" (click)="openImageModal()">
-    </div>
-
-    <form (ngSubmit)="onSubmit()" novalidate>
-      <div>
-        <label for="firstName">Vorname <span class="required">*</span></label>
-        <input id="firstName" type="text" [(ngModel)]="user.firstName" name="firstName" required />
-      </div>
-
-      <div>
-        <label for="lastName">Nachname <span class="required">*</span></label>
-        <input id="lastName" type="text" [(ngModel)]="user.lastName" name="lastName" required />
-      </div>
-
-      <div>
-        <label for="email">Email <span class="required">*</span></label>
-        <input id="email" type="email" [(ngModel)]="user.email" name="email" required />
-      </div>
-
-      <div>
-        <label for="birthDate">Geburtsdatum <span class="optional">(optional)</span></label>
-        <input id="birthDate" type="date" [(ngModel)]="user.birthDate" name="birthDate" [max]="today"
-          placeholder="TT.MM.JJJJ" />
-      </div>
-
-      <div>
-        <label for="phoneNumber">Telefonnummer <span class="optional">(optional)</span></label>
-        <input id="phoneNumber" type="tel" [(ngModel)]="user.phoneNumber" name="phoneNumber"
-          placeholder="+49 176 12345678" />
-      </div>
-
-      <div>
-        <label for="gender">Geschlecht <span class="optional">(optional)</span></label>
-        <select id="gender" [(ngModel)]="user.gender" name="gender">
-          <option [ngValue]="null" selected>Nicht genannt</option>
-          <option value="Male">Männlich</option>
-          <option value="Female">Weiblich</option>
-          <option value="Divers">Divers</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="country">Land <span class="optional">(optional)</span></label>
-        <select id="country" [(ngModel)]="user.country" name="country">
-          <option [ngValue]="null" selected>Nicht genannt</option>
-          <option value="Germany">Deutschland</option>
-          <option value="Austria">Österreich</option>
-          <option value="Switzerland">Schweiz</option>
-          <option value="France">Frankreich</option>
-          <option value="Italy">Italien</option>
-          <option value="Spain">Spanien</option>
-          <option value="Portugal">Portugal</option>
-          <option value="Netherlands">Niederlande</option>
-          <option value="Belgium">Belgien</option>
-          <option value="Luxembourg">Luxemburg</option>
-          <option value="Poland">Polen</option>
-          <option value="Czech Republic">Tschechien</option>
-          <option value="Denmark">Dänemark</option>
-          <option value="Norway">Norwegen</option>
-          <option value="Sweden">Schweden</option>
-          <option value="Finland">Finnland</option>
-          <option value="Greece">Griechenland</option>
-          <option value="Turkey">Türkei</option>
-          <option value="USA">USA</option>
-          <option value="Canada">Kanada</option>
-          <option value="United Kingdom">Großbritannien</option>
-          <option value="Ireland">Irland</option>
-          <option value="Australia">Australien</option>
-          <option value="New Zealand">Neuseeland</option>
-          <option value="China">China</option>
-          <option value="Japan">Japan</option>
-          <option value="India">Indien</option>
-          <option value="Brazil">Brasilien</option>
-          <option value="Mexico">Mexiko</option>
-          <option value="South Africa">Südafrika</option>
-
-        </select>
-      </div>
-
-      <p class="form-hint"><span class="required">*</span> Pflichtfeld</p>
-
-      <div class="error-message" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
-
-      <div class="success-message" *ngIf="successMessage">
-        {{ successMessage }}
-      </div>
-
-      <div class="actions">
-        <button type="reset" class="btn-secondary" (click)="onLoad()">Abbrechen</button>
-        <button type="submit">Speichern</button>
-      </div>
-    </form>
+<div class="auth-card" *ngIf="user; else notLoggedIn">
+  <div class="profil-header">
+    <img [src]="user.imageUrl || fallbackUrl" alt="Profilbild" class="profilbild" (click)="openImageModal()">
   </div>
 
-  <div class="image-modal" *ngIf="showImageModal">
-    <div class="modal-content">
-      <span class="close" (click)="closeImageModal()">&times;</span>
-      <img [src]="user.imageUrl || fallbackUrl" alt="Profilbild" class="large-image" />
-      <div class="url-input">
-        <label>Neue Bild-URL:</label>
-        <input type="text" [(ngModel)]="newImageUrl" placeholder="https://..." />
-        <div class="image-buttons">
-          <button (click)="updateImageUrl()" [disabled]="!newImageUrl || !newImageUrl.trim()">Ändern</button>
-          <button class="btn-delete" (click)="deleteImage()">Löschen</button>
-        </div>
+  <form (ngSubmit)="onSubmit()" novalidate>
+    <div>
+      <label for="firstName">Vorname <span class="required">*</span></label>
+      <input id="firstName" type="text" [(ngModel)]="user.firstName" name="firstName" required />
+    </div>
+
+    <div>
+      <label for="lastName">Nachname <span class="required">*</span></label>
+      <input id="lastName" type="text" [(ngModel)]="user.lastName" name="lastName" required />
+    </div>
+
+    <div>
+      <label for="email">Email <span class="required">*</span></label>
+      <input id="email" type="email" [(ngModel)]="user.email" name="email" required />
+    </div>
+
+    <div>
+      <label for="birthDate">Geburtsdatum <span class="optional">(optional)</span></label>
+      <input id="birthDate" type="date" [(ngModel)]="user.birthDate" name="birthDate" [max]="today"
+        placeholder="TT.MM.JJJJ" />
+    </div>
+
+    <div>
+      <label for="phoneNumber">Telefonnummer <span class="optional">(optional)</span></label>
+      <input id="phoneNumber" type="tel" [(ngModel)]="user.phoneNumber" name="phoneNumber"
+        placeholder="+49 176 12345678" />
+    </div>
+
+    <div>
+      <label for="gender">Geschlecht <span class="optional">(optional)</span></label>
+      <select id="gender" [(ngModel)]="user.gender" name="gender">
+        <option [ngValue]="null" selected>Nicht genannt</option>
+        <option value="Male">Männlich</option>
+        <option value="Female">Weiblich</option>
+        <option value="Divers">Divers</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="country">Land <span class="optional">(optional)</span></label>
+      <select id="country" [(ngModel)]="user.country" name="country">
+        <option [ngValue]="null" selected>Nicht genannt</option>
+        <option value="Germany">Deutschland</option>
+        <option value="Austria">Österreich</option>
+        <option value="Switzerland">Schweiz</option>
+        <option value="France">Frankreich</option>
+        <option value="Italy">Italien</option>
+        <option value="Spain">Spanien</option>
+        <option value="Portugal">Portugal</option>
+        <option value="Netherlands">Niederlande</option>
+        <option value="Belgium">Belgien</option>
+        <option value="Luxembourg">Luxemburg</option>
+        <option value="Poland">Polen</option>
+        <option value="Czech Republic">Tschechien</option>
+        <option value="Denmark">Dänemark</option>
+        <option value="Norway">Norwegen</option>
+        <option value="Sweden">Schweden</option>
+        <option value="Finland">Finnland</option>
+        <option value="Greece">Griechenland</option>
+        <option value="Turkey">Türkei</option>
+        <option value="USA">USA</option>
+        <option value="Canada">Kanada</option>
+        <option value="United Kingdom">Großbritannien</option>
+        <option value="Ireland">Irland</option>
+        <option value="Australia">Australien</option>
+        <option value="New Zealand">Neuseeland</option>
+        <option value="China">China</option>
+        <option value="Japan">Japan</option>
+        <option value="India">Indien</option>
+        <option value="Brazil">Brasilien</option>
+        <option value="Mexico">Mexiko</option>
+        <option value="South Africa">Südafrika</option>
+
+      </select>
+    </div>
+
+    <p class="form-hint"><span class="required">*</span> Pflichtfeld</p>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="success-message" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="actions">
+      <button type="reset" class="btn-secondary" (click)="onLoad()">Abbrechen</button>
+      <button type="submit">Speichern</button>
+      <button type="button" class="btn-password" (click)="openPasswordModal()">Passwort ändern</button>
+    </div>
+  </form>
+</div>
+
+<div class="image-modal" *ngIf="showImageModal">
+  <div class="modal-content">
+    <span class="close" (click)="closeImageModal()">&times;</span>
+    <img [src]="user.imageUrl || fallbackUrl" alt="Profilbild" class="large-image" />
+    <div class="url-input">
+      <label>Neue Bild-URL:</label>
+      <input type="text" [(ngModel)]="newImageUrl" placeholder="https://..." />
+      <div class="image-buttons">
+        <button type="reset" class="btn-secondary" (click)="closeImageModal()">Abbrechen</button>
+        <button class="btn-primary" (click)="updateImageUrl()">Ändern</button>
+        <button class="btn-delete" (click)="deleteImage()">Löschen</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="password-modal" *ngIf="showPasswordModal">
+  <div class="modal-content">
+    <span class="close" (click)="closePasswordModal()">&times;</span>
+    <div>
+      <label>Aktuelles Passwort</label>
+      <input type="password" [(ngModel)]="oldPassword" name="oldPassword" required />
+    </div>
+
+    <div>
+      <label>Neues Passwort</label>
+      <input type="password" [(ngModel)]="newPassword" name="newPassword" required />
+    </div>
+
+    <div>
+      <label>Neues Passwort bestätigen</label>
+      <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required />
+    </div>
+
+    <div class="error-message" *ngIf="passwordError">{{ passwordError }}</div>
+    <div class="success-message" *ngIf="passwordSuccess">{{ passwordSuccess }}</div>
+
+    <div class="modal-actions">
+      <button type="reset" class="btn-secondary" (click)="closePasswordModal()">Abbrechen</button>
+      <button class="btn-primary" (click)="updatePassword()">Ändern</button>
     </div>
   </div>
 </div>

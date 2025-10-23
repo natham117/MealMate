@@ -79,7 +79,6 @@ form {
   flex-direction: column;
   gap: 18px;
   align-items: flex-start;
-  
 }
 
 label {
@@ -88,7 +87,6 @@ label {
   font-size: 1rem;
   display: block;
   margin-bottom: 5px;
-
 }
 
 input,
@@ -101,16 +99,16 @@ select {
   font-size: 1rem;
   color: #2f2f2f;
   background: #fdfdf9;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
   max-width: 100%;
   box-sizing: border-box;
-
 }
 
 input:focus,
 select:focus {
   outline: none;
   border-color: #4d6c26;
+  background-color: #fcfff8;
 }
 
 /* === Pflichtfelder & Hinweise === */
@@ -147,23 +145,31 @@ button {
   font-size: 1rem;
   cursor: pointer;
   font-family: 'Alice', serif;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 button:hover {
   background-color: #3d551f;
+  transform: scale(1.02);
 }
 
 .btn-secondary {
   background: transparent;
   color: #4d6c26;
   border: 1.5px solid #4d6c26;
-  transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
   background: #4d6c26;
   color: white;
+}
+
+.btn-password {
+  background-color: #4d6c26;
+}
+
+.btn-password:hover {
+  background-color: #3b521e;
 }
 
 /* === Erfolgs- & Fehlermeldungen === */
@@ -185,87 +191,100 @@ button:hover {
   font-size: 0.95rem;
 }
 
-/* === Bildbearbeitungs-Modal === */
-.image-modal {
+/* === Modals (Bild + Passwort) === */
+.image-modal,
+.password-modal {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.65);
   display: flex;
   justify-content: center;
   align-items: center;
+  backdrop-filter: blur(2px);
+}
+
+.large-image {
+  max-width: 100%;
+  max-height: 400px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  object-fit: contain;
+  background-color: #f9f9f4;
 }
 
 .modal-content {
   background: #fff;
-  padding: 30px 40px;
-  border-radius: 15px;
+  padding: 35px 45px;
+  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   position: relative;
   width: 90%;
-  max-width: 400px;
+  max-width: 420px;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .close {
   position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 1.5rem;
-  color: #333;
+  top: 12px;
+  right: 18px;
+  font-size: 1.4rem;
+  color: #555;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+.close:hover {
+  color: #000;
 }
 
-.large-image {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 20px;
-}
-
-.url-input {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.url-input label {
+.modal-content input {
+  width: 100%;
+  padding: 10px 14px;
+  margin: 6px 0 12px;
+  border-radius: 10px;
+  border: 1.5px solid #c8c8b9;
+  background: #fdfdf9;
+  font-family: 'Alice', serif;
   font-size: 1rem;
-  color: #333;
+  color: #2f2f2f;
+  transition: border-color 0.2s ease;
+}
+.modal-content input:focus {
+  border-color: #4d6c26;
+  outline: none;
 }
 
-.url-input input {
-  text-align: center;
-  font-size: 0.95rem;
-}
-
+/* === Buttons im Modal === */
+.modal-actions,
 .image-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   margin-top: 10px;
 }
 
-.url-input button {
-  background-color: #4d6c26;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 20px;
-  cursor: pointer;
+.modal-actions button,
+.image-buttons button {
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 1rem;
   font-family: 'Alice', serif;
-  transition: background-color 0.3s ease;
-}
-
-.url-input button:hover {
-  background-color: #3d551f;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-delete {
   background-color: #d9534f;
+  color: #fff;
 }
-
 .btn-delete:hover {
   background-color: #b52b27;
 }
