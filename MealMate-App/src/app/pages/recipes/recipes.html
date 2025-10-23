@@ -144,14 +144,21 @@
                   }
                   <!-- Bearbeiten-Button nur für eigene Rezepte -->
                   @if (authService.isLoggedIn() && authService.getUserId() === ausgewaehltes_rezept.userId) {
-                    <button class="bearbeiten-btn" (click)="starteBearbeitung()">✏️ Bearbeiten</button>
+                    <button class="bearbeiten-btn" (click)="starteBearbeitung()">✏️</button>
                   }
                   <!-- Herunterladen-Button für PDF_Datei -->
                   @if (authService.isLoggedIn()) {
                     <button class="pdf-btn"
                             [disabled]="pdfLaedt"
                             (click)="ladePdf(ausgewaehltes_rezept.id, ausgewaehltes_rezept.titel)">
-                      @if (!pdfLaedt) { 🧾 PDF } @else { … lädt … }    
+                      @if (!pdfLaedt) { 📄 PDF } @else { … lädt … }
+                    </button>
+                  }
+                  <!-- Button für Einkaufsliste -->
+                  @if (authService.isLoggedIn()) {
+                    <button class="einkaufsliste-btn"
+                            (click)="oeffneEinkaufslistenDialog()">
+                      🛒 In Einkaufsliste
                     </button>
                   }
                 </div>
@@ -355,6 +362,38 @@
           <div class="form-aktionen">
             <button type="button" class="abbrechen-btn" (click)="schliesseFormular()">Abbrechen</button>
             <button type="submit" class="speichern-btn">Speichern</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal für Einkaufslisten-Name -->
+  <div class="modal" [class.aktiv]="einkaufslisten_dialog_aktiv">
+    <div class="modal-inhalt einkaufslisten-dialog">
+      <button class="schliessen-btn" (click)="schliesseEinkaufslistenDialog()">×</button>
+      
+      <div class="detail-inhalt">
+        <h2 class="detail-titel">In Einkaufsliste übernehmen</h2>
+        <p class="dialog-beschreibung">Gib einen Namen für die neue Einkaufsliste ein:</p>
+        
+        <form (ngSubmit)="erstelleEinkaufsliste()">
+          <div class="form-gruppe">
+            <label>Name der Einkaufsliste *</label>
+            <input type="text" 
+                   [(ngModel)]="einkaufslisten_name" 
+                   name="einkaufslisten_name" 
+                   class="form-input" 
+                   placeholder="z.B. Einkauf für Spaghetti Carbonara"
+                   required
+                   autofocus>
+          </div>
+
+          <div class="form-aktionen">
+            <button type="button" class="abbrechen-btn" (click)="schliesseEinkaufslistenDialog()">Abbrechen</button>
+            <button type="submit" class="speichern-btn" [disabled]="einkaufslisten_erstellen_laeuft">
+              @if (!einkaufslisten_erstellen_laeuft) { Erstellen } @else { … wird erstellt … }
+            </button>
           </div>
         </form>
       </div>

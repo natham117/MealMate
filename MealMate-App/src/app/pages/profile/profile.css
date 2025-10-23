@@ -1,8 +1,8 @@
 /* === Font Import === */
 @import url('https://fonts.googleapis.com/css2?family=Alice&display=swap');
 
-/* === Allgemeines Seitenlayout === */
-.settings-page {
+/* === Seitenlayout allgemein === */
+.profile-page {
   max-width: 1000px;
   margin: 60px auto;
   background-color: #f9f9f4;
@@ -10,9 +10,10 @@
   border-radius: 20px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
   font-family: 'Alice', serif;
+  color: #2f2f2f;
 }
 
-/* === Überschriften === */
+/* === Überschriften und Texte === */
 h1 {
   color: #4d6c26;
   font-size: 2.4rem;
@@ -20,13 +21,13 @@ h1 {
   text-align: left;
 }
 
-p {
-  color: #2f2f2f;
+.profile-page p {
   font-size: 1.05rem;
   line-height: 1.6;
+  color: #333;
   margin-bottom: 15px;
-  text-align: left;
   max-width: 850px;
+  text-align: left;
 }
 
 h3 {
@@ -40,11 +41,11 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background: #f9f9f4;
+  background: #fff;
   border-radius: 25px;
   padding: 35px 40px;
-  border: 1.5px solid #c8c8b9;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border: 1.5px solid #e6e6da;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06);
   flex-wrap: wrap;
   gap: 30px;
 }
@@ -77,16 +78,20 @@ form {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  align-items: flex-start;
 }
 
 label {
   font-weight: 600;
   color: #2f2f2f;
   font-size: 1rem;
+  display: block;
+  margin-bottom: 5px;
 }
 
-input {
-  width: 100%;
+input,
+select {
+  width: 400px;
   padding: 10px 15px;
   border-radius: 10px;
   border: 1.5px solid #c8c8b9;
@@ -94,205 +99,19 @@ input {
   font-size: 1rem;
   color: #2f2f2f;
   background: #fdfdf9;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-input:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: #4d6c26;
+  background-color: #fcfff8;
 }
 
-/* === Hinweise & Nachrichten === */
-.hint {
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: 4px;
-}
-
-.error-message {
-  color: #a94442;
-  background: #f8d7da;
-  padding: 10px 15px;
-  border-radius: 10px;
-  border: 1px solid #f5c6cb;
-/* -------------------- PAGE CONTAINER -------------------- */
-.profile-page {
-  padding: 1.25rem;
-}
-
-.profile-page h1,
-.profile-page p,
-.profile-page h2 {
-  text-align: center;
-  margin: 0 0.5rem;
-}
-
-/* -------------------- CARD -------------------- */
-.auth-card {
-  max-width: 420px;
-  margin: 8vh auto;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  background: #fff;
-}
-
-/* -------------------- PROFILE HEADER -------------------- */
-.profil-header {
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.profilbild {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  display: inline-block;
-  border: 2px solid rgba(0, 0, 0, 0.04);
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.profilbild:hover {
-  transform: scale(1.05);
-}
-
-/* -------------------- FORM -------------------- */
-form {
-  display: grid;
-  gap: 0.9rem;
-}
-
-label {
-  font-weight: 600;
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
-input,
-select,
-textarea {
-  padding: 0.75rem 0.9rem;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  font: inherit;
-  width: 100%;
-  box-sizing: border-box;
-  background: #fff;
-  color: #111;
-}
-
-/* -------------------- BUTTONS -------------------- */
-.actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-  margin-top: 0.6rem;
-}
-
-button {
-  margin-top: 0.5rem;
-  padding: 0.8rem 1rem;
-  border: 0;
-  border-radius: 12px;
-  background: #111;
-  color: #fff;
-  cursor: pointer;
-  font: inherit;
-}
-
-.btn-secondary {
-  background: transparent;
-  border: 1px solid #ddd;
-  color: #111;
-}
-
-.btn-delete {
-  background-color: #d9534f;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-delete:hover {
-  background-color: #b52b27;
-}
-
-.image-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-button:disabled {
-  opacity: 0.5;
-  background-color: #999 !important;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* -------------------- MESSAGES -------------------- */
-.error-message {
-  color: #d9534f;
-  background-color: #f9d6d5;
-  border: 1px solid #d9534f;
-  padding: 8px 12px;
-  border-radius: 6px;
-  margin-top: 10px;
-  font-size: 0.95rem;
-}
-
-.success-message {
-  color: #155724;
-  background: #d4edda;
-  padding: 10px 15px;
-  border-radius: 10px;
-  border: 1px solid #c3e6cb;
-}
-
-/* === Buttons === */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-button {
-  background-color: #4d6c26;
-  color: white;
-  padding: 10px 25px;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-  font-family: 'Alice', serif;
-  transition: background 0.3s ease;
-}
-
-button:hover {
-  background-color: #3d551f;
-}
-
-/* === Modal für Bildbearbeitung === */
-.image-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  background-color: #d4edda;
-  border: 1px solid #c3e6cb;
-  padding: 8px 12px;
-  border-radius: 6px;
-  margin-top: 10px;
-  font-size: 0.95rem;
-}
-
+/* === Pflichtfelder & Hinweise === */
 .required {
   color: red;
   margin-left: 2px;
@@ -306,95 +125,188 @@ button:hover {
 .form-hint {
   font-size: 0.9em;
   color: #666;
+  margin-top: 5px;
+}
+
+/* === Buttons === */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
   margin-top: 10px;
 }
 
-/* -------------------- MODAL -------------------- */
-.image-modal {
+button {
+  background-color: #4d6c26;
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: 'Alice', serif;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background-color: #3d551f;
+  transform: scale(1.02);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #4d6c26;
+  border: 1.5px solid #4d6c26;
+}
+
+.btn-secondary:hover {
+  background: #4d6c26;
+  color: white;
+}
+
+.btn-password {
+  background-color: #4d6c26;
+}
+
+.btn-password:hover {
+  background-color: #3b521e;
+}
+
+/* === Erfolgs- & Fehlermeldungen === */
+.error-message {
+  color: #a94442;
+  background: #f8d7da;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #f5c6cb;
+  font-size: 0.95rem;
+}
+
+.success-message {
+  color: #155724;
+  background: #d4edda;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #c3e6cb;
+  font-size: 0.95rem;
+}
+
+/* === Modals (Bild + Passwort) === */
+.image-modal,
+.password-modal {
   position: fixed;
   inset: 0;
-  z-index: 999;
-  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.65);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.large-image {
+  max-width: 100%;
+  max-height: 400px;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  object-fit: contain;
+  background-color: #f9f9f4;
 }
 
 .modal-content {
-  background: #f9f9f4;
-  padding: 30px 40px;
-  border-radius: 15px;
   background: #fff;
-  padding: 20px;
-  border-radius: 12px;
+  padding: 35px 45px;
+  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   position: relative;
+  width: 90%;
+  max-width: 420px;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .close {
   position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 1.5rem;
-  color: #333;
+  top: 12px;
+  right: 18px;
+  font-size: 1.4rem;
+  color: #555;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+.close:hover {
+  color: #000;
 }
 
-.large-image {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 20px;
+.modal-content input {
+  width: 100%;
+  padding: 10px 14px;
+  margin: 6px 0 12px;
+  border-radius: 10px;
+  border: 1.5px solid #c8c8b9;
+  background: #fdfdf9;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
+  color: #2f2f2f;
+  transition: border-color 0.2s ease;
+}
+.modal-content input:focus {
+  border-color: #4d6c26;
+  outline: none;
 }
 
-.url-input {
+/* === Buttons im Modal === */
+.modal-actions,
+.image-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
 }
 
-.url-input input {
-  text-align: center;
-  font-size: 0.95rem;
-}
-
-.url-input button {
-  align-self: center;
-  background: #4d6c26;
-  color: white;
-  padding: 8px 20px;
-  border-radius: 8px;
-  padding: 8px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
+.modal-actions button,
+.image-buttons button {
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 1rem;
   font-family: 'Alice', serif;
   cursor: pointer;
-  transition: background 0.3s;
+  border: none;
+  transition: all 0.2s ease-in-out;
 }
 
-.url-input button:hover {
-  background: #3d551f;
+.btn-delete {
+  background-color: #d9534f;
+  color: #fff;
 }
-  transition: background-color 0.2s;
-}
-
-.url-input button:hover {
-  background-color: #0056b3;
+.btn-delete:hover {
+  background-color: #b52b27;
 }
 
-/* -------------------- RESPONSIVE -------------------- */
-@media (max-width: 480px) {
+/* === Responsives Verhalten === */
+@media (max-width: 768px) {
   .auth-card {
-    margin: 4vh 1rem;
-    padding: 1.25rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  form {
+    width: 100%;
   }
 
   .profilbild {
-    width: 72px;
-    height: 72px;
+    width: 140px;
+    height: 140px;
+  }
+
+  .actions {
+    justify-content: center;
   }
 }
