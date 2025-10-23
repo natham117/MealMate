@@ -423,3 +423,106 @@ h1 {
     text-align: left;
   }
 }
+
+/* === DELETE MODAL === */
+.delete-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999 !important; /* steht ÜBER allem */
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.delete-modal-box {
+  background: #f9f9f4;
+  border-radius: 16px;
+  padding: 30px 40px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  animation: popIn 0.25s ease;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.delete-modal-box h2 {
+  color: #4d6c26;
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+
+.delete-modal-box p {
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.delete-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.cancel-btn,
+.delete-btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-family: 'Alice', serif;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn {
+  background: transparent;
+  color: #4d6c26;
+  border: 1.5px solid #4d6c26;
+}
+
+.cancel-btn:hover {
+  background: #4d6c26;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #b53a2d;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #922e22;
+}
+
+.delete-close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #333;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.delete-close:hover {
+  color: #4d6c26;
+  transform: scale(1.1);
+}
+
+

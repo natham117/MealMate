@@ -159,28 +159,18 @@
   </div>
 </div>
 <!-- Modal: Liste löschen -->
-<div class="modal" [class.aktiv]="deleteAktiv" (click)="schliesseDeleteDialog()">
-  <div class="modal-inhalt" (click)="$event.stopPropagation()">
-    <button class="schliessen-btn" (click)="schliesseDeleteDialog()">×</button>
-
-    <div class="detail-inhalt">
-      <h2 class="detail-titel">Liste löschen</h2>
-
-      <p>
-        Möchtest du die Liste
-        <strong>{{ zuLoeschendeListe?.listName }}</strong>
-        wirklich löschen? 🗑️
-      </p>
-
-      <div class="form-aktionen">
-        <button type="button" class="abbrechen-btn" (click)="schliesseDeleteDialog()">
-          Abbrechen
-        </button>
-        <button type="button" class="speichern-btn loeschen" (click)="bestaetigeDelete()">
-          Löschen
-        </button>
-
-      </div>
+<div class="delete-modal-overlay" *ngIf="deleteAktiv" (click)="schliesseDeleteDialog()">
+  <div class="delete-modal-box" (click)="$event.stopPropagation()">
+    <button class="delete-close" (click)="schliesseDeleteDialog()">×</button>
+    <h2>Liste löschen</h2>
+    <p>
+      Möchtest du die Liste
+      <strong>{{ zuLoeschendeListe?.listName }}</strong>
+      wirklich löschen?
+    </p>
+    <div class="delete-actions">
+      <button class="cancel-btn" (click)="schliesseDeleteDialog()">Abbrechen</button>
+      <button class="delete-btn" (click)="bestaetigeDelete()">Löschen</button>
     </div>
   </div>
 </div>
@@ -273,16 +263,7 @@
   </div>
 </div>
 
-<!-- === Delete Dialog === -->
-<div *ngIf="deleteAktiv" class="dialog-overlay">
-  <div class="dialog-box">
-    <h3>Soll die Liste "{{ zuLoeschendeListe?.listName }}" wirklich gelöscht werden?</h3>
-    <div class="dialog-actions">
-      <button class="btn-danger" (click)="bestaetigeDelete()">Ja, löschen</button>
-      <button class="btn-secondary" (click)="schliesseDeleteDialog()">Abbrechen</button>
-    </div>
-  </div>
-</div>
+
 
   <!-- Snackbar -->
   <div class="snackbar" [class.aktiv]="snackbarAktiv">
