@@ -210,28 +210,35 @@
       </div>
 
           <ul class="detail-item-liste">
-            <li *ngFor="let item of ausgewaehlteListe.items; let i = index">
-              <ng-container *ngIf="!item.bearbeitung">
-                {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
-                <div class="aktionen">
-                  <button class="bearbeiten-btn" (click)="bearbeiteProdukt(item)">✎</button>
-                  <button class="loeschen-btn" (click)="loescheProdukt(i)">🗑️</button>
-                </div>
-              </ng-container>
+  <li *ngFor="let item of ausgewaehlteListe?.items; let i = index; trackBy: trackByItem">
 
-              <ng-container *ngIf="item.bearbeitung">
-                <input [(ngModel)]="item.itemName" class="form-input small-input" />
-                <input
-                  type="number"
-                  [(ngModel)]="item.amount"
-                  class="form-input small-input"
-                  min="0"
-                />
-                <input [(ngModel)]="item.unit" class="form-input small-input" />
-                <button class="speichern-mini" (click)="speichereProdukt(item)">💾</button>
-              </ng-container>
-            </li>
-          </ul>
+    <!-- Anzeige-Modus -->
+    <ng-container *ngIf="!item.bearbeitung">
+      <label class="zeile" [class.checked]="item.isChecked">
+        <input type="checkbox"
+               [checked]="item.isChecked"
+               (change)="onToggleItem(ausgewaehlteListe!, item, $event.target.checked)" />
+        <span class="text">
+          {{ item.itemName }} – {{ item.amount }} {{ item.unit }}
+        </span>
+      </label>
+
+      <div class="aktionen">
+        <button class="bearbeiten-btn" (click)="bearbeiteProdukt(item)">✎</button>
+        <button class="loeschen-btn"   (click)="loescheProdukt(i)">🗑️</button>
+      </div>
+    </ng-container>
+
+    <!-- Bearbeiten-Modus -->
+    <ng-container *ngIf="item.bearbeitung">
+      <input [(ngModel)]="item.itemName" class="form-input small-input" />
+      <input type="number" [(ngModel)]="item.amount" class="form-input small-input" min="0" />
+      <input [(ngModel)]="item.unit" class="form-input small-input" />
+      <button class="speichern-mini" (click)="speichereProdukt(item)">💾</button>
+    </ng-container>
+
+  </li>
+</ul>
 
         <div class="produkt-hinzufuegen">
           <input
