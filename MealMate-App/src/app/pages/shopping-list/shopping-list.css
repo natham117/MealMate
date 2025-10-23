@@ -424,6 +424,7 @@ h1 {
   }
 }
 
+<<<<<<< HEAD
 /* === DELETE MODAL === */
 .delete-modal-overlay {
   position: fixed;
@@ -526,3 +527,16 @@ h1 {
 }
 
 
+=======
+
+.zeile { display: flex; align-items: center; gap: 8px; }
+.zeile .text { line-height: 1.4; }
+.zeile.checked .text { text-decoration: line-through; opacity: 0.6; }
+
+.detail-item-liste li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+>>>>>>> 6584926208b2116789e4243cbf323d51792b3576

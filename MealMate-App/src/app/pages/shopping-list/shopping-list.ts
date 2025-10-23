@@ -6,10 +6,12 @@ import { HttpParams } from '@angular/common/http';
 import { AuthService } from '../../auth/login/auth.service';
 
 interface ShoppingItem {
+  groceryListItemId?: number;
   itemId?: number;
   itemName: string;
   amount: number;
   unit: string;
+  isChecked?: boolean;
   bearbeitung?: boolean;
 }
 
@@ -61,16 +63,24 @@ export class ShoppingList implements OnInit {
     return;
   }
 
-  this.http.get<ShoppingListData[]>(`${this.baseUrl}/${this.userId}`).subscribe({
-    next: (listen) => {
-      this.listen = listen;
-      this.gefilterteListen = [...listen];
+  this.http.get<any[]>(`${this.baseUrl}/${this.userId}`).subscribe({
+    next: (data) => {
+      this.listen = this.mapLists(data);
+      this.gefilterteListen = [...this.listen];
     },
-    error: (err) => {
-      console.error('Fehler beim Laden der Listen:', err);
-      this.zeigeSnackbar('Fehler beim Laden deiner Einkaufslisten.');
-    }
+    error: (err) => { /* ... */ }
   });
+
+  // this.http.get<ShoppingListData[]>(`${this.baseUrl}/${this.userId}`).subscribe({
+  //   next: (listen) => {
+  //     this.listen = listen;
+  //     this.gefilterteListen = [...listen];
+  //   },
+  //   error: (err) => {
+  //     console.error('Fehler beim Laden der Listen:', err);
+  //     this.zeigeSnackbar('Fehler beim Laden deiner Einkaufslisten.');
+  //   }
+  // });
 }
 
   
@@ -84,28 +94,72 @@ export class ShoppingList implements OnInit {
     }
 
     this.http.get<any[]>(`${this.baseUrl}/${this.userId}`).subscribe({
-      next: (data) => {
-        this.listen = (data || []).map((l: any) => ({
-          listId: l.listId ?? l.ListId ?? l.LIST_ID ?? 0,
-          userId: l.userId ?? l.UserId ?? l.USER_ID ?? this.userId,
-          listName: l.listName ?? l.ListName ?? l.LIST_NAME ?? '',
-          items: (l.items ?? l.Items ?? l.ITEMS ?? []).map((i: any) => ({
-            itemId: i.itemId ?? i.ItemId ?? i.ITEM_ID ?? 0,
-            itemName: i.itemName ?? i.ItemName ?? i.ITEM_NAME ?? '',
-            amount: Number(i.amount ?? i.Amount ?? i.AMOUNT ?? 0),
-            unit: i.unit ?? i.Unit ?? i.UNIT ?? ''
-          }))
-        }));
+  next: (data) => {
+    this.listen = this.mapLists(data);
+    this.gefilterteListen = [...this.listen];
 
-        this.gefilterteListen = [...this.listen];
-        console.log('✅ Einkaufslisten geladen:', this.listen);
-      },
-      error: (err) => {
-        console.error('❌ Fehler beim Laden der Listen:', err);
-        this.zeigeSnackbar('Fehler beim Laden der Listen!');
-      }
-    });
+    // Optional: aktuell geöffnete Liste wiederfinden
+    if (this.ausgewaehlteListe?.listId) {
+      const id = this.ausgewaehlteListe.listId;
+      const refreshed = this.listen.find(l => l.listId === id);
+      if (refreshed) this.ausgewaehlteListe = refreshed;
+    }
+  },
+  error: (err) => { /* … */ }
+});
+
+    // this.http.get<any[]>(`${this.baseUrl}/${this.userId}`).subscribe({
+    //   next: (data) => {
+    //     this.listen = (data || []).map((l: any) => ({
+    //       listId: l.listId ?? l.ListId ?? l.LIST_ID ?? 0,
+    //       userId: l.userId ?? l.UserId ?? l.USER_ID ?? this.userId,
+    //       listName: l.listName ?? l.ListName ?? l.LIST_NAME ?? '',
+    //       items: (l.items ?? l.Items ?? l.ITEMS ?? []).map((i: any) => ({
+    //         itemId: i.itemId ?? i.ItemId ?? i.ITEM_ID ?? 0,
+    //         itemName: i.itemName ?? i.ItemName ?? i.ITEM_NAME ?? '',
+    //         amount: Number(i.amount ?? i.Amount ?? i.AMOUNT ?? 0),
+    //         unit: i.unit ?? i.Unit ?? i.UNIT ?? ''
+    //       }))
+    //     }));
+
+    //     this.gefilterteListen = [...this.listen];
+    //     console.log('✅ Einkaufslisten geladen:', this.listen);
+    //   },
+    //   error: (err) => {
+    //     console.error('❌ Fehler beim Laden der Listen:', err);
+    //     this.zeigeSnackbar('Fehler beim Laden der Listen!');
+    //   }
+    // });
   }
+
+
+
+  private asBool(v: any): boolean {
+    if(typeof v === 'boolean') return v;
+    if(typeof v === 'number') return v === 1;
+    if(typeof v === 'string') return v === '1' || v.toLowerCase() === 'true';
+    return false;
+  }
+
+  private mapItem = (i: any): ShoppingItem => ({
+    groceryListItemId: i.groceryListItemId ?? i.GroceryListItemId ?? i.GROCERY_LIST_ITEM_ID ?? 0,
+    itemId:            i.itemId ?? i.ItemId ?? i.ITEM_ID ?? 0,
+    itemName:          i.itemName ?? i.ItemName ?? i.ITEM_NAME ?? '',
+    amount:            Number(i.amount ?? i.Amount ?? i.AMOUNT ?? 0),
+    unit:              i.unit ?? i.Unit ?? i.UNIT ?? '',
+    isChecked:         this.asBool(i.isChecked ?? i.IsChecked ?? i.IS_CHECKED ?? 0),
+  });
+
+  private mapList = (l: any): ShoppingListData => ({
+    listId:   l.listId ?? l.ListId ?? l.LIST_ID ?? 0,
+    userId:   l.userId ?? l.UserId ?? l.USER_ID ?? this.userId ?? 0,
+    listName: l.listName ?? l.ListName ?? l.LIST_NAME ?? '',
+    items:    (l.items ?? l.Items ?? l.ITEMS ?? []).map(this.mapItem),
+  });
+
+  private mapLists = (data: any[]): ShoppingListData[] =>
+  (data || []).map(this.mapList);
+
 
 
   // ------------------------------------------------------------
@@ -230,18 +284,23 @@ export class ShoppingList implements OnInit {
 
   this.http.post(`${this.baseUrl}/item`, payload).subscribe({
     next: () => {
-      // Direkt in der Liste anzeigen
-      this.ausgewaehlteListe!.items.push({
-        itemName: payload.itemName,
-        amount: payload.amount,
-        unit: payload.unit
-      });
+  this.zeigeSnackbar('✅ Produkt erfolgreich hinzugefügt!');
+  this.neuesProdukt = '';
+  this.neueMenge = null;
+  this.neueEinheit = '';
 
-      this.zeigeSnackbar('✅ Produkt erfolgreich hinzugefügt!');
-      this.neuesProdukt = '';
-      this.neueMenge = null;
-      this.neueEinheit = '';
-    },
+  // Liste(n) neu laden, damit groceryListItemId & isChecked vorhanden sind
+  const currentId = this.ausgewaehlteListe?.listId;
+  this.ladeEinkaufslisten();
+
+  // Ausgewählte Liste nach Reload wiederherstellen
+  if (currentId) {
+    setTimeout(() => {
+      const neu = this.listen.find(l => l.listId === currentId);
+      if (neu) this.ausgewaehlteListe = neu;
+    }, 0);
+  }
+},
     error: (err) => {
       console.error('Fehler beim Hinzufügen:', err);
       
@@ -431,5 +490,32 @@ ladePdf(listeId?: number, titel?: string) {
     complete: () => this.pdfLaedt = false
   });
 }
+
+onToggleItem(list: ShoppingListData, item: ShoppingItem, checked: boolean): void {
+  if (!list.listId || !item.groceryListItemId) {
+    console.warn('Kein listId oder groceryListItemId vorhanden – reloading list.');
+    // Fallback: Liste neu laden
+    this.ladeEinkaufslisten();
+    return;
+  }
+
+  const prev = !!item.isChecked;
+  item.isChecked = checked; // Optimistic UI
+
+  this.http.patch(`${this.baseUrl}/${list.listId}/items/${item.groceryListItemId}`, { isChecked: checked })
+    .subscribe({
+      next: () => {},
+      error: (err) => {
+        console.error('PATCH fehlgeschlagen:', err);
+        item.isChecked = prev; // Rollback
+        this.zeigeSnackbar('❌ Konnte Status nicht speichern.');
+      }
+    });
+}
+
+trackByItem = (_: number, it: { groceryListItemId?: number; itemId?: number }) =>
+  it.groceryListItemId ?? it.itemId ?? _;
+
+
 
 }
