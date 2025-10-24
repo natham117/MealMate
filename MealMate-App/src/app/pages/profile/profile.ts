@@ -14,6 +14,7 @@ import { Data } from '@angular/router';
 export class Profile {
   today: string = new Date().toISOString().split('T')[0];
   user: any = {};
+  originalUser: any = {};
   email: string = '';
   newImageUrl: string = '';
   showImageModal: boolean = false;
@@ -49,6 +50,7 @@ export class Profile {
         if (this.user.birthDate) {
           this.user.birthDate = this.user.birthDate.split('T')[0];
         }
+        this.originalUser = JSON.parse(JSON.stringify(this.user));
       }
       console.log(result.message);
     });
@@ -67,12 +69,11 @@ export class Profile {
     }).subscribe({
       next: (res) => {
       if (res.success) {
-        this.showSnackbarMessage("Profilinformationen erfolgreich aktualisiert.", "ok")
+        this.showSnackbarMessage(res.message, "ok")
+        this.originalUser = JSON.parse(JSON.stringify(this.user));
         if (this.user.email === this.authService.getEmail()) {
           this.authService.setEmail(this.user.email);
         }
-      } else if (res.message?.includes("Bestätigungsmail wurde an die neue Adresse gesendet")) {
-        this.showSnackbarMessage("Eine Bestätigungsmail wurde an deine neue E-Mail-Adresse gesendet. Bitte überprüfe dein Postfach.", "ok")
       }
     },
     error: (err) => {
@@ -137,17 +138,19 @@ export class Profile {
     }).subscribe({
       next: (result: any) => {
         if (result.success) {
-          this.showSnackbarMessage("Das Passwort wurde erfolgreich geändert.", "ok")
+          this.showSnackbarMessage(result.message, "ok")
           this.oldPassword = this.newPassword = this.confirmPassword = '';
           this.closePasswordModal();
-        } else {
-          this.showSnackbarMessage(result.message, "fail");
         }
       },
       error: (err: any) => {
         this.showSnackbarMessage(err.error.message, "fail");
       },
     })
+  }
+
+  hasChanges(): boolean{
+      return JSON.stringify(this.user) !== JSON.stringify(this.originalUser);
   }
 
   // Snackbar

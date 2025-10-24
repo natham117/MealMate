@@ -172,6 +172,16 @@ button:hover {
   background-color: #3b521e;
 }
 
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transition: opacity 0.3s ease;
+}
+
+button:not([disabled]):hover {
+  opacity: 0.9;
+}
+
 /* === Erfolgs- & Fehlermeldungen === */
 .error-message {
   color: #a94442;

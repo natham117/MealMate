@@ -109,3 +109,33 @@ button[type="submit"]:hover,
 .hint a:hover {
   text-decoration: underline;
 }
+
+/* === Snackbar === */
+.snackbar {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 5000;
+  visibility: visible;
+}
+
+.snackbar.active {
+  opacity: 1;
+}
+
+/* Erfolgsnachricht */
+.snackbar.ok {
+  background-color: #4d6c26;
+}
+
+/* Fehlermeldung */
+.snackbar.fail {
+  background-color: #b52b27;
+}

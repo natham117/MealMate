@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 export class AuthService {
     private email: string = '';
     private userId: number | null = null;
+    private justLoggedIn: boolean = false;
 
     setEmail(email: string) {
         this.email = email;
@@ -29,6 +30,8 @@ export class AuthService {
     setUserData(email: string, userId: number) {
         this.setEmail(email);
         this.setUserId(userId);
+        this.justLoggedIn = true;
+        console.log("Eingeloggt? ", this.justLoggedIn);
     }
 
     logout() {
@@ -40,4 +43,13 @@ export class AuthService {
     isLoggedIn(): boolean {
         return this.userId !== null;
     }
+
+    wasJustLoggedIn(): boolean {
+    if (this.justLoggedIn) {
+        console.log("Funktion wasJustLoggedIn() aufgerufen!");
+      this.justLoggedIn = false;
+      return true;
+    }
+    return false;
+  }
 }

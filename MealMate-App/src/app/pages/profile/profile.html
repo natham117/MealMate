@@ -88,8 +88,8 @@
     <p class="form-hint"><span class="required">*</span> Pflichtfeld</p>
 
     <div class="actions">
-      <button type="reset" class="btn-secondary" (click)="onLoad()">Abbrechen</button>
-      <button type="submit">Speichern</button>
+      <button type="reset" class="btn-secondary" (click)="onLoad()" [disabled]="!hasChanges()">Abbrechen</button>
+      <button type="submit" [disabled]="!hasChanges()">Speichern</button>
       <button type="button" class="btn-password" (click)="openPasswordModal()">Passwort ändern</button>
     </div>
   </form>
@@ -142,7 +142,6 @@
   </div>
 </ng-template>
 
-<!-- Snackbar -->
 <div class="snackbar" [ngClass]="{'active': showSnackbar, 'ok': snackbarType === 'ok', 'fail': snackbarType === 'fail'}">
   {{ snackbarMessage }}
 </div>

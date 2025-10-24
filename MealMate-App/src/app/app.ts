@@ -11,6 +11,7 @@ import { AuthService } from './auth/login/auth.service';
 })
 export class App {
   protected title = 'MealMate-App';
+    showSnackbar = false;
 
   constructor(
     public authService: AuthService,

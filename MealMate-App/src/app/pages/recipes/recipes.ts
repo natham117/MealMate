@@ -35,29 +35,34 @@ interface Rezept {
 })
 export class Recipes implements OnInit {
   private apiUrl = 'http://localhost:5000/api/recipes';
-  
+
   suchbegriff = '';
   filter_vegetarisch = false;
   filter_vegan = false;
   filter_favoriten = false;
   filter_eigene_rezepte = false;
-  
+
   temp_zeit = 0;
   temp_portionen = 0;
-  
+
   neues_rezept: Rezept = this.leeres_rezept();
   formular_aktiv = false;
 
   rezepte: Rezept[] = [];
   ausgewaehltes_rezept: Rezept | null = null;
   modal_aktiv = false;
-  
+
   bearbeitungsmodus = false;
   bearbeitetes_rezept: Rezept | null = null;
   temp_bearbeitung_zeit = 0;
   temp_bearbeitung_portionen = 0;
 
-  constructor(private http: HttpClient, public authService: AuthService, private route: ActivatedRoute) {}
+  // Snackbar
+  snackbarMessage = '';
+  snackbarType: 'ok' | 'fail' = 'ok';
+  showSnackbar = false;
+
+  constructor(private http: HttpClient, public authService: AuthService, private route: ActivatedRoute) { }
 
   // ESC-Taste Handler
   @HostListener('document:keydown.escape')
@@ -75,8 +80,12 @@ export class Recipes implements OnInit {
   ngOnInit(): void {
     console.log('🔄 [Recipes] Komponente wird initialisiert');
     console.log('🔍 [Recipes] User-ID aus localStorage:', localStorage.getItem('userId'));
-    
-    
+
+    if (this.authService.wasJustLoggedIn()) {
+      console.log("Recipe Login aufgerufen!");
+      this.showSnackbarMessage("Sie sind erfolgreich eingeloggt", "ok");
+    }
+
     //begin: Suchbegriff aus URL auslesen -> man kann jetzt auf der Homepage nach Rezepten suchen und wird auf die Rezepte-Seite mit dem Suchbegriff weitergeleitet
     this.route.queryParams.subscribe(params => {
       const search = params['search'];
@@ -109,30 +118,30 @@ export class Recipes implements OnInit {
 
   get gefilterte_rezepte(): Rezept[] {
     let gefiltert = this.rezepte;
-    
+
     // Nach Titel filtern
     if (this.suchbegriff.trim()) {
       const suche = this.suchbegriff.toLowerCase();
-      gefiltert = gefiltert.filter(rezept => 
+      gefiltert = gefiltert.filter(rezept =>
         rezept.titel.toLowerCase().includes(suche)
       );
     }
-    
+
     // Nach Vegetarisch filtern
     if (this.filter_vegetarisch) {
       gefiltert = gefiltert.filter(rezept => rezept.vegetarisch);
     }
-    
+
     // Nach Vegan filtern
     if (this.filter_vegan) {
       gefiltert = gefiltert.filter(rezept => rezept.vegan);
     }
-    
+
     // Nach Favoriten filtern
     if (this.filter_favoriten) {
       gefiltert = gefiltert.filter(rezept => rezept.istFavorit);
     }
-    
+
     // Nach eigene Rezepte filtern
     if (this.filter_eigene_rezepte) {
       const currentUserId = this.authService.getUserId();
@@ -141,7 +150,7 @@ export class Recipes implements OnInit {
         console.log(`🔍 [Recipes] Filter "Eigene Rezepte": ${gefiltert.length} von ${this.rezepte.length}`);
       }
     }
-    
+
     return gefiltert;
   }
 
@@ -167,6 +176,8 @@ export class Recipes implements OnInit {
       return;
     }
 
+
+
     // Prüfe ob das Rezept dem aktuellen User gehört
     if (this.ausgewaehltes_rezept.userId !== currentUserId) {
       alert('Du kannst nur deine eigenen Rezepte bearbeiten!');
@@ -174,13 +185,13 @@ export class Recipes implements OnInit {
     }
 
     this.bearbeitetes_rezept = JSON.parse(JSON.stringify(this.ausgewaehltes_rezept));
-    
+
     const zeitMatch = this.ausgewaehltes_rezept.zeit.match(/\d+/);
     const portionenMatch = this.ausgewaehltes_rezept.portionen.match(/\d+/);
-    
+
     this.temp_bearbeitung_zeit = zeitMatch ? parseInt(zeitMatch[0]) : 0;
     this.temp_bearbeitung_portionen = portionenMatch ? parseInt(portionenMatch[0]) : 0;
-    
+
     this.bearbeitungsmodus = true;
   }
 
@@ -205,7 +216,7 @@ export class Recipes implements OnInit {
         if (index !== -1) {
           this.rezepte[index] = gespeichertesRezept;
         }
-        
+
         this.ausgewaehltes_rezept = gespeichertesRezept;
         this.bearbeitungsmodus = false;
         this.bearbeitetes_rezept = null;
@@ -390,7 +401,7 @@ export class Recipes implements OnInit {
       next: res => {
         const blob = res.body!;
         let filename = this.extractFilename(res.headers.get('Content-Disposition'))
-                      ?? (titel ? `${this.sanitize(titel)}.pdf` : 'rezept.pdf');
+          ?? (titel ? `${this.sanitize(titel)}.pdf` : 'rezept.pdf');
 
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -404,7 +415,7 @@ export class Recipes implements OnInit {
       error: err => {
         console.error('PDF-Download fehlgeschlagen:', err);
         alert('PDF konnte nicht erstellt werden.');
-      }, 
+      },
       complete: () => {
         this.pdfLaedt = false;
         this.pdfLaedtIds.delete(rezeptId);
@@ -413,9 +424,9 @@ export class Recipes implements OnInit {
   }
 
   private extractFilename(cd: string | null): string | null {
-    if(!cd) return null;
+    if (!cd) return null;
     const utf8 = /filename\*\s*=\s*UTF-8''([^;]+)/i.exec(cd);
-    if(utf8?.[1]) return decodeURIComponent(utf8[1]);
+    if (utf8?.[1]) return decodeURIComponent(utf8[1]);
     const simple = /filename="?([^"]+)"?/i.exec(cd);
     return simple?.[1] ?? null;
   }
@@ -428,7 +439,7 @@ export class Recipes implements OnInit {
   // Einkaufslisten-Methoden
   oeffneEinkaufslistenDialog(): void {
     if (!this.ausgewaehltes_rezept) return;
-    
+
     // Prüfe ob User eingeloggt ist
     const currentUserId = this.authService.getUserId();
     if (!currentUserId) {
@@ -449,7 +460,7 @@ export class Recipes implements OnInit {
 
   erstelleEinkaufsliste(): void {
     if (!this.ausgewaehltes_rezept) return;
-    
+
     const name = this.einkaufslisten_name.trim();
     if (!name) {
       alert('Bitte gib einen Namen für die Einkaufsliste ein!');
@@ -506,7 +517,7 @@ export class Recipes implements OnInit {
     if (typeof menge === 'number') {
       return menge;
     }
-    
+
     if (!menge || menge === '' || menge === '0') {
       return 0;
     }
@@ -516,8 +527,15 @@ export class Recipes implements OnInit {
     if (match) {
       return parseFloat(match[0].replace(',', '.'));
     }
-    
+
     return 0;
   }
 
+  // Snackbar
+  showSnackbarMessage(msg: string, type: 'ok' | 'fail' = 'ok'): void {
+    this.snackbarMessage = msg;
+    this.snackbarType = type;
+    this.showSnackbar = true;
+    setTimeout(() => (this.showSnackbar = false), 5000);
+  }
 }

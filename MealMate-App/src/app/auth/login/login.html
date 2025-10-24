@@ -3,24 +3,12 @@
 
     <form (ngSubmit)="onSubmit()">
         <label for="identifier">E-Mail</label>
-        <input
-            [(ngModel)]="email"
-            name="email"
-            type="text"
-            placeholder="z.B. max@mustermann.de"
-            autocomplete="username"
-            required
-        />
+        <input [(ngModel)]="email" name="email" type="text" placeholder="z.B. max@mustermann.de" autocomplete="username"
+            required />
 
         <label for="password">Passwort</label>
-        <input
-            [(ngModel)]="pw"
-            name="password"
-            type="password"
-            placeholder="********"
-            autocomplete="current-password"
-            required
-        />
+        <input [(ngModel)]="pw" name="password" type="password" placeholder="********" autocomplete="current-password"
+            required />
 
         <button type="submit">Anmelden</button>
 
@@ -29,4 +17,9 @@
             <a routerLink="/register">Jetzt registrieren.</a>
         </p>
     </form>
+
+    <div class="snackbar"
+        [ngClass]="{'active': showSnackbar, 'ok': snackbarType === 'ok', 'fail': snackbarType === 'fail'}">
+        {{ snackbarMessage }}
+    </div>
 </div>
